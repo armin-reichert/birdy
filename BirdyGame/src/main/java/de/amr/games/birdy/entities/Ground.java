@@ -16,23 +16,24 @@ public class Ground extends SpriteEntity {
 	private float startX;
 
 	public Ground() {
-		sprites.set("s_land", Sprite.ofAssets("land"));
+		Sprite land = Sprite.ofAssets("land");
+		sprites.set("s_land", land);
 		sprites.select("s_land");
-		tf.setWidth(sprites.current().getWidth());
-		tf.setHeight(sprites.current().getHeight());
+		tf.setWidth(land.getWidth());
+		tf.setHeight(land.getHeight());
 	}
 
 	@Override
 	public void update() {
 		startX -= tf.getVelocityX();
 		if (startX < 0) {
-			startX = sprites.current().currentFrame().getWidth(null);
+			startX = sprites.current().get().currentFrame().getWidth(null);
 		}
 	}
 
 	public void setWidth(int width) {
 		tf.setWidth(width);
-		sprites.current().scale(width, sprites.current().getHeight());
+		sprites.current().ifPresent(sprite -> sprite.scale(width, sprite.getHeight()));
 	}
 
 	public void stopMoving() {
@@ -41,7 +42,7 @@ public class Ground extends SpriteEntity {
 
 	@Override
 	public void draw(Graphics2D g) {
-		Image image = sprites.current().currentFrame();
+		Image image = sprites.current().get().currentFrame();
 		for (float x = -startX; x < tf.getWidth(); x += image.getWidth(null)) {
 			g.drawImage(image, (int) x, (int) tf.getY(), null);
 		}

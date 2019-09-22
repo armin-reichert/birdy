@@ -45,8 +45,10 @@ public class City extends SpriteEntity {
 		sprites.set("s_day", Sprite.ofAssets("bg_day"));
 		sprites.select("s_day");
 
-		tf.setWidth(sprites.current().getWidth());
-		tf.setHeight(sprites.current().getHeight());
+		sprites.current().ifPresent(sprite -> {
+			tf.setWidth(sprite.getWidth());
+			tf.setHeight(sprite.getHeight());
+		});
 
 		fsm = new StateMachine<>(DayTime.class, Match.BY_EQUALITY);
 		fsm.setDescription("City");
@@ -92,7 +94,8 @@ public class City extends SpriteEntity {
 	public void update() {
 		if (Keyboard.keyPressedOnce(KeyEvent.VK_N)) {
 			sunset();
-		} else if (Keyboard.keyPressedOnce(KeyEvent.VK_D)) {
+		}
+		else if (Keyboard.keyPressedOnce(KeyEvent.VK_D)) {
 			sunrise();
 		}
 		fsm.update();
@@ -131,12 +134,14 @@ public class City extends SpriteEntity {
 
 	@Override
 	public void draw(Graphics2D g) {
-		g.translate(tf.getX(), tf.getY());
-		Image image = sprites.current().currentFrame();
-		for (int x = 0; x < tf.getWidth(); x += image.getWidth(null)) {
-			g.drawImage(image, x, 0, null);
-		}
-		entities.ofClass(Star.class).forEach(star -> star.draw(g));
-		g.translate(-tf.getX(), -tf.getY());
+		sprites.current().ifPresent(sprite -> {
+			Image image = sprite.currentFrame();
+			g.translate(tf.getX(), tf.getY());
+			for (int x = 0; x < tf.getWidth(); x += image.getWidth(null)) {
+				g.drawImage(image, x, 0, null);
+			}
+			entities.ofClass(Star.class).forEach(star -> star.draw(g));
+			g.translate(-tf.getX(), -tf.getY());
+		});
 	}
 }

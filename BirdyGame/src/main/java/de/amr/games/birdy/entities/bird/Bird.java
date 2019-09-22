@@ -58,7 +58,8 @@ public class Bird extends SpriteEntity {
 			state(Injured).setTimer(() -> app().clock.sec(app().settings.get("bird injured seconds")));
 			state(Injured).setOnEntry(() -> sprites.select("s_red"));
 
-			addTransitionOnEventObject(Injured, Injured, null, e -> state(Injured).resetTimer(), BirdTouchedPipe);
+			addTransitionOnEventObject(Injured, Injured, null, e -> state(Injured).resetTimer(),
+					BirdTouchedPipe);
 			addTransitionOnTimeout(Injured, Sane, null, null);
 			addTransitionOnEventObject(Injured, Injured, null, null, BirdCrashed);
 			addTransitionOnEventObject(Injured, Injured, null, null, BirdLeftPassage);
@@ -88,7 +89,8 @@ public class Bird extends SpriteEntity {
 			state(Flying).setOnTick(() -> {
 				if (Keyboard.keyDown(app().settings.get("jump key"))) {
 					flap();
-				} else {
+				}
+				else {
 					fly();
 				}
 			});
@@ -125,8 +127,8 @@ public class Bird extends SpriteEntity {
 		sprites.set("s_blue", createFeatherSprite("bird1"));
 		sprites.set("s_red", createFeatherSprite("bird2"));
 		sprites.select("s_yellow");
-		tf.setWidth(sprites.current().getWidth());
-		tf.setHeight(sprites.current().getHeight());
+		tf.setWidth(sprites.current().get().getWidth());
+		tf.setHeight(sprites.current().get().getHeight());
 		gravity = app().settings.getAsFloat("world gravity");
 	}
 
@@ -146,7 +148,7 @@ public class Bird extends SpriteEntity {
 	public void update() {
 		flightControl.update();
 		healthControl.update();
-		sprites.current().enableAnimation(tf.getVelocityY() < 0);
+		sprites.current().get().enableAnimation(tf.getVelocityY() < 0);
 	}
 
 	public void receiveEvent(BirdEvent event) {
@@ -165,8 +167,8 @@ public class Bird extends SpriteEntity {
 	@Override
 	public Rectangle2D getCollisionBox() {
 		int margin = Math.min(tf.getWidth() / 4, tf.getHeight() / 4);
-		return new Rectangle2D.Double(tf.getX() + margin, tf.getY() + margin, tf.getWidth() - 2 * margin,
-				tf.getHeight() - 2 * margin);
+		return new Rectangle2D.Double(tf.getX() + margin, tf.getY() + margin,
+				tf.getWidth() - 2 * margin, tf.getHeight() - 2 * margin);
 	}
 
 	public void flap() {
