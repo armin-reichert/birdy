@@ -55,7 +55,7 @@ public class Bird extends SpriteEntity {
 			addTransitionOnEventObject(Sane, Dead, null, null, BirdTouchedGround);
 			addTransitionOnEventObject(Sane, Dead, null, null, BirdLeftWorld);
 
-			state(Injured).setTimer(() -> app().clock.sec(app().settings.get("bird injured seconds")));
+			state(Injured).setTimerFunction(() -> app().clock.sec(app().settings.get("bird injured seconds")));
 			state(Injured).setOnEntry(() -> sprites.select("s_red"));
 
 			addTransitionOnEventObject(Injured, Injured, null, e -> state(Injured).resetTimer(),

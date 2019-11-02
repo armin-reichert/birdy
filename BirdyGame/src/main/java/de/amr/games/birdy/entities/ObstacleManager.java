@@ -41,7 +41,7 @@ public class ObstacleManager extends Entity implements View {
 		control.setInitialState(Stopped);
 
 		// Stay breeding for some random time from interval [MIN_PIPE_TIME, MAX_PIPE_TIME]:
-		control.state(Breeding).setTimer(() -> {
+		control.state(Breeding).setTimerFunction(() -> {
 			int minCreationTime = app().clock.sec(app.settings.getAsFloat("min pipe creation sec"));
 			int maxCreationTime = app().clock.sec(app.settings.getAsFloat("max pipe creation sec"));
 			return randomInt(minCreationTime, maxCreationTime);

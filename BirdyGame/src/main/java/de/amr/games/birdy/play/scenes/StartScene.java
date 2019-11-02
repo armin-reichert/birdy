@@ -69,7 +69,7 @@ public class StartScene implements View, Controller {
 
 			// Ready ---
 
-			state(Ready).setTimer(() -> app().clock.sec(app.settings.getAsFloat("ready time sec")));
+			state(Ready).setTimerFunction(() -> app().clock.sec(app.settings.getAsFloat("ready time sec")));
 			state(Ready).setOnEntry(() -> displayText("readyText"));
 			addTransitionOnTimeout(Ready, StartPlaying, null, e -> app.setController(app.getPlayScene()));
 			addTransitionOnEventObject(Ready, GameOver, null, e -> displayText("title"), BirdTouchedGround);

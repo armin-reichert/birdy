@@ -61,7 +61,7 @@ public class City extends SpriteEntity {
 		fsm.addTransitionOnEventObject(DAY, NIGHT, null, null, SUNSET);
 		fsm.addTransitionOnEventObject(DAY, DAY, null, null, SUNRISE);
 
-		fsm.state(NIGHT).setTimer(() -> app().clock.sec(10));
+		fsm.state(NIGHT).setTimerFunction(() -> app().clock.sec(10));
 
 		fsm.state(NIGHT).setOnEntry(() -> {
 			sprites.select("s_night");
