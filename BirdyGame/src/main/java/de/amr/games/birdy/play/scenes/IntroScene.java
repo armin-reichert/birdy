@@ -63,11 +63,11 @@ public class IntroScene extends StateMachine<State, Void> implements View, Contr
 
 					.state(WAITING)
 						.timeoutAfter(sec(2))
-						.onExit(() -> creditsText.setVisible(false))
+						.onExit(() -> creditsText.visible = false)
 						
 					.state(LOGO)
 						.timeoutAfter(sec(4)) 
-						.onEntry(() -> logoImage.setVisible(true))
+						.onEntry(() -> logoImage.visible = true)
 						.onExit(() -> app().setController(app.getStartScene()))
 						
 				.transitions()
@@ -92,7 +92,8 @@ public class IntroScene extends StateMachine<State, Void> implements View, Contr
 		city.setWidth(width);
 		if (new Random().nextBoolean()) {
 			city.sunset();
-		} else {
+		}
+		else {
 			city.sunrise();
 		}
 
@@ -105,7 +106,7 @@ public class IntroScene extends StateMachine<State, Void> implements View, Contr
 
 		logoImage = PumpingImageWidget.create().image(Assets.image("title")).scale(3).build();
 		logoImage.tf.center(width, height);
-		logoImage.setVisible(false);
+		logoImage.visible = false;
 
 		super.init();
 		Assets.sound("music/bgmusic.mp3").loop();
