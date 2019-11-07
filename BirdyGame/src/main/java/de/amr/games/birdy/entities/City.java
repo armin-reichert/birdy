@@ -16,7 +16,6 @@ import java.util.stream.IntStream;
 
 import de.amr.easy.game.Application;
 import de.amr.easy.game.entity.Entity;
-import de.amr.easy.game.entity.SpriteEntity;
 import de.amr.easy.game.input.Keyboard;
 import de.amr.easy.game.ui.sprites.Sprite;
 import de.amr.statemachine.Match;
@@ -27,7 +26,7 @@ import de.amr.statemachine.StateMachine;
  * 
  * @author Armin Reichert
  */
-public class City extends SpriteEntity {
+public class City extends Entity {
 
 	public enum DayTime {
 		DAY, NIGHT

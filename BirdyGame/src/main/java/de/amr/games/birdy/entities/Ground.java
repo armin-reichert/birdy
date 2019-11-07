@@ -3,7 +3,7 @@ package de.amr.games.birdy.entities;
 import java.awt.Graphics2D;
 import java.awt.Image;
 
-import de.amr.easy.game.entity.SpriteEntity;
+import de.amr.easy.game.entity.Entity;
 import de.amr.easy.game.ui.sprites.Sprite;
 
 /**
@@ -11,7 +11,7 @@ import de.amr.easy.game.ui.sprites.Sprite;
  * 
  * @author Armin Reichert
  */
-public class Ground extends SpriteEntity {
+public class Ground extends Entity {
 
 	private float startX;
 
