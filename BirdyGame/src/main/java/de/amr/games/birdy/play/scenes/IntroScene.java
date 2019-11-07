@@ -63,11 +63,11 @@ public class IntroScene extends StateMachine<State, Void> implements View, Contr
 
 					.state(WAITING)
 						.timeoutAfter(sec(2))
-						.onExit(() -> creditsText.visible = false)
+						.onExit(() -> creditsText.hide())
 						
 					.state(LOGO)
 						.timeoutAfter(sec(4)) 
-						.onEntry(() -> logoImage.visible = true)
+						.onEntry(() -> logoImage.show())
 						.onExit(() -> app().setController(app.getStartScene()))
 						
 				.transitions()
@@ -106,7 +106,7 @@ public class IntroScene extends StateMachine<State, Void> implements View, Contr
 
 		logoImage = PumpingImageWidget.create().image(Assets.image("title")).scale(3).build();
 		logoImage.tf.center(width, height);
-		logoImage.visible = false;
+		logoImage.hide();
 
 		super.init();
 		Assets.sound("music/bgmusic.mp3").loop();
