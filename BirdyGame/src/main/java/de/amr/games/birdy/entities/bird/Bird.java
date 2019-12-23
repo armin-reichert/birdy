@@ -23,8 +23,8 @@ import de.amr.easy.game.input.Keyboard;
 import de.amr.easy.game.ui.sprites.AnimationType;
 import de.amr.easy.game.ui.sprites.Sprite;
 import de.amr.games.birdy.play.BirdEvent;
-import de.amr.statemachine.Match;
-import de.amr.statemachine.StateMachine;
+import de.amr.statemachine.core.Match;
+import de.amr.statemachine.core.StateMachine;
 
 /**
  * The little bird.

@@ -30,8 +30,8 @@ import de.amr.games.birdy.entities.City;
 import de.amr.games.birdy.entities.Ground;
 import de.amr.games.birdy.entities.bird.Bird;
 import de.amr.games.birdy.play.BirdEvent;
-import de.amr.statemachine.Match;
-import de.amr.statemachine.StateMachine;
+import de.amr.statemachine.core.Match;
+import de.amr.statemachine.core.StateMachine;
 
 /**
  * Start scene of the game: bird flaps in the air until user presses the JUMP key.

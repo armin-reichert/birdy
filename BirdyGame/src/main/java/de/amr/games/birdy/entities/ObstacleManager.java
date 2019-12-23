@@ -19,8 +19,8 @@ import de.amr.easy.game.entity.Entity;
 import de.amr.easy.game.view.View;
 import de.amr.games.birdy.BirdyGameApp;
 import de.amr.games.birdy.entities.bird.Bird;
-import de.amr.statemachine.Match;
-import de.amr.statemachine.StateMachine;
+import de.amr.statemachine.core.Match;
+import de.amr.statemachine.core.StateMachine;
 
 /**
  * Manages the creation and deletion of obstacles.

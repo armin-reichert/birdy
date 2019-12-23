@@ -31,8 +31,8 @@ import de.amr.games.birdy.entities.ScoreDisplay;
 import de.amr.games.birdy.entities.bird.Bird;
 import de.amr.games.birdy.play.BirdEvent;
 import de.amr.games.birdy.utils.Score;
-import de.amr.statemachine.Match;
-import de.amr.statemachine.StateMachine;
+import de.amr.statemachine.core.Match;
+import de.amr.statemachine.core.StateMachine;
 
 /**
  * Play scene of the game.
