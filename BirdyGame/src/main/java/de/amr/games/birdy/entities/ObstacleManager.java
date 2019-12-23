@@ -19,7 +19,7 @@ import de.amr.easy.game.entity.Entity;
 import de.amr.easy.game.view.View;
 import de.amr.games.birdy.BirdyGameApp;
 import de.amr.games.birdy.entities.bird.Bird;
-import de.amr.statemachine.core.Match;
+import de.amr.statemachine.core.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 
 /**
@@ -36,7 +36,7 @@ public class ObstacleManager extends Entity implements View {
 	public ObstacleManager(BirdyGameApp app) {
 		this.app = app;
 
-		control = new StateMachine<>(ObstacleManagerState.class, Match.BY_EQUALITY);
+		control = new StateMachine<>(ObstacleManagerState.class, EventMatchStrategy.BY_EQUALITY);
 		control.setDescription(getClass().getSimpleName());
 		control.setInitialState(Stopped);
 

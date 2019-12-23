@@ -31,7 +31,7 @@ import de.amr.games.birdy.entities.ScoreDisplay;
 import de.amr.games.birdy.entities.bird.Bird;
 import de.amr.games.birdy.play.BirdEvent;
 import de.amr.games.birdy.utils.Score;
-import de.amr.statemachine.core.Match;
+import de.amr.statemachine.core.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 
 /**
@@ -59,7 +59,7 @@ public class PlayScene implements View, Lifecycle {
 
 		public PlaySceneControl() {
 
-			super(State.class, Match.BY_EQUALITY);
+			super(State.class, EventMatchStrategy.BY_EQUALITY);
 			setDescription("Play Scene Control");
 			setInitialState(Playing);
 

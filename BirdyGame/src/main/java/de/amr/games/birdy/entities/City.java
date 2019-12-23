@@ -18,7 +18,7 @@ import de.amr.easy.game.Application;
 import de.amr.easy.game.entity.Entity;
 import de.amr.easy.game.input.Keyboard;
 import de.amr.easy.game.ui.sprites.Sprite;
-import de.amr.statemachine.core.Match;
+import de.amr.statemachine.core.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 
 /**
@@ -49,7 +49,7 @@ public class City extends Entity {
 			tf.setHeight(sprite.getHeight());
 		});
 
-		fsm = new StateMachine<>(DayTime.class, Match.BY_EQUALITY);
+		fsm = new StateMachine<>(DayTime.class, EventMatchStrategy.BY_EQUALITY);
 		fsm.setDescription("City");
 		fsm.setInitialState(DAY);
 

@@ -21,7 +21,7 @@ import de.amr.easy.game.view.View;
 import de.amr.games.birdy.BirdyGameApp;
 import de.amr.games.birdy.entities.City;
 import de.amr.games.birdy.play.scenes.IntroScene.State;
-import de.amr.statemachine.core.Match;
+import de.amr.statemachine.core.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 
 /**
@@ -49,7 +49,7 @@ public class IntroScene extends StateMachine<State, Void> implements View, Lifec
 	private TextWidget creditsText;
 
 	public IntroScene(BirdyGameApp app) {
-		super(State.class, Match.BY_EQUALITY);
+		super(State.class, EventMatchStrategy.BY_EQUALITY);
 		/*@formatter:off*/
 		beginStateMachine()
 				.description("Intro Scene")

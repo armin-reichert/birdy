@@ -23,7 +23,7 @@ import de.amr.easy.game.input.Keyboard;
 import de.amr.easy.game.ui.sprites.AnimationType;
 import de.amr.easy.game.ui.sprites.Sprite;
 import de.amr.games.birdy.play.BirdEvent;
-import de.amr.statemachine.core.Match;
+import de.amr.statemachine.core.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 
 /**
@@ -44,7 +44,7 @@ public class Bird extends Entity {
 
 		public HealthControl() {
 
-			super(HealthState.class, Match.BY_EQUALITY);
+			super(HealthState.class, EventMatchStrategy.BY_EQUALITY);
 			setDescription("Bird Health Control");
 			setInitialState(Sane);
 
@@ -82,7 +82,7 @@ public class Bird extends Entity {
 
 		public FlightControl() {
 
-			super(FlightState.class, Match.BY_EQUALITY);
+			super(FlightState.class, EventMatchStrategy.BY_EQUALITY);
 			setDescription("Bird Flight Control");
 			setInitialState(Flying);
 

@@ -30,7 +30,7 @@ import de.amr.games.birdy.entities.City;
 import de.amr.games.birdy.entities.Ground;
 import de.amr.games.birdy.entities.bird.Bird;
 import de.amr.games.birdy.play.BirdEvent;
-import de.amr.statemachine.core.Match;
+import de.amr.statemachine.core.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 
 /**
@@ -48,7 +48,7 @@ public class StartScene implements View, Lifecycle {
 
 		public StartSceneControl() {
 
-			super(State.class, Match.BY_EQUALITY);
+			super(State.class, EventMatchStrategy.BY_EQUALITY);
 
 			setDescription("Start Scene Control");
 			setInitialState(Starting);
