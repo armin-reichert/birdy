@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 import de.amr.easy.game.assets.Assets;
 import de.amr.easy.game.ui.widgets.PumpingImageWidget;
 import de.amr.easy.game.ui.widgets.TextWidget;
-import de.amr.easy.game.view.Controller;
+import de.amr.easy.game.view.Lifecycle;
 import de.amr.easy.game.view.View;
 import de.amr.games.birdy.BirdyGameApp;
 import de.amr.games.birdy.entities.City;
@@ -29,7 +29,7 @@ import de.amr.statemachine.core.StateMachine;
  * 
  * @author Armin Reichert
  */
-public class IntroScene extends StateMachine<State, Void> implements View, Controller {
+public class IntroScene extends StateMachine<State, Void> implements View, Lifecycle {
 
 	public enum State {
 		CREDITS, WAITING, LOGO, COMPLETE
@@ -57,9 +57,9 @@ public class IntroScene extends StateMachine<State, Void> implements View, Contr
 				.states()
 
 					.state(CREDITS)
-						.onEntry(() -> creditsText.startAnimation())
+						.onEntry(() -> creditsText.start())
 						.onTick(() -> creditsText.update())
-						.onExit(() -> creditsText.stopAnimation())
+						.onExit(() -> creditsText.stop())
 
 					.state(WAITING)
 						.timeoutAfter(sec(2))
@@ -71,7 +71,7 @@ public class IntroScene extends StateMachine<State, Void> implements View, Contr
 						.onExit(() -> app().setController(app.getStartScene()))
 						
 				.transitions()
-					.when(CREDITS).then(WAITING).condition(() -> creditsText.isAnimationCompleted())
+					.when(CREDITS).then(WAITING).condition(() -> creditsText.complete())
 					.when(WAITING).then(LOGO).onTimeout()
 					.when(LOGO).then(COMPLETE).onTimeout()
 				

@@ -11,10 +11,10 @@ import java.util.List;
 
 import de.amr.easy.game.assets.Assets;
 import de.amr.easy.game.input.Keyboard;
-import de.amr.easy.game.view.Controller;
+import de.amr.easy.game.view.Lifecycle;
 import de.amr.easy.game.view.View;
 
-public class SpriteBrowserScene implements View, Controller {
+public class SpriteBrowserScene implements View, Lifecycle {
 
 	private final int height;
 	private final Font font = new Font("Courier New", Font.PLAIN, 16);
