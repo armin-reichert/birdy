@@ -14,9 +14,9 @@ import java.util.function.IntSupplier;
 import java.util.stream.Stream;
 
 import de.amr.easy.game.assets.Assets;
+import de.amr.easy.game.controller.Lifecycle;
 import de.amr.easy.game.ui.widgets.PumpingImageWidget;
 import de.amr.easy.game.ui.widgets.TextWidget;
-import de.amr.easy.game.view.Lifecycle;
 import de.amr.easy.game.view.View;
 import de.amr.games.birdy.BirdyGameApp;
 import de.amr.games.birdy.entities.City;
@@ -71,7 +71,7 @@ public class IntroScene extends StateMachine<State, Void> implements View, Lifec
 						.onExit(() -> app().setController(app.getStartScene()))
 						
 				.transitions()
-					.when(CREDITS).then(WAITING).condition(() -> creditsText.complete())
+					.when(CREDITS).then(WAITING).condition(() -> creditsText.isComplete())
 					.when(WAITING).then(LOGO).onTimeout()
 					.when(LOGO).then(COMPLETE).onTimeout()
 				

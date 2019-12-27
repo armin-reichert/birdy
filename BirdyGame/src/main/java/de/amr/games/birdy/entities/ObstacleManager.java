@@ -40,7 +40,8 @@ public class ObstacleManager extends Entity implements View {
 		control.setDescription(getClass().getSimpleName());
 		control.setInitialState(Stopped);
 
-		// Stay breeding for some random time from interval [MIN_PIPE_TIME, MAX_PIPE_TIME]:
+		// Stay breeding for some random time from interval [MIN_PIPE_TIME,
+		// MAX_PIPE_TIME]:
 		control.state(Breeding).setTimerFunction(() -> {
 			int minCreationTime = app().clock.sec(app.settings.getAsFloat("min pipe creation sec"));
 			int maxCreationTime = app().clock.sec(app.settings.getAsFloat("max pipe creation sec"));
@@ -77,11 +78,13 @@ public class ObstacleManager extends Entity implements View {
 		control.init();
 	}
 
+	@Override
 	public void start() {
 		control.enqueue("Start");
 		control.update();
 	}
 
+	@Override
 	public void stop() {
 		control.enqueue("Stop");
 		control.update();

@@ -17,10 +17,10 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
 import de.amr.easy.game.assets.Assets;
+import de.amr.easy.game.controller.Lifecycle;
 import de.amr.easy.game.entity.collision.Collision;
 import de.amr.easy.game.input.Keyboard;
 import de.amr.easy.game.ui.widgets.ImageWidget;
-import de.amr.easy.game.view.Lifecycle;
 import de.amr.easy.game.view.View;
 import de.amr.games.birdy.BirdyGameApp;
 import de.amr.games.birdy.entities.Area;
@@ -176,12 +176,14 @@ public class PlayScene implements View, Lifecycle {
 		showState(g);
 	}
 
-	private void start() {
+	@Override
+	public void start() {
 		ground.tf.setVelocity(app.settings.get("world speed"), 0);
 		obstacleManager.start();
 	}
 
-	private void stop() {
+	@Override
+	public void stop() {
 		ground.stopMoving();
 		obstacleManager.stop();
 	}
@@ -191,7 +193,7 @@ public class PlayScene implements View, Lifecycle {
 	private void showState(Graphics2D g) {
 		g.setColor(Color.BLACK);
 		g.setFont(stateTextFont);
-		g.drawString(format("%s: %s  Bird: %s & %s", control.getDescription(), control.getState(),
-				bird.getFlightState(), bird.getHealthState()), 20, getHeight() - 50);
+		g.drawString(format("%s: %s  Bird: %s & %s", control.getDescription(), control.getState(), bird.getFlightState(),
+				bird.getHealthState()), 20, getHeight() - 50);
 	}
 }

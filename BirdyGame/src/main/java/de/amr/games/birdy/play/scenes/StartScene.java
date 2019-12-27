@@ -18,11 +18,11 @@ import java.awt.event.KeyEvent;
 
 import de.amr.easy.game.assets.Assets;
 import de.amr.easy.game.assets.Sound;
+import de.amr.easy.game.controller.Lifecycle;
 import de.amr.easy.game.entity.collision.Collision;
 import de.amr.easy.game.input.Keyboard;
-import de.amr.easy.game.ui.widgets.PumpingImageWidget;
 import de.amr.easy.game.ui.widgets.ImageWidget;
-import de.amr.easy.game.view.Lifecycle;
+import de.amr.easy.game.ui.widgets.PumpingImageWidget;
 import de.amr.easy.game.view.View;
 import de.amr.games.birdy.BirdyGameApp;
 import de.amr.games.birdy.entities.Area;
@@ -34,7 +34,8 @@ import de.amr.statemachine.core.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 
 /**
- * Start scene of the game: bird flaps in the air until user presses the JUMP key.
+ * Start scene of the game: bird flaps in the air until user presses the JUMP
+ * key.
  * 
  * @author Armin Reichert
  */
@@ -113,7 +114,8 @@ public class StartScene implements View, Lifecycle {
 		control.init();
 	}
 
-	private void stop() {
+	@Override
+	public void stop() {
 		ground.tf.setVelocity(0, 0);
 	}
 
@@ -194,7 +196,7 @@ public class StartScene implements View, Lifecycle {
 		}
 		g.setColor(Color.BLACK);
 		g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 10));
-		g.drawString(format("%s: (%s)  Bird: Flight: (%s) Sanity: (%s)", control.getDescription(),
-				control.getState(), bird.getFlightState(), bird.getHealthState()), 20, getHeight() - 50);
+		g.drawString(format("%s: (%s)  Bird: Flight: (%s) Sanity: (%s)", control.getDescription(), control.getState(),
+				bird.getFlightState(), bird.getHealthState()), 20, getHeight() - 50);
 	}
 }
