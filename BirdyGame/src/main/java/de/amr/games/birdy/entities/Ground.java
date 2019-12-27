@@ -3,16 +3,19 @@ package de.amr.games.birdy.entities;
 import java.awt.Graphics2D;
 import java.awt.Image;
 
+import de.amr.easy.game.controller.Lifecycle;
 import de.amr.easy.game.entity.Entity;
 import de.amr.easy.game.ui.sprites.Sprite;
+import de.amr.easy.game.ui.sprites.SpriteMap;
 
 /**
  * The ground.
  * 
  * @author Armin Reichert
  */
-public class Ground extends Entity {
+public class Ground extends Entity implements Lifecycle {
 
+	private final SpriteMap sprites = new SpriteMap();
 	private float startX;
 
 	public Ground() {
@@ -21,6 +24,10 @@ public class Ground extends Entity {
 		sprites.select("s_land");
 		tf.setWidth(land.getWidth());
 		tf.setHeight(land.getHeight());
+	}
+	
+	@Override
+	public void init() {
 	}
 
 	@Override

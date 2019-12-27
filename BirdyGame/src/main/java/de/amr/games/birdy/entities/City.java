@@ -15,9 +15,11 @@ import java.awt.event.KeyEvent;
 import java.util.stream.IntStream;
 
 import de.amr.easy.game.Application;
+import de.amr.easy.game.controller.Lifecycle;
 import de.amr.easy.game.entity.Entity;
 import de.amr.easy.game.input.Keyboard;
 import de.amr.easy.game.ui.sprites.Sprite;
+import de.amr.easy.game.ui.sprites.SpriteMap;
 import de.amr.statemachine.core.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 
@@ -26,7 +28,7 @@ import de.amr.statemachine.core.StateMachine;
  * 
  * @author Armin Reichert
  */
-public class City extends Entity {
+public class City extends Entity implements Lifecycle {
 
 	public enum DayTime {
 		DAY, NIGHT
@@ -36,6 +38,7 @@ public class City extends Entity {
 		SUNSET, SUNRISE
 	}
 
+	private final SpriteMap sprites = new SpriteMap();
 	private final StateMachine<DayTime, DayEvent> fsm;
 
 	public City() {
@@ -65,10 +68,6 @@ public class City extends Entity {
 		fsm.state(NIGHT).setOnEntry(() -> {
 			sprites.select("s_night");
 			replaceStars();
-		});
-
-		fsm.state(NIGHT).setOnTick(() -> {
-			entities.ofClass(Star.class).forEach(Entity::update);
 		});
 
 		fsm.state(NIGHT).setOnExit(() -> {

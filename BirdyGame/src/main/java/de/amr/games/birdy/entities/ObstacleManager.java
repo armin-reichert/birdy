@@ -15,8 +15,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import de.amr.easy.game.controller.Lifecycle;
 import de.amr.easy.game.entity.Entity;
-import de.amr.easy.game.view.View;
 import de.amr.games.birdy.BirdyGameApp;
 import de.amr.games.birdy.entities.bird.Bird;
 import de.amr.statemachine.core.EventMatchStrategy;
@@ -27,7 +27,7 @@ import de.amr.statemachine.core.StateMachine;
  * 
  * @author Armin Reichert
  */
-public class ObstacleManager extends Entity implements View {
+public class ObstacleManager extends Entity implements Lifecycle {
 
 	private final BirdyGameApp app;
 	private final List<Obstacle> obstacles = new LinkedList<>();

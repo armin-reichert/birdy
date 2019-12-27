@@ -15,13 +15,17 @@ import static de.amr.games.birdy.play.BirdEvent.BirdTouchedGround;
 import static de.amr.games.birdy.play.BirdEvent.BirdTouchedPipe;
 import static java.lang.Math.PI;
 
+import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 
 import de.amr.easy.game.assets.Assets;
+import de.amr.easy.game.controller.Lifecycle;
 import de.amr.easy.game.entity.Entity;
 import de.amr.easy.game.input.Keyboard;
+import de.amr.easy.game.math.Vector2f;
 import de.amr.easy.game.ui.sprites.AnimationType;
 import de.amr.easy.game.ui.sprites.Sprite;
+import de.amr.easy.game.ui.sprites.SpriteMap;
 import de.amr.games.birdy.play.BirdEvent;
 import de.amr.statemachine.core.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
@@ -31,8 +35,9 @@ import de.amr.statemachine.core.StateMachine;
  * 
  * @author Armin Reichert
  */
-public class Bird extends Entity {
+public class Bird extends Entity implements Lifecycle {
 
+	private final SpriteMap sprites = new SpriteMap();
 	private final FlightControl flightControl;
 	private final HealthControl healthControl;
 	private float gravity;
@@ -58,8 +63,7 @@ public class Bird extends Entity {
 			state(Injured).setTimerFunction(() -> app().clock.sec(app().settings.get("bird injured seconds")));
 			state(Injured).setOnEntry(() -> sprites.select("s_red"));
 
-			addTransitionOnEventObject(Injured, Injured, null, e -> state(Injured).resetTimer(),
-					BirdTouchedPipe);
+			addTransitionOnEventObject(Injured, Injured, null, e -> state(Injured).resetTimer(), BirdTouchedPipe);
 			addTransitionOnTimeout(Injured, Sane, null, null);
 			addTransitionOnEventObject(Injured, Injured, null, null, BirdCrashed);
 			addTransitionOnEventObject(Injured, Injured, null, null, BirdLeftPassage);
@@ -167,8 +171,8 @@ public class Bird extends Entity {
 	@Override
 	public Rectangle2D getCollisionBox() {
 		int margin = Math.min(tf.getWidth() / 4, tf.getHeight() / 4);
-		return new Rectangle2D.Double(tf.getX() + margin, tf.getY() + margin,
-				tf.getWidth() - 2 * margin, tf.getHeight() - 2 * margin);
+		return new Rectangle2D.Double(tf.getX() + margin, tf.getY() + margin, tf.getWidth() - 2 * margin,
+				tf.getHeight() - 2 * margin);
 	}
 
 	public void flap() {
@@ -203,5 +207,19 @@ public class Bird extends Entity {
 	private void turnDown() {
 		tf.setRotation(PI / 2);
 		tf.setVelocity(0, 0);
+	}
+
+	@Override
+	public void draw(Graphics2D g2) {
+		Graphics2D g = (Graphics2D) g2.create();
+		sprites.current().ifPresent(sprite -> {
+			Vector2f center = tf.getCenter();
+			float dx = center.x - sprite.getWidth() / 2;
+			float dy = center.y - sprite.getHeight() / 2;
+			g.translate(dx, dy);
+			g.rotate(tf.getRotation());
+			sprite.draw(g);
+		});
+		g.dispose();
 	}
 }

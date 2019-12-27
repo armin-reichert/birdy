@@ -14,6 +14,7 @@ import java.util.function.IntSupplier;
 import java.util.stream.Stream;
 
 import de.amr.easy.game.assets.Assets;
+import de.amr.easy.game.assets.Sound;
 import de.amr.easy.game.controller.Lifecycle;
 import de.amr.easy.game.ui.widgets.PumpingImageWidget;
 import de.amr.easy.game.ui.widgets.TextWidget;
@@ -109,7 +110,9 @@ public class IntroScene extends StateMachine<State, Void> implements View, Lifec
 		logoImage.hide();
 
 		super.init();
-		Assets.sound("music/bgmusic.mp3").loop();
+		Sound music = Assets.sound("music/bgmusic.mp3");
+		music.volume(0.9f);
+		music.loop();
 	}
 
 	@Override

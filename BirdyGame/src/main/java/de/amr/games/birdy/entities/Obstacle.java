@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import de.amr.easy.game.assets.Assets;
+import de.amr.easy.game.controller.Lifecycle;
 import de.amr.easy.game.entity.Entity;
 import de.amr.easy.game.entity.collision.Collider;
 import de.amr.easy.game.view.View;
@@ -18,7 +19,7 @@ import de.amr.games.birdy.BirdyGameApp;
  * 
  * @author Armin Reichert
  */
-public class Obstacle extends Entity implements View {
+public class Obstacle extends Entity implements Lifecycle, View {
 
 	private Rectangle2D upperPart;
 	private Rectangle2D lowerPart;
@@ -40,6 +41,10 @@ public class Obstacle extends Entity implements View {
 				BufferedImage.SCALE_SMOOTH);
 		pipeUp = Assets.image("pipe_up").getScaledInstance(width, (int) lowerPart.getHeight(),
 				BufferedImage.SCALE_SMOOTH);
+	}
+	
+	@Override
+	public void init() {
 	}
 
 	@Override
