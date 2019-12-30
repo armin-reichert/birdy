@@ -85,7 +85,7 @@ public class City extends Entity implements Lifecycle {
 	@Override
 	public void init() {
 		fsm.init();
-		fsm.traceTo(LOGGER, app().clock::getFrequency);
+		fsm.setLogger(LOGGER);
 	}
 
 	@Override

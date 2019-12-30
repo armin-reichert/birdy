@@ -78,7 +78,7 @@ public class IntroScene extends StateMachine<State, Void> implements View, Lifec
 				
 		.endStateMachine();
 		/*@formatter:on*/
-		traceTo(LOGGER, app().clock::getFrequency);
+		setLogger(LOGGER);
 	}
 
 	private IntSupplier sec(float amount) {

@@ -69,7 +69,7 @@ public class ObstacleManager extends Entity implements Lifecycle {
 	}
 
 	public void setLogger(Logger log) {
-		control.traceTo(log, app().clock::getFrequency);
+		control.setLogger(log);
 	}
 
 	@Override
