@@ -86,6 +86,14 @@ public class IntroScene extends StateMachine<State, Void> implements View, Lifec
 	}
 
 	@Override
+	public void show() {
+	}
+
+	@Override
+	public void hide() {
+	}
+
+	@Override
 	public void init() {
 		int width = app().settings.width, height = app().settings.height;
 
@@ -93,8 +101,7 @@ public class IntroScene extends StateMachine<State, Void> implements View, Lifec
 		city.setWidth(width);
 		if (new Random().nextBoolean()) {
 			city.sunset();
-		}
-		else {
+		} else {
 			city.sunrise();
 		}
 

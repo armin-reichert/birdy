@@ -19,11 +19,11 @@ import java.awt.event.KeyEvent;
 import de.amr.easy.game.assets.Assets;
 import de.amr.easy.game.assets.Sound;
 import de.amr.easy.game.controller.Lifecycle;
+import de.amr.easy.game.entity.Entity;
 import de.amr.easy.game.entity.collision.Collision;
 import de.amr.easy.game.input.Keyboard;
 import de.amr.easy.game.ui.widgets.ImageWidget;
 import de.amr.easy.game.ui.widgets.PumpingImageWidget;
-import de.amr.easy.game.view.View;
 import de.amr.games.birdy.BirdyGameApp;
 import de.amr.games.birdy.entities.Area;
 import de.amr.games.birdy.entities.City;
@@ -34,12 +34,11 @@ import de.amr.statemachine.core.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 
 /**
- * Start scene of the game: bird flaps in the air until user presses the JUMP
- * key.
+ * Start scene of the game: bird flaps in the air until user presses the JUMP key.
  * 
  * @author Armin Reichert
  */
-public class StartScene implements View, Lifecycle {
+public class StartScene extends Entity implements Lifecycle {
 
 	public enum State {
 		Starting, Ready, GameOver, StartPlaying, StartSpriteBrowser

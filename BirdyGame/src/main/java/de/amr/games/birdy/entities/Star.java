@@ -9,7 +9,6 @@ import java.util.Random;
 
 import de.amr.easy.game.entity.Entity;
 import de.amr.easy.game.ui.sprites.Sprite;
-import de.amr.easy.game.ui.sprites.SpriteMap;
 
 /**
  * A shining and blinking star...
@@ -18,19 +17,15 @@ import de.amr.easy.game.ui.sprites.SpriteMap;
  */
 public class Star extends Entity {
 
-	private final SpriteMap sprites = new SpriteMap();
+	private final Sprite sprite;
 
 	public Star() {
-		sprites.set("s_star", Sprite.ofAssets("blink_00", "blink_01", "blink_02")
-				.animate(new Random().nextBoolean() ? BACK_AND_FORTH : CYCLIC, randomInt(300, 2000)));
-		sprites.select("s_star");
+		sprite = Sprite.ofAssets("blink_00", "blink_01", "blink_02")
+				.animate(new Random().nextBoolean() ? BACK_AND_FORTH : CYCLIC, randomInt(300, 2000));
 	}
 
 	@Override
 	public void draw(Graphics2D g) {
-		g = (Graphics2D) g.create();
-		g.translate(tf.getX(), tf.getY());
-		sprites.get("s_star").draw(g);
-		g.dispose();
+		sprite.draw(g, tf.getX(), tf.getY());
 	}
 }

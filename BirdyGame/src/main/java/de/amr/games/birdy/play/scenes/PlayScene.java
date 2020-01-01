@@ -18,10 +18,10 @@ import java.awt.event.KeyEvent;
 
 import de.amr.easy.game.assets.Assets;
 import de.amr.easy.game.controller.Lifecycle;
+import de.amr.easy.game.entity.Entity;
 import de.amr.easy.game.entity.collision.Collision;
 import de.amr.easy.game.input.Keyboard;
 import de.amr.easy.game.ui.widgets.ImageWidget;
-import de.amr.easy.game.view.View;
 import de.amr.games.birdy.BirdyGameApp;
 import de.amr.games.birdy.entities.Area;
 import de.amr.games.birdy.entities.City;
@@ -39,7 +39,7 @@ import de.amr.statemachine.core.StateMachine;
  * 
  * @author Armin Reichert
  */
-public class PlayScene implements View, Lifecycle {
+public class PlayScene extends Entity implements Lifecycle {
 
 	private final BirdyGameApp app;
 	private final PlaySceneControl control;
