@@ -1,9 +1,9 @@
 package de.amr.games.birdy.browser;
 
-import de.amr.easy.game.GenericApplication;
+import de.amr.easy.game.Application;
 import de.amr.games.birdy.utils.SpritesheetReader;
 
-public class SpriteBrowserApp extends GenericApplication {
+public class SpriteBrowserApp extends Application {
 
 	public static void main(String[] args) {
 		launch(new SpriteBrowserApp(), args);

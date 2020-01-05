@@ -4,7 +4,7 @@ import java.awt.DisplayMode;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
 
-import de.amr.easy.game.GenericApplication;
+import de.amr.easy.game.Application;
 import de.amr.easy.game.assets.Assets;
 import de.amr.easy.game.entity.EntityMap;
 import de.amr.games.birdy.entities.City;
@@ -20,7 +20,7 @@ import de.amr.games.birdy.utils.SpritesheetReader;
  * 
  * @author Armin Reichert
  */
-public class BirdyGameApp extends GenericApplication {
+public class BirdyGameApp extends Application {
 
 	public static void main(String[] args) {
 		launch(new BirdyGameApp(), args);
