@@ -71,7 +71,7 @@ public class PlayScene extends Entity implements Lifecycle {
 
 			addTransitionOnEventObject(Playing, Playing, () -> score.points > 3, e -> {
 				score.points -= 3;
-				bird.tf.setX(bird.tf.getX() + app.settings.getAsInt("pipe width") + bird.tf.getWidth());
+				bird.tf.setX(bird.tf.getX() + app.settings().getAsInt("pipe width") + bird.tf.getWidth());
 				bird.receiveEvent(BirdTouchedPipe);
 				Assets.sound("sfx/hit.mp3").play();
 			}, BirdTouchedPipe);
@@ -121,11 +121,11 @@ public class PlayScene extends Entity implements Lifecycle {
 	}
 
 	public int getWidth() {
-		return app.settings.width;
+		return app.settings().width;
 	}
 
 	public int getHeight() {
-		return app.settings.height;
+		return app.settings().height;
 	}
 
 	@Override
@@ -178,7 +178,7 @@ public class PlayScene extends Entity implements Lifecycle {
 
 	@Override
 	public void start() {
-		ground.tf.setVelocity(app.settings.get("world speed"), 0);
+		ground.tf.setVelocity(app.settings().get("world speed"), 0);
 		obstacleManager.start();
 	}
 

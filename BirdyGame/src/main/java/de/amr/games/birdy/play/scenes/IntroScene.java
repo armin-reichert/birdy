@@ -82,7 +82,7 @@ public class IntroScene extends StateMachine<State, Void> implements View, Lifec
 	}
 
 	private IntSupplier sec(float amount) {
-		return () -> app().clock.sec(amount);
+		return () -> app().clock().sec(amount);
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public class IntroScene extends StateMachine<State, Void> implements View, Lifec
 
 	@Override
 	public void init() {
-		int width = app().settings.width, height = app().settings.height;
+		int width = app().settings().width, height = app().settings().height;
 
 		city = new City();
 		city.setWidth(width);

@@ -10,15 +10,15 @@ public class SpriteBrowserApp extends GenericApplication {
 	}
 
 	public SpriteBrowserApp() {
-		settings.title = "Birdy Sprites";
-		settings.width = 1024;
-		settings.height = 1024;
-		clock.setFrequency(10);
+		settings().title = "Birdy Sprites";
+		settings().width = 1024;
+		settings().height = 1024;
+		clock().setFrequency(10);
 	}
 
 	@Override
 	public void init() {
 		SpritesheetReader.extractSpriteSheet();
-		setController(new SpriteBrowserScene(settings.width, settings.height));
+		setController(new SpriteBrowserScene(settings().width, settings().height));
 	}
 }

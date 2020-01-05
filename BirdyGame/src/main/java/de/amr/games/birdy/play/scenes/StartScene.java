@@ -64,12 +64,12 @@ public class StartScene extends Entity implements Lifecycle {
 
 			state(Starting).setOnTick(() -> keepBirdInAir());
 
-			addTransition(Starting, Ready, () -> Keyboard.keyDown(app.settings.get("jump key")), null);
+			addTransition(Starting, Ready, () -> Keyboard.keyDown(app.settings().get("jump key")), null);
 			addTransitionOnEventObject(Starting, GameOver, null, null, BirdTouchedGround);
 
 			// Ready ---
 
-			state(Ready).setTimerFunction(() -> app().clock.sec(app.settings.getAsFloat("ready time sec")));
+			state(Ready).setTimerFunction(() -> app().clock().sec(app.settings().getAsFloat("ready time sec")));
 			state(Ready).setOnEntry(() -> displayText("readyText"));
 			addTransitionOnTimeout(Ready, StartPlaying, null, e -> app.setController(app.getPlayScene()));
 			addTransitionOnEventObject(Ready, GameOver, null, e -> displayText("title"), BirdTouchedGround);
@@ -100,11 +100,11 @@ public class StartScene extends Entity implements Lifecycle {
 	}
 
 	public int getWidth() {
-		return app.settings.width;
+		return app.settings().width;
 	}
 
 	public int getHeight() {
-		return app.settings.height;
+		return app.settings().height;
 	}
 
 	@Override
@@ -136,7 +136,7 @@ public class StartScene extends Entity implements Lifecycle {
 		ground = entities.ofClass(Ground.class).findAny().get();
 		ground.setWidth(getWidth());
 		ground.tf.setPosition(0, getHeight() - ground.tf.getHeight());
-		ground.tf.setVelocity(app.settings.getAsFloat("world speed"), 0);
+		ground.tf.setVelocity(app.settings().getAsFloat("world speed"), 0);
 
 		bird = entities.ofClass(Bird.class).findAny().get();
 		bird.init();

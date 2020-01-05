@@ -28,26 +28,26 @@ public class BirdyGameApp extends GenericApplication {
 
 	public BirdyGameApp() {
 		// general settings
-		settings.title = "Zwick, das listige Vögelchen";
-		settings.width = 640;
-		settings.height = 480;
-		settings.fullScreenMode = new DisplayMode(640, 480, 32, DisplayMode.REFRESH_RATE_UNKNOWN);
-		settings.fullScreenOnStart = false;
+		settings().title = "Zwick, das listige Vögelchen";
+		settings().width = 640;
+		settings().height = 480;
+		settings().fullScreenMode = new DisplayMode(640, 480, 32, DisplayMode.REFRESH_RATE_UNKNOWN);
+		settings().fullScreenOnStart = false;
 
 		// specific settings
-		settings.set("jump key", KeyEvent.VK_UP);
-		settings.set("world gravity", 0.4f);
-		settings.set("world speed", -2.5f);
-		settings.set("ready time sec", 2f);
-		settings.set("max stars", 5);
-		settings.set("bird flap millis", 50);
-		settings.set("bird injured seconds", 1f);
-		settings.set("min pipe creation sec", 1f);
-		settings.set("max pipe creation sec", 5f);
-		settings.set("pipe height", 480 - 112);
-		settings.set("pipe width", 52);
-		settings.set("min pipe height", 100);
-		settings.set("passage height", 100);
+		settings().set("jump key", KeyEvent.VK_UP);
+		settings().set("world gravity", 0.4f);
+		settings().set("world speed", -2.5f);
+		settings().set("ready time sec", 2f);
+		settings().set("max stars", 5);
+		settings().set("bird flap millis", 50);
+		settings().set("bird injured seconds", 1f);
+		settings().set("min pipe creation sec", 1f);
+		settings().set("max pipe creation sec", 5f);
+		settings().set("pipe height", 480 - 112);
+		settings().set("pipe width", 52);
+		settings().set("min pipe height", 100);
+		settings().set("passage height", 100);
 	}
 
 	public static final EntityMap entities = new EntityMap();

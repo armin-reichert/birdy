@@ -63,7 +63,7 @@ public class City extends Entity implements Lifecycle {
 		fsm.addTransitionOnEventObject(DAY, NIGHT, null, null, SUNSET);
 		fsm.addTransitionOnEventObject(DAY, DAY, null, null, SUNRISE);
 
-		fsm.state(NIGHT).setTimerFunction(() -> app().clock.sec(10));
+		fsm.state(NIGHT).setTimerFunction(() -> app().clock().sec(10));
 
 		fsm.state(NIGHT).setOnEntry(() -> {
 			sprites.select("s_night");
@@ -101,7 +101,7 @@ public class City extends Entity implements Lifecycle {
 
 	private void replaceStars() {
 		entities.removeAll(Star.class);
-		int numStars = randomInt(1, app().settings.get("max stars"));
+		int numStars = randomInt(1, app().settings().get("max stars"));
 		IntStream.range(1, numStars).forEach(i -> {
 			Star star = entities.store(new Star());
 			star.tf.setPosition(randomInt(50, tf.getWidth() - 50), randomInt(100, 180));
