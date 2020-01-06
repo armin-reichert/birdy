@@ -141,8 +141,8 @@ public class PlayScene extends Entity implements Lifecycle {
 		Area world = new Area(getWidth(), 2 * getHeight());
 		world.tf.setPosition(0, -getHeight());
 
-		app.collisionHandler.registerStart(bird, ground, BirdTouchedGround);
-		app.collisionHandler.registerEnd(bird, world, BirdLeftWorld);
+		app.collisionHandler().registerStart(bird, ground, BirdTouchedGround);
+		app.collisionHandler().registerEnd(bird, world, BirdLeftWorld);
 
 		obstacleManager.init();
 		// obstacleManager.setLogger(Application.LOG);
@@ -151,7 +151,7 @@ public class PlayScene extends Entity implements Lifecycle {
 
 	@Override
 	public void update() {
-		for (Collision collision : app.collisionHandler.collisions()) {
+		for (Collision collision : app.collisionHandler().collisions()) {
 			receive((BirdEvent) collision.getAppEvent());
 		}
 		control.update();

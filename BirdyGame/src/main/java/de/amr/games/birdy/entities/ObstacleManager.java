@@ -120,18 +120,18 @@ public class ObstacleManager extends Entity implements Lifecycle {
 		obstacle.setLighted(city.isNight() && randomInt(0, 5) == 0);
 		obstacles.add(obstacle);
 
-		app.collisionHandler.registerStart(bird, obstacle.getUpperPart(), BirdTouchedPipe);
-		app.collisionHandler.registerStart(bird, obstacle.getLowerPart(), BirdTouchedPipe);
-		app.collisionHandler.registerEnd(bird, obstacle.getPassage(), BirdLeftPassage);
+		app.collisionHandler().registerStart(bird, obstacle.getUpperPart(), BirdTouchedPipe);
+		app.collisionHandler().registerStart(bird, obstacle.getLowerPart(), BirdTouchedPipe);
+		app.collisionHandler().registerEnd(bird, obstacle.getPassage(), BirdLeftPassage);
 
 		// Remove obstacles that ran out of screen
 		Iterator<Obstacle> it = obstacles.iterator();
 		while (it.hasNext()) {
 			obstacle = it.next();
 			if (obstacle.tf.getX() + obstacle.tf.getWidth() < 0) {
-				app.collisionHandler.unregisterStart(bird, obstacle.getUpperPart());
-				app.collisionHandler.unregisterStart(bird, obstacle.getLowerPart());
-				app.collisionHandler.unregisterEnd(bird, obstacle.getPassage());
+				app.collisionHandler().unregisterStart(bird, obstacle.getUpperPart());
+				app.collisionHandler().unregisterStart(bird, obstacle.getLowerPart());
+				app.collisionHandler().unregisterEnd(bird, obstacle.getPassage());
 				it.remove();
 			}
 		}

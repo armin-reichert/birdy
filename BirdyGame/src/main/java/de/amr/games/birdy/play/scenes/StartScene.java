@@ -164,16 +164,16 @@ public class StartScene extends Entity implements Lifecycle {
 			entities.store("world", world);
 		}
 
-		app.collisionHandler.clear();
-		app.collisionHandler.registerEnd(bird, entities.ofClass(Area.class).findAny().get(), BirdLeftWorld);
-		app.collisionHandler.registerStart(bird, ground, BirdTouchedGround);
+		app.collisionHandler().clear();
+		app.collisionHandler().registerEnd(bird, entities.ofClass(Area.class).findAny().get(), BirdLeftWorld);
+		app.collisionHandler().registerStart(bird, ground, BirdTouchedGround);
 
 		displayText("title");
 	}
 
 	@Override
 	public void update() {
-		for (Collision c : app.collisionHandler.collisions()) {
+		for (Collision c : app.collisionHandler().collisions()) {
 			BirdEvent event = (BirdEvent) c.getAppEvent();
 			bird.receiveEvent(event);
 			control.enqueue(event);
