@@ -1,6 +1,5 @@
 package de.amr.games.birdy.play.scenes;
 
-import static de.amr.easy.game.Application.LOGGER;
 import static de.amr.easy.game.Application.app;
 import static de.amr.games.birdy.play.scenes.IntroScene.State.COMPLETE;
 import static de.amr.games.birdy.play.scenes.IntroScene.State.CREDITS;
@@ -13,6 +12,7 @@ import java.util.Random;
 import java.util.function.IntSupplier;
 import java.util.stream.Stream;
 
+import de.amr.easy.game.Application;
 import de.amr.easy.game.assets.Assets;
 import de.amr.easy.game.assets.Sound;
 import de.amr.easy.game.controller.Lifecycle;
@@ -64,11 +64,11 @@ public class IntroScene extends StateMachine<State, Void> implements View, Lifec
 
 					.state(WAITING)
 						.timeoutAfter(sec(2))
-						.onExit(() -> creditsText.hide())
+						.onExit(() -> creditsText.setVisible(false))
 						
 					.state(LOGO)
 						.timeoutAfter(sec(4)) 
-						.onEntry(() -> logoImage.show())
+						.onEntry(() -> logoImage.setVisible(true))
 						.onExit(() -> app().setController(app.getStartScene()))
 						
 				.transitions()
@@ -78,19 +78,11 @@ public class IntroScene extends StateMachine<State, Void> implements View, Lifec
 				
 		.endStateMachine();
 		/*@formatter:on*/
-		setLogger(LOGGER);
+		setLogger(Application.LOGGER);
 	}
 
 	private IntSupplier sec(float amount) {
 		return () -> app().clock().sec(amount);
-	}
-
-	@Override
-	public void show() {
-	}
-
-	@Override
-	public void hide() {
 	}
 
 	@Override
@@ -114,12 +106,21 @@ public class IntroScene extends StateMachine<State, Void> implements View, Lifec
 
 		logoImage = PumpingImageWidget.create().image(Assets.image("title")).scale(3).build();
 		logoImage.tf.center(width, height);
-		logoImage.hide();
+		logoImage.setVisible(false);
 
 		super.init();
 		Sound music = Assets.sound("music/bgmusic.mp3");
 		music.volume(0.9f);
 		music.loop();
+	}
+
+	@Override
+	public boolean visible() {
+		return true;
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
 	}
 
 	@Override
