@@ -63,7 +63,7 @@ public class Bird extends Entity implements Lifecycle {
 			state(Injured).setTimerFunction(() -> app().clock().sec(app().settings().get("bird injured seconds")));
 			state(Injured).setOnEntry(() -> sprites.select("s_red"));
 
-			addTransitionOnEventObject(Injured, Injured, null, e -> state(Injured).resetTimer(), BirdTouchedPipe);
+			addTransitionOnEventObject(Injured, Injured, null, e -> restartTimer(Injured), BirdTouchedPipe);
 			addTransitionOnTimeout(Injured, Sane, null, null);
 			addTransitionOnEventObject(Injured, Injured, null, null, BirdCrashed);
 			addTransitionOnEventObject(Injured, Injured, null, null, BirdLeftPassage);
@@ -93,8 +93,7 @@ public class Bird extends Entity implements Lifecycle {
 			state(Flying).setOnTick(() -> {
 				if (Keyboard.keyDown(app().settings().get("jump key"))) {
 					flap();
-				}
-				else {
+				} else {
 					fly();
 				}
 			});

@@ -76,7 +76,7 @@ public class City extends Entity implements Lifecycle {
 
 		fsm.addTransitionOnTimeout(NIGHT, NIGHT, null, e -> {
 			replaceStars();
-			fsm.state(NIGHT).resetTimer();
+			fsm.restartTimer(NIGHT);
 		});
 
 		fsm.addTransitionOnEventObject(NIGHT, DAY, null, null, SUNRISE);
