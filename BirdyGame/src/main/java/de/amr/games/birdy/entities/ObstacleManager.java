@@ -69,7 +69,7 @@ public class ObstacleManager extends Entity implements Lifecycle {
 	}
 
 	public void setLogger(Logger log) {
-		control.setLogger(log);
+		control.getTracer().setLogger(log);
 	}
 
 	@Override

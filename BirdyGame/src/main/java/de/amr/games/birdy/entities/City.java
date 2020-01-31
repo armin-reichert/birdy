@@ -85,7 +85,7 @@ public class City extends Entity implements Lifecycle {
 	@Override
 	public void init() {
 		fsm.init();
-		fsm.setLogger(LOGGER);
+		fsm.getTracer().setLogger(LOGGER);
 	}
 
 	@Override

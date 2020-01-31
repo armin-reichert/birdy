@@ -123,9 +123,9 @@ public class Bird extends Entity implements Lifecycle {
 
 	public Bird() {
 		flightControl = new FlightControl();
-		flightControl.setLogger(LOGGER);
+		flightControl.getTracer().setLogger(LOGGER);
 		healthControl = new HealthControl();
-		healthControl.setLogger(LOGGER);
+		healthControl.getTracer().setLogger(LOGGER);
 		sprites.set("s_yellow", createFeatherSprite("bird0"));
 		sprites.set("s_blue", createFeatherSprite("bird1"));
 		sprites.set("s_red", createFeatherSprite("bird2"));
