@@ -60,7 +60,7 @@ public class Bird extends Entity implements Lifecycle {
 			addTransitionOnEventObject(Sane, Dead, null, null, BirdTouchedGround);
 			addTransitionOnEventObject(Sane, Dead, null, null, BirdLeftWorld);
 
-			state(Injured).setTimerFunction(() -> app().clock().sec(app().settings().get("bird injured seconds")));
+			state(Injured).setTimer(() -> app().clock().sec(app().settings().get("bird injured seconds")));
 			state(Injured).setOnEntry(() -> sprites.select("s_red"));
 
 			addTransitionOnEventObject(Injured, Injured, null, e -> restartTimer(Injured), BirdTouchedPipe);
