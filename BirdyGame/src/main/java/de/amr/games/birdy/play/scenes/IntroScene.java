@@ -115,15 +115,6 @@ public class IntroScene extends StateMachine<State, Void> implements View, Lifec
 	}
 
 	@Override
-	public boolean visible() {
-		return true;
-	}
-
-	@Override
-	public void setVisible(boolean visible) {
-	}
-
-	@Override
 	public void draw(Graphics2D g) {
 		Stream.of(city, logoImage, creditsText).forEach(e -> e.draw(g));
 	}
