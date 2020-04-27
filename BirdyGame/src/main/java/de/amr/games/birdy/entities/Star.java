@@ -9,13 +9,14 @@ import java.util.Random;
 
 import de.amr.easy.game.entity.Entity;
 import de.amr.easy.game.ui.sprites.Sprite;
+import de.amr.easy.game.view.View;
 
 /**
  * A shining and blinking star...
  * 
  * @author Armin Reichert
  */
-public class Star extends Entity {
+public class Star extends Entity implements View {
 
 	private final Sprite sprite;
 

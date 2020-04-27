@@ -7,13 +7,14 @@ import de.amr.easy.game.controller.Lifecycle;
 import de.amr.easy.game.entity.Entity;
 import de.amr.easy.game.ui.sprites.Sprite;
 import de.amr.easy.game.ui.sprites.SpriteMap;
+import de.amr.easy.game.view.View;
 
 /**
  * The ground.
  * 
  * @author Armin Reichert
  */
-public class Ground extends Entity implements Lifecycle {
+public class Ground extends Entity implements Lifecycle, View {
 
 	private final SpriteMap sprites = new SpriteMap();
 	private float startX;
@@ -25,7 +26,7 @@ public class Ground extends Entity implements Lifecycle {
 		tf.setWidth(land.getWidth());
 		tf.setHeight(land.getHeight());
 	}
-	
+
 	@Override
 	public void init() {
 	}

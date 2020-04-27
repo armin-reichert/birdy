@@ -26,6 +26,7 @@ import de.amr.easy.game.math.Vector2f;
 import de.amr.easy.game.ui.sprites.AnimationType;
 import de.amr.easy.game.ui.sprites.Sprite;
 import de.amr.easy.game.ui.sprites.SpriteMap;
+import de.amr.easy.game.view.View;
 import de.amr.games.birdy.play.BirdEvent;
 import de.amr.statemachine.api.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
@@ -35,7 +36,7 @@ import de.amr.statemachine.core.StateMachine;
  * 
  * @author Armin Reichert
  */
-public class Bird extends Entity implements Lifecycle {
+public class Bird extends Entity implements Lifecycle, View {
 
 	private final SpriteMap sprites = new SpriteMap();
 	private final FlightControl flightControl;

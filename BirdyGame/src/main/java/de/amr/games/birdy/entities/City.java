@@ -20,6 +20,7 @@ import de.amr.easy.game.entity.Entity;
 import de.amr.easy.game.input.Keyboard;
 import de.amr.easy.game.ui.sprites.Sprite;
 import de.amr.easy.game.ui.sprites.SpriteMap;
+import de.amr.easy.game.view.View;
 import de.amr.statemachine.api.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 
@@ -28,7 +29,7 @@ import de.amr.statemachine.core.StateMachine;
  * 
  * @author Armin Reichert
  */
-public class City extends Entity implements Lifecycle {
+public class City extends Entity implements Lifecycle, View {
 
 	public enum DayTime {
 		DAY, NIGHT
@@ -92,8 +93,7 @@ public class City extends Entity implements Lifecycle {
 	public void update() {
 		if (Keyboard.keyPressedOnce(KeyEvent.VK_N)) {
 			sunset();
-		}
-		else if (Keyboard.keyPressedOnce(KeyEvent.VK_D)) {
+		} else if (Keyboard.keyPressedOnce(KeyEvent.VK_D)) {
 			sunrise();
 		}
 		fsm.update();
