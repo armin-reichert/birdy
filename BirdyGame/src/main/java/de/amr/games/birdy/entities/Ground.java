@@ -33,7 +33,7 @@ public class Ground extends Entity implements Lifecycle, View {
 
 	@Override
 	public void update() {
-		startX -= tf.getVelocityX();
+		startX -= tf.vx;
 		if (startX < 0) {
 			startX = sprites.current().get().currentFrame().getWidth(null);
 		}
@@ -45,7 +45,7 @@ public class Ground extends Entity implements Lifecycle, View {
 	}
 
 	public void stopMoving() {
-		tf.setVelocityX(0);
+		tf.vx = 0;
 	}
 
 	@Override

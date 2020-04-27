@@ -100,8 +100,8 @@ public class IntroScene extends StateMachine<State, Void> implements View, Lifec
 		creditsText = TextWidget.create().text(CREDITS_TEXT).font(Assets.font("Pacifico-Regular"))
 				.color(city.isNight() ? Color.WHITE : Color.DARK_GRAY).build();
 		creditsText.tf.centerX(width);
-		creditsText.tf.y=(height);
-		creditsText.tf.setVelocityY(-1.5f);
+		creditsText.tf.y = (height);
+		creditsText.tf.vy = -1.5f;
 		creditsText.setCompletion(() -> creditsText.tf.y < height / 4);
 
 		logoImage = PumpingImageWidget.create().image(Assets.image("title")).scale(3).build();

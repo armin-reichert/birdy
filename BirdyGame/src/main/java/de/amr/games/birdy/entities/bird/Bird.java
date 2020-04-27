@@ -131,8 +131,8 @@ public class Bird extends Entity implements Lifecycle, View {
 		sprites.set("s_blue", createFeatherSprite("bird1"));
 		sprites.set("s_red", createFeatherSprite("bird2"));
 		sprites.select("s_yellow");
-		tf.width =(sprites.current().get().getWidth());
-		tf.height =(sprites.current().get().getHeight());
+		tf.width = (sprites.current().get().getWidth());
+		tf.height = (sprites.current().get().getHeight());
 		gravity = app().settings().getAsFloat("world gravity");
 	}
 
@@ -152,7 +152,7 @@ public class Bird extends Entity implements Lifecycle, View {
 	public void update() {
 		flightControl.update();
 		healthControl.update();
-		sprites.current().get().enableAnimation(tf.getVelocityY() < 0);
+		sprites.current().get().enableAnimation(tf.vy < 0);
 	}
 
 	public void receiveEvent(BirdEvent event) {
@@ -171,8 +171,7 @@ public class Bird extends Entity implements Lifecycle, View {
 	@Override
 	public Rectangle2D getCollisionBox() {
 		int margin = Math.min(tf.width / 4, tf.height / 4);
-		return new Rectangle2D.Double(tf.x + margin, tf.y + margin, tf.width - 2 * margin,
-				tf.height - 2 * margin);
+		return new Rectangle2D.Double(tf.x + margin, tf.y + margin, tf.width - 2 * margin, tf.height - 2 * margin);
 	}
 
 	public void flap() {
@@ -181,7 +180,7 @@ public class Bird extends Entity implements Lifecycle, View {
 
 	public void flap(float force) {
 		Assets.sound("sfx/wing.mp3").play();
-		tf.setVelocityY(tf.getVelocityY() - force * gravity);
+		tf.vy = tf.vy - force * gravity;
 		fly();
 	}
 
@@ -189,9 +188,9 @@ public class Bird extends Entity implements Lifecycle, View {
 		if (tf.y < -tf.height) {
 			tf.setVelocity(0, 0);
 		}
-		tf.setVelocityY(tf.getVelocityY() + gravity);
-		double damp = tf.getVelocityY() < 0 ? 0.05 : 0.2;
-		tf.setRotation(-PI / 8 + damp * tf.getVelocityY());
+		tf.vy += gravity;
+		double damp = tf.vy < 0 ? 0.05 : 0.2;
+		tf.setRotation(-PI / 8 + damp * tf.vy);
 		if (tf.getRotation() < -PI / 4)
 			tf.setRotation(-PI / 4);
 		if (tf.getRotation() > PI / 2)
@@ -200,7 +199,7 @@ public class Bird extends Entity implements Lifecycle, View {
 	}
 
 	public void fall(float slowdown) {
-		tf.setVelocityY(tf.getVelocityY() + gravity / slowdown);
+		tf.vy = tf.vy + gravity / slowdown;
 		tf.move();
 	}
 
