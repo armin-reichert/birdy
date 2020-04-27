@@ -190,11 +190,11 @@ public class Bird extends Entity implements Lifecycle, View {
 		}
 		tf.vy += gravity;
 		double damp = tf.vy < 0 ? 0.05 : 0.2;
-		tf.setRotation(-PI / 8 + damp * tf.vy);
-		if (tf.getRotation() < -PI / 4)
-			tf.setRotation(-PI / 4);
-		if (tf.getRotation() > PI / 2)
-			tf.setRotation(PI / 2);
+		tf.rotation = -PI / 8 + damp * tf.vy;
+		if (tf.rotation < -PI / 4)
+			tf.rotation = -PI / 4;
+		if (tf.rotation > PI / 2)
+			tf.rotation = PI / 2;
 		tf.move();
 	}
 
@@ -204,7 +204,7 @@ public class Bird extends Entity implements Lifecycle, View {
 	}
 
 	private void turnDown() {
-		tf.setRotation(PI / 2);
+		tf.rotation = PI / 2;
 		tf.setVelocity(0, 0);
 	}
 
@@ -216,7 +216,7 @@ public class Bird extends Entity implements Lifecycle, View {
 			float dx = center.x - sprite.getWidth() / 2;
 			float dy = center.y - sprite.getHeight() / 2;
 			g.translate(dx, dy);
-			g.rotate(tf.getRotation());
+			g.rotate(tf.rotation);
 			sprite.draw(g);
 		});
 		g.dispose();
