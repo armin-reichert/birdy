@@ -71,7 +71,7 @@ public class PlayScene implements Lifecycle, View {
 
 			addTransitionOnEventObject(Playing, Playing, () -> score.points > 3, e -> {
 				score.points -= 3;
-				bird.tf.setX(bird.tf.getX() + app.settings().getAsInt("pipe width") + bird.tf.getWidth());
+				bird.tf.x=(bird.tf.x + app.settings().getAsInt("pipe width") + bird.tf.width);
 				bird.receiveEvent(BirdTouchedPipe);
 				Assets.sound("sfx/hit.mp3").play();
 			}, BirdTouchedPipe);
@@ -135,7 +135,7 @@ public class PlayScene implements Lifecycle, View {
 		bird = entities.ofClass(Bird.class).findAny().get();
 		scoreDisplay = new ScoreDisplay(score, 1.5f);
 		scoreDisplay.tf.centerX(getWidth());
-		scoreDisplay.tf.setY(ground.tf.getY() / 4);
+		scoreDisplay.tf.y=(ground.tf.y / 4);
 		gameOverText = entities.store(new ImageWidget(Assets.image("text_game_over")));
 		gameOverText.tf.center(getWidth(), getHeight());
 		Area world = new Area(getWidth(), 2 * getHeight());

@@ -23,8 +23,8 @@ public class Ground extends Entity implements Lifecycle, View {
 		Sprite land = Sprite.ofAssets("land");
 		sprites.set("s_land", land);
 		sprites.select("s_land");
-		tf.setWidth(land.getWidth());
-		tf.setHeight(land.getHeight());
+		tf.width = land.getWidth();
+		tf.height = land.getHeight();
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class Ground extends Entity implements Lifecycle, View {
 	}
 
 	public void setWidth(int width) {
-		tf.setWidth(width);
+		tf.width = width;
 		sprites.current().ifPresent(sprite -> sprite.scale(width, sprite.getHeight()));
 	}
 
@@ -51,8 +51,8 @@ public class Ground extends Entity implements Lifecycle, View {
 	@Override
 	public void draw(Graphics2D g) {
 		Image image = sprites.current().get().currentFrame();
-		for (float x = -startX; x < tf.getWidth(); x += image.getWidth(null)) {
-			g.drawImage(image, (int) x, (int) tf.getY(), null);
+		for (float x = -startX; x < tf.width; x += image.getWidth(null)) {
+			g.drawImage(image, (int) x, (int) tf.y, null);
 		}
 	}
 }

@@ -112,12 +112,12 @@ public class ObstacleManager extends Entity implements Lifecycle, View {
 		int width = app.settings().get("pipe width");
 		int height = app.settings().get("pipe height");
 		int passageCenterY = randomInt(minHeight + passageHeight / 2,
-				(int) ground.tf.getY() - minHeight - passageHeight / 2);
+				(int) ground.tf.y - minHeight - passageHeight / 2);
 		float speed = app.settings().get("world speed");
 
 		Obstacle obstacle = new Obstacle(app, width, height, passageHeight, passageCenterY);
 		obstacle.tf.setVelocityX(speed);
-		obstacle.tf.setX(app.settings().width);
+		obstacle.tf.x = app.settings().width;
 		obstacle.setLighted(city.isNight() && randomInt(0, 5) == 0);
 		obstacles.add(obstacle);
 
@@ -129,7 +129,7 @@ public class ObstacleManager extends Entity implements Lifecycle, View {
 		Iterator<Obstacle> it = obstacles.iterator();
 		while (it.hasNext()) {
 			obstacle = it.next();
-			if (obstacle.tf.getX() + obstacle.tf.getWidth() < 0) {
+			if (obstacle.tf.x + obstacle.tf.width < 0) {
 				app.collisionHandler().unregisterStart(bird, obstacle.getUpperPart());
 				app.collisionHandler().unregisterStart(bird, obstacle.getLowerPart());
 				app.collisionHandler().unregisterEnd(bird, obstacle.getPassage());

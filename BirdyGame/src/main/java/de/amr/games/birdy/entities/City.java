@@ -49,8 +49,8 @@ public class City extends Entity implements Lifecycle, View {
 		sprites.select("s_day");
 
 		sprites.current().ifPresent(sprite -> {
-			tf.setWidth(sprite.getWidth());
-			tf.setHeight(sprite.getHeight());
+			tf.width = sprite.getWidth();
+			tf.height = sprite.getHeight();
 		});
 
 		fsm = new StateMachine<>(DayTime.class, EventMatchStrategy.BY_EQUALITY);
@@ -104,7 +104,7 @@ public class City extends Entity implements Lifecycle, View {
 		int numStars = randomInt(1, app().settings().get("max stars"));
 		IntStream.range(1, numStars).forEach(i -> {
 			Star star = entities.store(new Star());
-			star.tf.setPosition(randomInt(50, tf.getWidth() - 50), randomInt(100, 180));
+			star.tf.setPosition(randomInt(50, tf.width - 50), randomInt(100, 180));
 		});
 		Application.LOGGER.info("Created " + numStars + " new stars");
 	}
@@ -122,8 +122,8 @@ public class City extends Entity implements Lifecycle, View {
 	}
 
 	public void setWidth(int width) {
-		if (tf.getWidth() != width) {
-			tf.setWidth(width);
+		if (tf.width != width) {
+			tf.width = width;
 			sprites.forEach(sprite -> {
 				sprite.scale(width, sprite.getHeight());
 			});
@@ -134,12 +134,12 @@ public class City extends Entity implements Lifecycle, View {
 	public void draw(Graphics2D g) {
 		sprites.current().ifPresent(sprite -> {
 			Image image = sprite.currentFrame();
-			g.translate(tf.getX(), tf.getY());
-			for (int x = 0; x < tf.getWidth(); x += image.getWidth(null)) {
+			g.translate(tf.x, tf.y);
+			for (int x = 0; x < tf.width; x += image.getWidth(null)) {
 				g.drawImage(image, x, 0, null);
 			}
 			entities.ofClass(Star.class).forEach(star -> star.draw(g));
-			g.translate(-tf.getX(), -tf.getY());
+			g.translate(-tf.x, -tf.y);
 		});
 	}
 }

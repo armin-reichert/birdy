@@ -131,8 +131,8 @@ public class Bird extends Entity implements Lifecycle, View {
 		sprites.set("s_blue", createFeatherSprite("bird1"));
 		sprites.set("s_red", createFeatherSprite("bird2"));
 		sprites.select("s_yellow");
-		tf.setWidth(sprites.current().get().getWidth());
-		tf.setHeight(sprites.current().get().getHeight());
+		tf.width =(sprites.current().get().getWidth());
+		tf.height =(sprites.current().get().getHeight());
 		gravity = app().settings().getAsFloat("world gravity");
 	}
 
@@ -170,9 +170,9 @@ public class Bird extends Entity implements Lifecycle, View {
 
 	@Override
 	public Rectangle2D getCollisionBox() {
-		int margin = Math.min(tf.getWidth() / 4, tf.getHeight() / 4);
-		return new Rectangle2D.Double(tf.getX() + margin, tf.getY() + margin, tf.getWidth() - 2 * margin,
-				tf.getHeight() - 2 * margin);
+		int margin = Math.min(tf.width / 4, tf.height / 4);
+		return new Rectangle2D.Double(tf.x + margin, tf.y + margin, tf.width - 2 * margin,
+				tf.height - 2 * margin);
 	}
 
 	public void flap() {
@@ -186,7 +186,7 @@ public class Bird extends Entity implements Lifecycle, View {
 	}
 
 	public void fly() {
-		if (tf.getY() < -tf.getHeight()) {
+		if (tf.y < -tf.height) {
 			tf.setVelocity(0, 0);
 		}
 		tf.setVelocityY(tf.getVelocityY() + gravity);

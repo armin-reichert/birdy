@@ -120,7 +120,7 @@ public class StartScene implements Lifecycle, View {
 	}
 
 	private void keepBirdInAir() {
-		while (bird.tf.getY() > ground.tf.getY() / 2) {
+		while (bird.tf.y > ground.tf.y / 2) {
 			bird.flap(randomInt(1, 4));
 		}
 	}
@@ -136,12 +136,12 @@ public class StartScene implements Lifecycle, View {
 
 		ground = entities.ofClass(Ground.class).findAny().get();
 		ground.setWidth(getWidth());
-		ground.tf.setPosition(0, getHeight() - ground.tf.getHeight());
+		ground.tf.setPosition(0, getHeight() - ground.tf.height);
 		ground.tf.setVelocity(app.settings().getAsFloat("world speed"), 0);
 
 		bird = entities.ofClass(Bird.class).findAny().get();
 		bird.init();
-		bird.tf.setPosition(getWidth() / 8, ground.tf.getY() / 2);
+		bird.tf.setPosition(getWidth() / 8, ground.tf.y / 2);
 		bird.tf.setVelocity(0, 0);
 
 		if (!entities.contains("title")) {
@@ -191,7 +191,7 @@ public class StartScene implements Lifecycle, View {
 		ground.draw(g);
 		bird.draw(g);
 		if (displayedText != null) {
-			displayedText.tf.center(getWidth(), getHeight() - ground.tf.getHeight());
+			displayedText.tf.center(getWidth(), getHeight() - ground.tf.height);
 			displayedText.draw(g);
 		}
 		g.setColor(Color.BLACK);

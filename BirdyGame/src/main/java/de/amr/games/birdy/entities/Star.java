@@ -27,6 +27,6 @@ public class Star extends Entity implements View {
 
 	@Override
 	public void draw(Graphics2D g) {
-		sprite.draw(g, tf.getX(), tf.getY());
+		sprite.draw(g, tf.x, tf.y);
 	}
 }

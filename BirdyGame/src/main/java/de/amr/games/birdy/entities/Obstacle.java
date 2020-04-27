@@ -30,8 +30,8 @@ public class Obstacle extends Entity implements Lifecycle, View {
 	private final Random rand = new Random();
 
 	public Obstacle(BirdyGameApp app, int width, int height, int passageHeight, int passageCenterY) {
-		tf.setWidth(width);
-		tf.setHeight(height);
+		tf.width = width;
+		tf.height = height;
 		int passageRadius = passageHeight / 2;
 		upperPart = new Rectangle2D.Double(0, 0, width, passageCenterY - passageRadius);
 		passage = new Rectangle2D.Double(0, passageCenterY - passageRadius, width, passageHeight);
@@ -54,7 +54,7 @@ public class Obstacle extends Entity implements Lifecycle, View {
 
 	@Override
 	public void draw(Graphics2D g) {
-		g.translate(tf.getX(), tf.getY());
+		g.translate(tf.x, tf.y);
 		g.drawImage(pipeDown, 0, 0, null);
 		if (lighted) {
 			int inset = (int) passage.getWidth() / 10;
@@ -63,7 +63,7 @@ public class Obstacle extends Entity implements Lifecycle, View {
 					(int) (passage.getWidth() - 2 * inset), (int) passage.getHeight());
 		}
 		g.drawImage(pipeUp, 0, (int) (upperPart.getHeight() + passage.getHeight()), null);
-		g.translate(-tf.getX(), -tf.getY());
+		g.translate(-tf.x, -tf.y);
 	}
 
 	public void setLighted(boolean lighted) {
@@ -71,18 +71,18 @@ public class Obstacle extends Entity implements Lifecycle, View {
 	}
 
 	public Collider getUpperPart() {
-		return () -> new Rectangle2D.Double(tf.getX(), tf.getY(), upperPart.getWidth(),
+		return () -> new Rectangle2D.Double(tf.x, tf.y, upperPart.getWidth(),
 				upperPart.getHeight());
 	}
 
 	public Collider getLowerPart() {
-		return () -> new Rectangle2D.Double(tf.getX(),
-				tf.getY() + upperPart.getHeight() + passage.getHeight(), lowerPart.getWidth(),
+		return () -> new Rectangle2D.Double(tf.x,
+				tf.y + upperPart.getHeight() + passage.getHeight(), lowerPart.getWidth(),
 				lowerPart.getHeight());
 	}
 
 	public Collider getPassage() {
-		return () -> new Rectangle2D.Double(tf.getX(), tf.getY() + upperPart.getHeight(),
+		return () -> new Rectangle2D.Double(tf.x, tf.y + upperPart.getHeight(),
 				passage.getWidth(), passage.getHeight());
 	}
 }

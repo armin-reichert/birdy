@@ -46,15 +46,15 @@ public class ScoreDisplay extends Entity implements Lifecycle, View {
 	@Override
 	public void update() {
 		scoreText = pointsText();
-		tf.setWidth(scoreText.length() * digits[0].getWidth(null));
-		tf.setHeight(digits[0].getHeight(null));
+		tf.width =(scoreText.length() * digits[0].getWidth(null));
+		tf.height =(digits[0].getHeight(null));
 	}
 
 	@Override
 	public void draw(Graphics2D g) {
 		for (int i = 0; i < scoreText.length(); i++) {
 			int digit = "0123456789".indexOf(scoreText.charAt(i));
-			g.drawImage(digits[digit], (int) tf.getX() + i * (digits[0].getWidth(null) - round(3 * scale)), (int) tf.getY(),
+			g.drawImage(digits[digit], (int) tf.x + i * (digits[0].getWidth(null) - round(3 * scale)), (int) tf.y,
 					null);
 		}
 	}
