@@ -39,10 +39,10 @@ public class IntroScene extends StateMachine<State, Void> implements View, Lifec
 
 	private static final String CREDITS_TEXT = String.join("\n",
 	/*@formatter:off*/
-			"Anna proudly presents", 
-			"in cooperation with",
-			"Prof. Zwickmann", 
-			"Geräteschuppen Software 2017"
+	"Anna proudly presents", 
+	"in cooperation with",
+	"Prof. Zwickmann", 
+	"Geräteschuppen Software, 2017"
 	/*@formatter:on*/
 	);
 
