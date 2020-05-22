@@ -118,26 +118,19 @@ public class PlayScene implements Lifecycle, View {
 		bird.receiveEvent(event);
 	}
 
-	public int getWidth() {
-		return BirdyGameApp.app().settings().width;
-	}
-
-	public int getHeight() {
-		return BirdyGameApp.app().settings().height;
-	}
-
 	@Override
 	public void init() {
+		int w = BirdyGameApp.app().settings().width, h = BirdyGameApp.app().settings().height;
 		ground = BirdyGameApp.entities().ofClass(Ground.class).findAny().get();
 		city = BirdyGameApp.entities().ofClass(City.class).findAny().get();
 		bird = BirdyGameApp.entities().ofClass(Bird.class).findAny().get();
 		scoreDisplay = new ScoreDisplay(score, 1.5f);
-		scoreDisplay.tf.centerX(getWidth());
+		scoreDisplay.tf.centerX(w);
 		scoreDisplay.tf.y = (ground.tf.y / 4);
 		gameOverText = BirdyGameApp.entities().store(new ImageWidget(Assets.image("text_game_over")));
-		gameOverText.tf.center(getWidth(), getHeight());
-		Area world = new Area(getWidth(), 2 * getHeight());
-		world.tf.setPosition(0, -getHeight());
+		gameOverText.tf.center(w, h);
+		Area world = new Area(w, 2 * h);
+		world.tf.setPosition(0, -h);
 
 		BirdyGameApp.app().collisionHandler().registerStart(bird, ground, BirdTouchedGround);
 		BirdyGameApp.app().collisionHandler().registerEnd(bird, world, BirdLeftWorld);
@@ -189,9 +182,10 @@ public class PlayScene implements Lifecycle, View {
 	private Font stateTextFont = new Font(Font.SANS_SERIF, Font.PLAIN, 10);
 
 	private void showState(Graphics2D g) {
+		int h = BirdyGameApp.app().settings().height;
 		g.setColor(Color.BLACK);
 		g.setFont(stateTextFont);
 		g.drawString(format("%s: %s  Bird: %s & %s", control.getDescription(), control.getState(), bird.getFlightState(),
-				bird.getHealthState()), 20, getHeight() - 50);
+				bird.getHealthState()), 20, h - 50);
 	}
 }
