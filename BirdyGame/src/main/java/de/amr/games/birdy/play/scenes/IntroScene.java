@@ -20,6 +20,7 @@ import de.amr.easy.game.ui.widgets.PumpingImageWidget;
 import de.amr.easy.game.ui.widgets.TextWidget;
 import de.amr.easy.game.view.View;
 import de.amr.games.birdy.BirdyGameApp;
+import de.amr.games.birdy.BirdyGameApp.Scene;
 import de.amr.games.birdy.entities.City;
 import de.amr.games.birdy.play.scenes.IntroScene.State;
 import de.amr.statemachine.api.EventMatchStrategy;
@@ -69,7 +70,7 @@ public class IntroScene extends StateMachine<State, Void> implements View, Lifec
 					.state(LOGO)
 						.timeoutAfter(sec(4)) 
 						.onEntry(() -> logoImage.visible = true)
-						.onExit(() -> app().setController(app.getStartScene()))
+						.onExit(() -> BirdyGameApp.setScene(Scene.START))
 						
 				.transitions()
 					.when(CREDITS).then(WAITING).condition(() -> creditsText.isComplete())

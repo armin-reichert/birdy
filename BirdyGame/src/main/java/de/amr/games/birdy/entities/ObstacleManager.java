@@ -1,7 +1,6 @@
 package de.amr.games.birdy.entities;
 
 import static de.amr.easy.game.Application.app;
-import static de.amr.games.birdy.BirdyGameApp.entities;
 import static de.amr.games.birdy.entities.ObstacleManagerState.Birth;
 import static de.amr.games.birdy.entities.ObstacleManagerState.Breeding;
 import static de.amr.games.birdy.entities.ObstacleManagerState.Stopped;
@@ -102,9 +101,9 @@ public class ObstacleManager extends Entity implements Lifecycle, View {
 	}
 
 	private void updateObstacles() {
-		Ground ground = entities.ofClass(Ground.class).findAny().get();
-		City city = entities.ofClass(City.class).findAny().get();
-		Bird bird = entities.ofClass(Bird.class).findAny().get();
+		Ground ground = BirdyGameApp.entities().ofClass(Ground.class).findAny().get();
+		City city = BirdyGameApp.entities().ofClass(City.class).findAny().get();
+		Bird bird = BirdyGameApp.entities().ofClass(Bird.class).findAny().get();
 
 		// Add new obstacle
 		int minHeight = app.settings().get("min pipe height");

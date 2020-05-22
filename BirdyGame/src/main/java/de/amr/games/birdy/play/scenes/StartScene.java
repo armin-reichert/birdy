@@ -1,7 +1,6 @@
 package de.amr.games.birdy.play.scenes;
 
 import static de.amr.easy.game.Application.app;
-import static de.amr.games.birdy.BirdyGameApp.entities;
 import static de.amr.games.birdy.play.BirdEvent.BirdLeftWorld;
 import static de.amr.games.birdy.play.BirdEvent.BirdTouchedGround;
 import static de.amr.games.birdy.play.scenes.StartScene.State.GameOver;
@@ -25,6 +24,7 @@ import de.amr.easy.game.ui.widgets.ImageWidget;
 import de.amr.easy.game.ui.widgets.PumpingImageWidget;
 import de.amr.easy.game.view.View;
 import de.amr.games.birdy.BirdyGameApp;
+import de.amr.games.birdy.BirdyGameApp.Scene;
 import de.amr.games.birdy.entities.Area;
 import de.amr.games.birdy.entities.City;
 import de.amr.games.birdy.entities.Ground;
@@ -72,7 +72,7 @@ public class StartScene implements Lifecycle, View {
 
 			state(Ready).setTimer(() -> app().clock().sec(app.settings().getAsFloat("ready time sec")));
 			state(Ready).setOnEntry(() -> displayText("readyText"));
-			addTransitionOnTimeout(Ready, StartPlaying, null, e -> app.setController(app.getPlayScene()));
+			addTransitionOnTimeout(Ready, StartPlaying, null, e -> BirdyGameApp.setScene(Scene.PLAY));
 			addTransitionOnEventObject(Ready, GameOver, null, e -> displayText("title"), BirdTouchedGround);
 			state(Ready).setOnExit(() -> displayedText = null);
 
@@ -80,7 +80,7 @@ public class StartScene implements Lifecycle, View {
 
 			state(GameOver).setOnEntry(() -> {
 				stop();
-				displayedText = entities.ofName("game_over");
+				displayedText = BirdyGameApp.entities().ofName("game_over");
 				Assets.sounds().forEach(Sound::stop);
 			});
 
@@ -126,47 +126,48 @@ public class StartScene implements Lifecycle, View {
 	}
 
 	private void displayText(String name) {
-		displayedText = entities.ofName(name);
+		displayedText = BirdyGameApp.entities().ofName(name);
 	}
 
 	private void reset() {
-		city = entities.ofClass(City.class).findAny().get();
+		city = BirdyGameApp.entities().ofClass(City.class).findAny().get();
 		city.setWidth(getWidth());
 		city.init();
 
-		ground = entities.ofClass(Ground.class).findAny().get();
+		ground = BirdyGameApp.entities().ofClass(Ground.class).findAny().get();
 		ground.setWidth(getWidth());
 		ground.tf.setPosition(0, getHeight() - ground.tf.height);
 		ground.tf.setVelocity(app.settings().getAsFloat("world speed"), 0);
 
-		bird = entities.ofClass(Bird.class).findAny().get();
+		bird = BirdyGameApp.entities().ofClass(Bird.class).findAny().get();
 		bird.init();
 		bird.tf.setPosition(getWidth() / 8, ground.tf.y / 2);
 		bird.tf.setVelocity(0, 0);
 
-		if (!entities.contains("title")) {
+		if (!BirdyGameApp.entities().contains("title")) {
 			ImageWidget titleText = new ImageWidget(Assets.image("title"));
-			entities.store("title", titleText);
+			BirdyGameApp.entities().store("title", titleText);
 		}
 
-		if (!entities.contains("text_game_over")) {
+		if (!BirdyGameApp.entities().contains("text_game_over")) {
 			ImageWidget gameOverText = new ImageWidget(Assets.image("text_game_over"));
-			entities.store("text_game_over", gameOverText);
+			BirdyGameApp.entities().store("text_game_over", gameOverText);
 		}
 
-		if (!entities.contains("text_ready")) {
+		if (!BirdyGameApp.entities().contains("text_ready")) {
 			PumpingImageWidget readyText = PumpingImageWidget.create().image(Assets.image("text_ready")).build();
-			entities.store("text_ready", readyText);
+			BirdyGameApp.entities().store("text_ready", readyText);
 		}
 
-		if (!entities.contains("world")) {
+		if (!BirdyGameApp.entities().contains("world")) {
 			Area world = new Area(getWidth(), 2 * getHeight());
 			world.tf.setPosition(0, -getHeight());
-			entities.store("world", world);
+			BirdyGameApp.entities().store("world", world);
 		}
 
 		app.collisionHandler().clear();
-		app.collisionHandler().registerEnd(bird, entities.ofClass(Area.class).findAny().get(), BirdLeftWorld);
+		app.collisionHandler().registerEnd(bird, BirdyGameApp.entities().ofClass(Area.class).findAny().get(),
+				BirdLeftWorld);
 		app.collisionHandler().registerStart(bird, ground, BirdTouchedGround);
 
 		displayText("title");

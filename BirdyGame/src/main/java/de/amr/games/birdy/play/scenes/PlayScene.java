@@ -1,6 +1,5 @@
 package de.amr.games.birdy.play.scenes;
 
-import static de.amr.games.birdy.BirdyGameApp.entities;
 import static de.amr.games.birdy.play.BirdEvent.BirdCrashed;
 import static de.amr.games.birdy.play.BirdEvent.BirdLeftPassage;
 import static de.amr.games.birdy.play.BirdEvent.BirdLeftWorld;
@@ -23,6 +22,7 @@ import de.amr.easy.game.input.Keyboard;
 import de.amr.easy.game.ui.widgets.ImageWidget;
 import de.amr.easy.game.view.View;
 import de.amr.games.birdy.BirdyGameApp;
+import de.amr.games.birdy.BirdyGameApp.Scene;
 import de.amr.games.birdy.entities.Area;
 import de.amr.games.birdy.entities.City;
 import de.amr.games.birdy.entities.Ground;
@@ -71,7 +71,7 @@ public class PlayScene implements Lifecycle, View {
 
 			addTransitionOnEventObject(Playing, Playing, () -> score.points > 3, e -> {
 				score.points -= 3;
-				bird.tf.x=(bird.tf.x + app.settings().getAsInt("pipe width") + bird.tf.width);
+				bird.tf.x = (bird.tf.x + app.settings().getAsInt("pipe width") + bird.tf.width);
 				bird.receiveEvent(BirdTouchedPipe);
 				Assets.sound("sfx/hit.mp3").play();
 			}, BirdTouchedPipe);
@@ -105,7 +105,7 @@ public class PlayScene implements Lifecycle, View {
 			addTransitionOnEventObject(GameOver, GameOver, null, e -> Assets.sound("music/bgmusic.mp3").stop(),
 					BirdTouchedGround);
 
-			state(StartingNewGame).setOnEntry(() -> app.setController(app.getStartScene()));
+			state(StartingNewGame).setOnEntry(() -> BirdyGameApp.setScene(Scene.START));
 		}
 	}
 
@@ -130,13 +130,13 @@ public class PlayScene implements Lifecycle, View {
 
 	@Override
 	public void init() {
-		ground = entities.ofClass(Ground.class).findAny().get();
-		city = entities.ofClass(City.class).findAny().get();
-		bird = entities.ofClass(Bird.class).findAny().get();
+		ground = BirdyGameApp.entities().ofClass(Ground.class).findAny().get();
+		city = BirdyGameApp.entities().ofClass(City.class).findAny().get();
+		bird = BirdyGameApp.entities().ofClass(Bird.class).findAny().get();
 		scoreDisplay = new ScoreDisplay(score, 1.5f);
 		scoreDisplay.tf.centerX(getWidth());
-		scoreDisplay.tf.y=(ground.tf.y / 4);
-		gameOverText = entities.store(new ImageWidget(Assets.image("text_game_over")));
+		scoreDisplay.tf.y = (ground.tf.y / 4);
+		gameOverText = BirdyGameApp.entities().store(new ImageWidget(Assets.image("text_game_over")));
 		gameOverText.tf.center(getWidth(), getHeight());
 		Area world = new Area(getWidth(), 2 * getHeight());
 		world.tf.setPosition(0, -getHeight());

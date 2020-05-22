@@ -3,10 +3,12 @@ package de.amr.games.birdy;
 import java.awt.DisplayMode;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
+import java.util.EnumMap;
 
 import de.amr.easy.game.Application;
 import de.amr.easy.game.assets.Assets;
 import de.amr.easy.game.config.AppSettings;
+import de.amr.easy.game.controller.Lifecycle;
 import de.amr.easy.game.entity.EntityMap;
 import de.amr.games.birdy.entities.City;
 import de.amr.games.birdy.entities.Ground;
@@ -26,6 +28,23 @@ public class BirdyGameApp extends Application {
 	public static void main(String[] args) {
 		launch(BirdyGameApp.class, args);
 	}
+
+	public enum Scene {
+		INTRO, START, PLAY
+	};
+
+	public static void setScene(Scene scene) {
+		BirdyGameApp app = (BirdyGameApp) app();
+		app.setController(app.scenes.get(scene));
+	}
+
+	public static EntityMap entities() {
+		BirdyGameApp app = (BirdyGameApp) app();
+		return app.entities;
+	}
+
+	private EnumMap<Scene, Lifecycle> scenes = new EnumMap<>(Scene.class);
+	private EntityMap entities = new EntityMap();
 
 	@Override
 	protected void configure(AppSettings settings) {
@@ -52,46 +71,17 @@ public class BirdyGameApp extends Application {
 		settings.set("passage height", 100);
 	}
 
-	public static final EntityMap entities = new EntityMap();
-
-	private IntroScene introScene;
-
-	public IntroScene getIntroScene() {
-		if (introScene == null) {
-			introScene = new IntroScene(this);
-		}
-		return introScene;
-	}
-
-	private StartScene startScene;
-
-	public StartScene getStartScene() {
-		if (startScene == null) {
-			startScene = new StartScene(this);
-		}
-		return startScene;
-	}
-
-	private PlayScene playScene;
-
-	public PlayScene getPlayScene() {
-		if (playScene == null) {
-			playScene = new PlayScene(this);
-		}
-		return playScene;
-	}
-
 	@Override
 	public void init() {
 		SpritesheetReader.extractSpriteSheet();
 		Assets.sound("music/bgmusic.mp3").volume(0.5f);
 		Assets.storeTrueTypeFont("Pacifico-Regular", "fonts/Pacifico-Regular.ttf", Font.BOLD, 40);
-
-		// create entities shared by different scenes:
 		entities.store(new Bird());
 		entities.store(new Ground());
 		entities.store(new City());
-
-		setController(getIntroScene());
+		scenes.put(Scene.INTRO, new IntroScene(this));
+		scenes.put(Scene.START, new StartScene(this));
+		scenes.put(Scene.PLAY, new PlayScene(this));
+		setScene(Scene.INTRO);
 	}
 }
