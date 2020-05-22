@@ -50,7 +50,7 @@ public class IntroScene extends StateMachine<State, Void> implements View, Lifec
 	private PumpingImageWidget logoImage;
 	private TextWidget creditsText;
 
-	public IntroScene(BirdyGameApp app) {
+	public IntroScene() {
 		super(State.class, EventMatchStrategy.BY_EQUALITY);
 		/*@formatter:off*/
 		beginStateMachine()

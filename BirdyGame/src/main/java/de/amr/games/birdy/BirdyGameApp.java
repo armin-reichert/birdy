@@ -79,9 +79,9 @@ public class BirdyGameApp extends Application {
 		entities.store(new Bird());
 		entities.store(new Ground());
 		entities.store(new City());
-		scenes.put(Scene.INTRO, new IntroScene(this));
-		scenes.put(Scene.START, new StartScene(this));
-		scenes.put(Scene.PLAY, new PlayScene(this));
+		scenes.put(Scene.INTRO, new IntroScene());
+		scenes.put(Scene.START, new StartScene());
+		scenes.put(Scene.PLAY, new PlayScene());
 		setScene(Scene.INTRO);
 	}
 }

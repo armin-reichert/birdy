@@ -108,9 +108,9 @@ public class PlayScene implements Lifecycle, View {
 		}
 	}
 
-	public PlayScene(BirdyGameApp game) {
+	public PlayScene() {
 		control = new PlaySceneControl();
-		obstacleManager = new ObstacleManager(game);
+		obstacleManager = new ObstacleManager();
 	}
 
 	public void receive(BirdEvent event) {

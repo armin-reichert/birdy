@@ -1,6 +1,7 @@
 package de.amr.games.birdy.play.scenes;
 
 import static de.amr.easy.game.Application.app;
+import static de.amr.games.birdy.BirdyGameApp.entities;
 import static de.amr.games.birdy.play.BirdEvent.BirdLeftWorld;
 import static de.amr.games.birdy.play.BirdEvent.BirdTouchedGround;
 import static de.amr.games.birdy.play.scenes.StartScene.State.GameOver;
@@ -15,6 +16,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
+import de.amr.easy.game.Application;
 import de.amr.easy.game.assets.Assets;
 import de.amr.easy.game.assets.Sound;
 import de.amr.easy.game.controller.Lifecycle;
@@ -48,9 +50,9 @@ public class StartScene implements Lifecycle, View {
 	private class StartSceneControl extends StateMachine<State, BirdEvent> {
 
 		public StartSceneControl() {
-
 			super(State.class, EventMatchStrategy.BY_EQUALITY);
 
+			BirdyGameApp app = (BirdyGameApp) Application.app();
 			setDescription("Start Scene Control");
 			setInitialState(Starting);
 
@@ -80,7 +82,7 @@ public class StartScene implements Lifecycle, View {
 
 			state(GameOver).setOnEntry(() -> {
 				stop();
-				displayedText = BirdyGameApp.entities().ofName("game_over");
+				displayedText = entities().ofName("game_over");
 				Assets.sounds().forEach(Sound::stop);
 			});
 
@@ -88,24 +90,14 @@ public class StartScene implements Lifecycle, View {
 		}
 	}
 
-	private final BirdyGameApp app;
 	private final StartSceneControl control;
 	private Bird bird;
 	private City city;
 	private Ground ground;
 	private ImageWidget displayedText;
 
-	public StartScene(BirdyGameApp game) {
-		this.app = game;
+	public StartScene() {
 		control = new StartSceneControl();
-	}
-
-	public int getWidth() {
-		return app.settings().width;
-	}
-
-	public int getHeight() {
-		return app.settings().height;
 	}
 
 	@Override
@@ -126,56 +118,56 @@ public class StartScene implements Lifecycle, View {
 	}
 
 	private void displayText(String name) {
-		displayedText = BirdyGameApp.entities().ofName(name);
+		displayedText = entities().ofName(name);
 	}
 
 	private void reset() {
-		city = BirdyGameApp.entities().ofClass(City.class).findAny().get();
-		city.setWidth(getWidth());
+		int w = app().settings().width, h = app().settings().height;
+		city = entities().ofClass(City.class).findAny().get();
+		city.setWidth(w);
 		city.init();
 
-		ground = BirdyGameApp.entities().ofClass(Ground.class).findAny().get();
-		ground.setWidth(getWidth());
-		ground.tf.setPosition(0, getHeight() - ground.tf.height);
-		ground.tf.setVelocity(app.settings().getAsFloat("world speed"), 0);
+		ground = entities().ofClass(Ground.class).findAny().get();
+		ground.setWidth(w);
+		ground.tf.setPosition(0, h - ground.tf.height);
+		ground.tf.setVelocity(app().settings().getAsFloat("world speed"), 0);
 
-		bird = BirdyGameApp.entities().ofClass(Bird.class).findAny().get();
+		bird = entities().ofClass(Bird.class).findAny().get();
 		bird.init();
-		bird.tf.setPosition(getWidth() / 8, ground.tf.y / 2);
+		bird.tf.setPosition(w / 8, ground.tf.y / 2);
 		bird.tf.setVelocity(0, 0);
 
-		if (!BirdyGameApp.entities().contains("title")) {
+		if (!entities().contains("title")) {
 			ImageWidget titleText = new ImageWidget(Assets.image("title"));
-			BirdyGameApp.entities().store("title", titleText);
+			entities().store("title", titleText);
 		}
 
-		if (!BirdyGameApp.entities().contains("text_game_over")) {
+		if (!entities().contains("text_game_over")) {
 			ImageWidget gameOverText = new ImageWidget(Assets.image("text_game_over"));
-			BirdyGameApp.entities().store("text_game_over", gameOverText);
+			entities().store("text_game_over", gameOverText);
 		}
 
-		if (!BirdyGameApp.entities().contains("text_ready")) {
+		if (!entities().contains("text_ready")) {
 			PumpingImageWidget readyText = PumpingImageWidget.create().image(Assets.image("text_ready")).build();
-			BirdyGameApp.entities().store("text_ready", readyText);
+			entities().store("text_ready", readyText);
 		}
 
-		if (!BirdyGameApp.entities().contains("world")) {
-			Area world = new Area(getWidth(), 2 * getHeight());
-			world.tf.setPosition(0, -getHeight());
-			BirdyGameApp.entities().store("world", world);
+		if (!entities().contains("world")) {
+			Area world = new Area(w, 2 * h);
+			world.tf.setPosition(0, -h);
+			entities().store("world", world);
 		}
 
-		app.collisionHandler().clear();
-		app.collisionHandler().registerEnd(bird, BirdyGameApp.entities().ofClass(Area.class).findAny().get(),
-				BirdLeftWorld);
-		app.collisionHandler().registerStart(bird, ground, BirdTouchedGround);
+		app().collisionHandler().clear();
+		app().collisionHandler().registerEnd(bird, entities().ofClass(Area.class).findAny().get(), BirdLeftWorld);
+		app().collisionHandler().registerStart(bird, ground, BirdTouchedGround);
 
 		displayText("title");
 	}
 
 	@Override
 	public void update() {
-		for (Collision c : app.collisionHandler().collisions()) {
+		for (Collision c : app().collisionHandler().collisions()) {
 			BirdEvent event = (BirdEvent) c.getAppEvent();
 			bird.receiveEvent(event);
 			control.enqueue(event);
@@ -188,16 +180,17 @@ public class StartScene implements Lifecycle, View {
 
 	@Override
 	public void draw(Graphics2D g) {
+		int w = app().settings().width, h = app().settings().height;
 		city.draw(g);
 		ground.draw(g);
 		bird.draw(g);
 		if (displayedText != null) {
-			displayedText.tf.center(getWidth(), getHeight() - ground.tf.height);
+			displayedText.tf.center(w, h - ground.tf.height);
 			displayedText.draw(g);
 		}
 		g.setColor(Color.BLACK);
 		g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 10));
 		g.drawString(format("%s: (%s)  Bird: Flight: (%s) Sanity: (%s)", control.getDescription(), control.getState(),
-				bird.getFlightState(), bird.getHealthState()), 20, getHeight() - 50);
+				bird.getFlightState(), bird.getHealthState()), 20, h - 50);
 	}
 }

@@ -12,10 +12,10 @@ import de.amr.easy.game.controller.Lifecycle;
 import de.amr.easy.game.entity.Entity;
 import de.amr.easy.game.entity.collision.Collider;
 import de.amr.easy.game.view.View;
-import de.amr.games.birdy.BirdyGameApp;
 
 /**
- * An obstacle consisting of a hanging and a standing pipe with a passage in the middle.
+ * An obstacle consisting of a hanging and a standing pipe with a passage in the
+ * middle.
  * 
  * @author Armin Reichert
  */
@@ -29,7 +29,7 @@ public class Obstacle extends Entity implements Lifecycle, View {
 	private boolean lighted;
 	private final Random rand = new Random();
 
-	public Obstacle(BirdyGameApp app, int width, int height, int passageHeight, int passageCenterY) {
+	public Obstacle(int width, int height, int passageHeight, int passageCenterY) {
 		tf.width = width;
 		tf.height = height;
 		int passageRadius = passageHeight / 2;
@@ -39,10 +39,9 @@ public class Obstacle extends Entity implements Lifecycle, View {
 				height - passageRadius - passageCenterY);
 		pipeDown = Assets.image("pipe_down").getScaledInstance(width, (int) upperPart.getHeight(),
 				BufferedImage.SCALE_SMOOTH);
-		pipeUp = Assets.image("pipe_up").getScaledInstance(width, (int) lowerPart.getHeight(),
-				BufferedImage.SCALE_SMOOTH);
+		pipeUp = Assets.image("pipe_up").getScaledInstance(width, (int) lowerPart.getHeight(), BufferedImage.SCALE_SMOOTH);
 	}
-	
+
 	@Override
 	public void init() {
 	}
@@ -59,8 +58,8 @@ public class Obstacle extends Entity implements Lifecycle, View {
 		if (lighted) {
 			int inset = (int) passage.getWidth() / 10;
 			g.setColor(new Color(255, 255, 0, rand.nextInt(170)));
-			g.fillRect((int) passage.getX() + inset, (int) passage.getY(),
-					(int) (passage.getWidth() - 2 * inset), (int) passage.getHeight());
+			g.fillRect((int) passage.getX() + inset, (int) passage.getY(), (int) (passage.getWidth() - 2 * inset),
+					(int) passage.getHeight());
 		}
 		g.drawImage(pipeUp, 0, (int) (upperPart.getHeight() + passage.getHeight()), null);
 		g.translate(-tf.x, -tf.y);
@@ -71,18 +70,15 @@ public class Obstacle extends Entity implements Lifecycle, View {
 	}
 
 	public Collider getUpperPart() {
-		return () -> new Rectangle2D.Double(tf.x, tf.y, upperPart.getWidth(),
-				upperPart.getHeight());
+		return () -> new Rectangle2D.Double(tf.x, tf.y, upperPart.getWidth(), upperPart.getHeight());
 	}
 
 	public Collider getLowerPart() {
-		return () -> new Rectangle2D.Double(tf.x,
-				tf.y + upperPart.getHeight() + passage.getHeight(), lowerPart.getWidth(),
+		return () -> new Rectangle2D.Double(tf.x, tf.y + upperPart.getHeight() + passage.getHeight(), lowerPart.getWidth(),
 				lowerPart.getHeight());
 	}
 
 	public Collider getPassage() {
-		return () -> new Rectangle2D.Double(tf.x, tf.y + upperPart.getHeight(),
-				passage.getWidth(), passage.getHeight());
+		return () -> new Rectangle2D.Double(tf.x, tf.y + upperPart.getHeight(), passage.getWidth(), passage.getHeight());
 	}
 }
