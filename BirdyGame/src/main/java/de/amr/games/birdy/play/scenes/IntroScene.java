@@ -46,6 +46,10 @@ public class IntroScene extends StateMachine<State, Void> implements View, Lifec
 	/*@formatter:on*/
 	);
 
+	private static IntSupplier sec(float amount) {
+		return () -> app().clock().sec(amount);
+	}
+
 	private City city;
 	private PumpingImageWidget logoImage;
 	private TextWidget creditsText;
@@ -80,10 +84,6 @@ public class IntroScene extends StateMachine<State, Void> implements View, Lifec
 		.endStateMachine();
 		/*@formatter:on*/
 		getTracer().setLogger(Application.LOGGER);
-	}
-
-	private IntSupplier sec(float amount) {
-		return () -> app().clock().sec(amount);
 	}
 
 	@Override

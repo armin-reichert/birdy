@@ -41,6 +41,7 @@ import de.amr.statemachine.core.StateMachine;
  */
 public class PlayScene implements Lifecycle, View {
 
+	private Font stateTextFont = new Font(Font.SANS_SERIF, Font.PLAIN, 10);
 	private final PlaySceneControl control;
 	private final Score score = new Score();
 	private final ObstacleManager obstacleManager;
@@ -164,7 +165,15 @@ public class PlayScene implements Lifecycle, View {
 		if (control.getState() == GameOver) {
 			gameOverText.draw(g);
 		}
-		showState(g);
+		drawState(g);
+	}
+
+	private void drawState(Graphics2D g) {
+		int h = BirdyGameApp.app().settings().height;
+		g.setColor(Color.BLACK);
+		g.setFont(stateTextFont);
+		g.drawString(format("%s: %s  Bird: %s & %s", control.getDescription(), control.getState(), bird.getFlightState(),
+				bird.getHealthState()), 20, h - 50);
 	}
 
 	@Override
@@ -177,15 +186,5 @@ public class PlayScene implements Lifecycle, View {
 	public void stop() {
 		ground.stopMoving();
 		obstacleManager.stop();
-	}
-
-	private Font stateTextFont = new Font(Font.SANS_SERIF, Font.PLAIN, 10);
-
-	private void showState(Graphics2D g) {
-		int h = BirdyGameApp.app().settings().height;
-		g.setColor(Color.BLACK);
-		g.setFont(stateTextFont);
-		g.drawString(format("%s: %s  Bird: %s & %s", control.getDescription(), control.getState(), bird.getFlightState(),
-				bird.getHealthState()), 20, h - 50);
 	}
 }
