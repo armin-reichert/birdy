@@ -41,7 +41,6 @@ import de.amr.statemachine.core.StateMachine;
  */
 public class PlayScene implements Lifecycle, View {
 
-	private final BirdyGameApp app;
 	private final PlaySceneControl control;
 	private final Score score = new Score();
 	private final ObstacleManager obstacleManager;
@@ -71,7 +70,7 @@ public class PlayScene implements Lifecycle, View {
 
 			addTransitionOnEventObject(Playing, Playing, () -> score.points > 3, e -> {
 				score.points -= 3;
-				bird.tf.x = (bird.tf.x + app.settings().getAsInt("pipe width") + bird.tf.width);
+				bird.tf.x = (bird.tf.x + BirdyGameApp.app().settings().getAsInt("pipe width") + bird.tf.width);
 				bird.receiveEvent(BirdTouchedPipe);
 				Assets.sound("sfx/hit.mp3").play();
 			}, BirdTouchedPipe);
@@ -110,9 +109,8 @@ public class PlayScene implements Lifecycle, View {
 	}
 
 	public PlayScene(BirdyGameApp game) {
-		this.app = game;
 		control = new PlaySceneControl();
-		obstacleManager = new ObstacleManager(app);
+		obstacleManager = new ObstacleManager(game);
 	}
 
 	public void receive(BirdEvent event) {
@@ -121,11 +119,11 @@ public class PlayScene implements Lifecycle, View {
 	}
 
 	public int getWidth() {
-		return app.settings().width;
+		return BirdyGameApp.app().settings().width;
 	}
 
 	public int getHeight() {
-		return app.settings().height;
+		return BirdyGameApp.app().settings().height;
 	}
 
 	@Override
@@ -141,8 +139,8 @@ public class PlayScene implements Lifecycle, View {
 		Area world = new Area(getWidth(), 2 * getHeight());
 		world.tf.setPosition(0, -getHeight());
 
-		app.collisionHandler().registerStart(bird, ground, BirdTouchedGround);
-		app.collisionHandler().registerEnd(bird, world, BirdLeftWorld);
+		BirdyGameApp.app().collisionHandler().registerStart(bird, ground, BirdTouchedGround);
+		BirdyGameApp.app().collisionHandler().registerEnd(bird, world, BirdLeftWorld);
 
 		obstacleManager.init();
 		// obstacleManager.setLogger(Application.LOG);
@@ -151,7 +149,7 @@ public class PlayScene implements Lifecycle, View {
 
 	@Override
 	public void update() {
-		for (Collision collision : app.collisionHandler().collisions()) {
+		for (Collision collision : BirdyGameApp.app().collisionHandler().collisions()) {
 			receive((BirdEvent) collision.getAppEvent());
 		}
 		control.update();
@@ -178,7 +176,7 @@ public class PlayScene implements Lifecycle, View {
 
 	@Override
 	public void start() {
-		ground.tf.setVelocity(app.settings().get("world speed"), 0);
+		ground.tf.setVelocity(BirdyGameApp.app().settings().get("world speed"), 0);
 		obstacleManager.start();
 	}
 
