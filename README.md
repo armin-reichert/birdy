@@ -1,7 +1,7 @@
 # Birdy
 A Flappy-Bird like game using explicit finite state machines.
 
-<img src="birdy.png">
+<img src="/birdy.png">
 
 ## How to build and run
 ```
