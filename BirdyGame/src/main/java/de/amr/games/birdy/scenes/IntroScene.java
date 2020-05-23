@@ -1,11 +1,11 @@
-package de.amr.games.birdy.play.scenes;
+package de.amr.games.birdy.scenes;
 
 import static de.amr.easy.game.Application.app;
 import static de.amr.games.birdy.BirdyGameApp.sec;
-import static de.amr.games.birdy.play.scenes.IntroScene.IntroSceneState.COMPLETE;
-import static de.amr.games.birdy.play.scenes.IntroScene.IntroSceneState.CREDITS;
-import static de.amr.games.birdy.play.scenes.IntroScene.IntroSceneState.LOGO;
-import static de.amr.games.birdy.play.scenes.IntroScene.IntroSceneState.WAITING;
+import static de.amr.games.birdy.scenes.IntroScene.IntroSceneState.COMPLETE;
+import static de.amr.games.birdy.scenes.IntroScene.IntroSceneState.CREDITS;
+import static de.amr.games.birdy.scenes.IntroScene.IntroSceneState.LOGO;
+import static de.amr.games.birdy.scenes.IntroScene.IntroSceneState.WAITING;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -21,7 +21,7 @@ import de.amr.easy.game.view.View;
 import de.amr.games.birdy.BirdyGameApp;
 import de.amr.games.birdy.BirdyGameApp.Scene;
 import de.amr.games.birdy.entities.BirdyGameEntities;
-import de.amr.games.birdy.play.scenes.IntroScene.IntroSceneState;
+import de.amr.games.birdy.scenes.IntroScene.IntroSceneState;
 import de.amr.statemachine.api.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 

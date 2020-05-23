@@ -4,8 +4,8 @@ import static de.amr.easy.game.Application.app;
 import static de.amr.games.birdy.entities.ObstacleControllerState.EMITTING;
 import static de.amr.games.birdy.entities.ObstacleControllerState.BREEDING;
 import static de.amr.games.birdy.entities.ObstacleControllerState.STOPPED;
-import static de.amr.games.birdy.play.BirdEvent.LEFT_PASSAGE;
-import static de.amr.games.birdy.play.BirdEvent.TOUCHED_PIPE;
+import static de.amr.games.birdy.entities.bird.BirdEvent.LEFT_PASSAGE;
+import static de.amr.games.birdy.entities.bird.BirdEvent.TOUCHED_PIPE;
 import static de.amr.games.birdy.utils.Util.randomInt;
 
 import java.awt.Graphics2D;

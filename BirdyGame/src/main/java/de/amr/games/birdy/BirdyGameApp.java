@@ -16,9 +16,9 @@ import de.amr.games.birdy.entities.BirdyGameEntities;
 import de.amr.games.birdy.entities.City;
 import de.amr.games.birdy.entities.Ground;
 import de.amr.games.birdy.entities.bird.Bird;
-import de.amr.games.birdy.play.scenes.IntroScene;
-import de.amr.games.birdy.play.scenes.PlayScene;
-import de.amr.games.birdy.play.scenes.StartScene;
+import de.amr.games.birdy.scenes.IntroScene;
+import de.amr.games.birdy.scenes.PlayScene;
+import de.amr.games.birdy.scenes.StartScene;
 
 /**
  * "Flappy Bird"-like game.

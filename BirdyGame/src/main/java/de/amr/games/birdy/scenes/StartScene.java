@@ -1,16 +1,16 @@
-package de.amr.games.birdy.play.scenes;
+package de.amr.games.birdy.scenes;
 
 import static de.amr.easy.game.Application.app;
 import static de.amr.easy.game.assets.Assets.sound;
 import static de.amr.easy.game.assets.Assets.sounds;
 import static de.amr.games.birdy.BirdyGameApp.sec;
 import static de.amr.games.birdy.BirdyGameApp.setScene;
-import static de.amr.games.birdy.play.BirdEvent.LEFT_WORLD;
-import static de.amr.games.birdy.play.BirdEvent.TOUCHED_GROUND;
-import static de.amr.games.birdy.play.scenes.StartScene.StartSceneState.GAME_OVER;
-import static de.amr.games.birdy.play.scenes.StartScene.StartSceneState.READY;
-import static de.amr.games.birdy.play.scenes.StartScene.StartSceneState.STARTING;
-import static de.amr.games.birdy.play.scenes.StartScene.StartSceneState.STARTING_TO_PLAY;
+import static de.amr.games.birdy.entities.bird.BirdEvent.LEFT_WORLD;
+import static de.amr.games.birdy.entities.bird.BirdEvent.TOUCHED_GROUND;
+import static de.amr.games.birdy.scenes.StartScene.StartSceneState.GAME_OVER;
+import static de.amr.games.birdy.scenes.StartScene.StartSceneState.READY;
+import static de.amr.games.birdy.scenes.StartScene.StartSceneState.STARTING;
+import static de.amr.games.birdy.scenes.StartScene.StartSceneState.STARTING_TO_PLAY;
 import static de.amr.games.birdy.utils.Util.randomInt;
 
 import java.awt.Font;
@@ -28,8 +28,8 @@ import de.amr.easy.game.view.View;
 import de.amr.games.birdy.BirdyGameApp.Scene;
 import de.amr.games.birdy.entities.Area;
 import de.amr.games.birdy.entities.BirdyGameEntities;
-import de.amr.games.birdy.play.BirdEvent;
-import de.amr.games.birdy.play.scenes.StartScene.StartSceneState;
+import de.amr.games.birdy.entities.bird.BirdEvent;
+import de.amr.games.birdy.scenes.StartScene.StartSceneState;
 import de.amr.statemachine.api.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 

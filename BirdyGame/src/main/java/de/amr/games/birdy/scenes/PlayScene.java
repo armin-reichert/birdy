@@ -1,15 +1,15 @@
-package de.amr.games.birdy.play.scenes;
+package de.amr.games.birdy.scenes;
 
 import static de.amr.easy.game.Application.app;
 import static de.amr.easy.game.assets.Assets.sound;
-import static de.amr.games.birdy.play.BirdEvent.CRASHED;
-import static de.amr.games.birdy.play.BirdEvent.LEFT_PASSAGE;
-import static de.amr.games.birdy.play.BirdEvent.LEFT_WORLD;
-import static de.amr.games.birdy.play.BirdEvent.TOUCHED_GROUND;
-import static de.amr.games.birdy.play.BirdEvent.TOUCHED_PIPE;
-import static de.amr.games.birdy.play.scenes.PlayScene.PlaySceneState.GAME_OVER;
-import static de.amr.games.birdy.play.scenes.PlayScene.PlaySceneState.PLAYING;
-import static de.amr.games.birdy.play.scenes.PlayScene.PlaySceneState.STARTING;
+import static de.amr.games.birdy.entities.bird.BirdEvent.CRASHED;
+import static de.amr.games.birdy.entities.bird.BirdEvent.LEFT_PASSAGE;
+import static de.amr.games.birdy.entities.bird.BirdEvent.LEFT_WORLD;
+import static de.amr.games.birdy.entities.bird.BirdEvent.TOUCHED_GROUND;
+import static de.amr.games.birdy.entities.bird.BirdEvent.TOUCHED_PIPE;
+import static de.amr.games.birdy.scenes.PlayScene.PlaySceneState.GAME_OVER;
+import static de.amr.games.birdy.scenes.PlayScene.PlaySceneState.PLAYING;
+import static de.amr.games.birdy.scenes.PlayScene.PlaySceneState.STARTING;
 
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -28,8 +28,8 @@ import de.amr.games.birdy.entities.Area;
 import de.amr.games.birdy.entities.BirdyGameEntities;
 import de.amr.games.birdy.entities.ObstacleController;
 import de.amr.games.birdy.entities.ScoreDisplay;
-import de.amr.games.birdy.play.BirdEvent;
-import de.amr.games.birdy.play.scenes.PlayScene.PlaySceneState;
+import de.amr.games.birdy.entities.bird.BirdEvent;
+import de.amr.games.birdy.scenes.PlayScene.PlaySceneState;
 import de.amr.games.birdy.utils.Score;
 import de.amr.statemachine.api.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;

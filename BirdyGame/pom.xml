@@ -7,7 +7,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.amr.games.birdy</groupId>
 	<artifactId>BirdyGame</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>BirdyGame</name>
 	<description>Flappy Bird like game</description>
 	<build>
