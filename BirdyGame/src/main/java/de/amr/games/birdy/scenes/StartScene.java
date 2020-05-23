@@ -8,9 +8,9 @@ import static de.amr.games.birdy.BirdyGameApp.setScene;
 import static de.amr.games.birdy.entities.bird.BirdEvent.LEFT_WORLD;
 import static de.amr.games.birdy.entities.bird.BirdEvent.TOUCHED_GROUND;
 import static de.amr.games.birdy.scenes.StartScene.StartSceneState.GAME_OVER;
+import static de.amr.games.birdy.scenes.StartScene.StartSceneState.LEAVING;
 import static de.amr.games.birdy.scenes.StartScene.StartSceneState.READY;
 import static de.amr.games.birdy.scenes.StartScene.StartSceneState.STARTING;
-import static de.amr.games.birdy.scenes.StartScene.StartSceneState.STARTING_TO_PLAY;
 import static de.amr.games.birdy.utils.Util.randomInt;
 
 import java.awt.Font;
@@ -34,15 +34,14 @@ import de.amr.statemachine.api.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 
 /**
- * Start scene of the game: bird flaps in the air until user presses the JUMP
- * key.
+ * Start scene of the game: bird flaps in the air until user presses the JUMP key.
  * 
  * @author Armin Reichert
  */
 public class StartScene extends StateMachine<StartSceneState, BirdEvent> implements Lifecycle, View {
 
 	public enum StartSceneState {
-		STARTING, READY, GAME_OVER, STARTING_TO_PLAY, SPRITE_BROWSER
+		STARTING, READY, GAME_OVER, LEAVING, SPRITE_BROWSER
 	}
 
 	private BirdyGameEntities ent;
@@ -81,9 +80,13 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 
 		state(READY).setOnExit(this::hideSceneText);
 
-		addTransitionOnTimeout(READY, STARTING_TO_PLAY, null, e -> setScene(Scene.PLAY_SCENE));
+		addTransitionOnTimeout(READY, LEAVING, null, null);
 
 		addTransitionOnEventObject(READY, GAME_OVER, null, e -> showSceneText("title"), TOUCHED_GROUND);
+
+		// Leaving ---
+
+		state(LEAVING).setOnEntry(() -> setScene(Scene.PLAY_SCENE));
 
 		// GameOver ---
 

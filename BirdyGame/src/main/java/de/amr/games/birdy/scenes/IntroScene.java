@@ -54,7 +54,7 @@ public class IntroScene extends StateMachine<IntroSceneState, Void> implements V
 		ent = entities;
 		/*@formatter:off*/
 		beginStateMachine()
-				.description("Intro Scene")
+				.description("[Intro Scene]")
 				.initialState(CREDITS)
 				.states()
 

@@ -47,6 +47,7 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 
 	private Score score = new Score();
 
+	private ObstacleController obstacleController;
 	private BirdyGameEntities ent;
 	private ImageWidget gameOverText;
 	private ScoreDisplay scoreDisplay;
@@ -55,6 +56,10 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		super(PlaySceneState.class, EventMatchStrategy.BY_EQUALITY);
 		this.ent = entities;
 		buildStateMachine();
+		getTracer().setLogger(Application.LOGGER);
+		obstacleController = new ObstacleController(ent);
+		obstacleController.getTracer().setLogger(Application.LOGGER);
+
 	}
 
 	private void buildStateMachine() {
@@ -63,7 +68,6 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 
 		state(PLAYING).setOnEntry(() -> {
 			score.reset();
-			ent.theObstacles().init();
 			start();
 		});
 
@@ -125,13 +129,10 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		Area world = new Area(w, 2 * h);
 		world.tf.setPosition(0, -h);
 
-		ObstacleController obstacles = new ObstacleController(ent);
-		obstacles.setLogger(Application.LOGGER);
-		ent.store("obstacles", obstacles);
-
 		app().collisionHandler().registerStart(ent.theBird(), ent.theGround(), TOUCHED_GROUND);
 		app().collisionHandler().registerEnd(ent.theBird(), world, LEFT_WORLD);
 
+		obstacleController.init();
 		super.init();
 	}
 
@@ -145,25 +146,26 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 				((Lifecycle) entity).update();
 			}
 		});
+		obstacleController.update();
 		super.update();
 	}
 
 	@Override
 	public void start() {
 		ent.theGround().tf.setVelocity(app().settings().get("world-speed"), 0);
-		ent.theObstacles().start();
+		obstacleController.start();
 	}
 
 	@Override
 	public void stop() {
 		ent.theGround().stopMoving();
-		ent.theObstacles().stop();
+		obstacleController.stop();
 	}
 
 	@Override
 	public void draw(Graphics2D g) {
 		ent.theCity().draw(g);
-		ent.theObstacles().draw(g);
+		obstacleController.obstacles.forEach(obstacle -> obstacle.draw(g));
 		ent.theGround().draw(g);
 		scoreDisplay.draw(g);
 		ent.theBird().draw(g);

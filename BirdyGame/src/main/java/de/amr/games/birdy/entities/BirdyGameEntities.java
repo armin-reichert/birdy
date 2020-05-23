@@ -25,8 +25,4 @@ public class BirdyGameEntities extends EntityMap {
 	public Ground theGround() {
 		return ofName("ground");
 	}
-
-	public ObstacleController theObstacles() {
-		return ofName("obstacles");
-	}
 }
