@@ -143,6 +143,10 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 
 	@Override
 	public void update() {
+		if (Keyboard.keyPressedOnce("s")) {
+			boolean showState = app().settings().getAsBoolean("show-state");
+			app().settings().set("show-state", !showState);
+		}
 		checkCollisions();
 		ent.update();
 		super.update();
@@ -151,7 +155,7 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 	private void checkCollisions() {
 		for (Collision c : app().collisionHandler().collisions()) {
 			BirdEvent event = (BirdEvent) c.getAppEvent();
-			ent.theBird().receiveEvent(event);
+			ent.theBird().consume(event);
 			enqueue(event);
 		}
 	}

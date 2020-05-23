@@ -46,7 +46,6 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 	}
 
 	private Score score = new Score();
-
 	private ObstacleController obstacleController;
 	private BirdyGameEntities ent;
 	private ImageWidget gameOverText;
@@ -59,7 +58,6 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		getTracer().setLogger(Application.LOGGER);
 		obstacleController = new ObstacleController(ent);
 		obstacleController.getTracer().setLogger(Application.LOGGER);
-
 	}
 
 	private void buildStateMachine() {
@@ -74,12 +72,12 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		addTransitionOnEventObject(PLAYING, PLAYING, () -> score.points > 3, e -> {
 			score.points -= 3;
 			ent.theBird().tf.x = (ent.theBird().tf.x + app().settings().getAsInt("pipe-width") + ent.theBird().tf.width);
-			ent.theBird().receiveEvent(TOUCHED_PIPE);
+			ent.theBird().consume(TOUCHED_PIPE);
 			sound("sfx/hit.mp3").play();
 		}, TOUCHED_PIPE);
 
 		addTransitionOnEventObject(PLAYING, GAME_OVER, () -> score.points <= 3, t -> {
-			ent.theBird().receiveEvent(CRASHED);
+			ent.theBird().consume(CRASHED);
 			sound("sfx/hit.mp3").play();
 		}, TOUCHED_PIPE);
 
@@ -89,12 +87,12 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		}, LEFT_PASSAGE);
 
 		addTransitionOnEventObject(PLAYING, GAME_OVER, null, e -> {
-			ent.theBird().receiveEvent(TOUCHED_GROUND);
+			ent.theBird().consume(TOUCHED_GROUND);
 			sound("music/bgmusic.mp3").stop();
 		}, TOUCHED_GROUND);
 
 		addTransitionOnEventObject(PLAYING, GAME_OVER, null, e -> {
-			ent.theBird().receiveEvent(LEFT_WORLD);
+			ent.theBird().consume(LEFT_WORLD);
 			sound("music/bgmusic.mp3").stop();
 		}, LEFT_WORLD);
 
@@ -109,14 +107,14 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		state(STARTING).setOnEntry(() -> BirdyGameApp.setScene(Scene.START_SCENE));
 	}
 
-	public void receive(BirdEvent event) {
+	public void consume(BirdEvent event) {
 		enqueue(event);
-		ent.theBird().receiveEvent(event);
+		ent.theBird().consume(event);
 	}
 
 	@Override
 	public void init() {
-		int w = app().settings().width, h = BirdyGameApp.app().settings().height;
+		int w = app().settings().width, h = app().settings().height;
 		scoreDisplay = new ScoreDisplay(score, 1.5f);
 		scoreDisplay.tf.centerX(w);
 		scoreDisplay.tf.y = (ent.theGround().tf.y / 4);
@@ -138,8 +136,12 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 
 	@Override
 	public void update() {
+		if (Keyboard.keyPressedOnce("s")) {
+			boolean showState = app().settings().getAsBoolean("show-state");
+			app().settings().set("show-state", !showState);
+		}
 		for (Collision collision : app().collisionHandler().collisions()) {
-			receive((BirdEvent) collision.getAppEvent());
+			consume((BirdEvent) collision.getAppEvent());
 		}
 		ent.all().forEach(entity -> {
 			if (entity instanceof Lifecycle) {
@@ -152,7 +154,7 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 
 	@Override
 	public void start() {
-		ent.theGround().tf.setVelocity(app().settings().get("world-speed"), 0);
+		ent.theGround().tf.vx = app().settings().get("world-speed");
 		obstacleController.start();
 	}
 
