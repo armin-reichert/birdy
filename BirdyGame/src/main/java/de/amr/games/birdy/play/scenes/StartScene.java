@@ -5,8 +5,8 @@ import static de.amr.easy.game.assets.Assets.sound;
 import static de.amr.easy.game.assets.Assets.sounds;
 import static de.amr.games.birdy.BirdyGameApp.sec;
 import static de.amr.games.birdy.BirdyGameApp.setScene;
-import static de.amr.games.birdy.play.BirdEvent.BirdLeftWorld;
-import static de.amr.games.birdy.play.BirdEvent.BirdTouchedGround;
+import static de.amr.games.birdy.play.BirdEvent.LEFT_WORLD;
+import static de.amr.games.birdy.play.BirdEvent.TOUCHED_GROUND;
 import static de.amr.games.birdy.play.scenes.StartScene.StartSceneState.GAME_OVER;
 import static de.amr.games.birdy.play.scenes.StartScene.StartSceneState.READY;
 import static de.amr.games.birdy.play.scenes.StartScene.StartSceneState.STARTING;
@@ -71,7 +71,7 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 
 		addTransition(STARTING, READY, () -> Keyboard.keyDown(app().settings().get("jump-key")), null);
 
-		addTransitionOnEventObject(STARTING, GAME_OVER, null, null, BirdTouchedGround);
+		addTransitionOnEventObject(STARTING, GAME_OVER, null, null, TOUCHED_GROUND);
 
 		// Ready ---
 
@@ -83,7 +83,7 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 
 		addTransitionOnTimeout(READY, STARTING_TO_PLAY, null, e -> setScene(Scene.PLAY_SCENE));
 
-		addTransitionOnEventObject(READY, GAME_OVER, null, e -> showSceneText("title"), BirdTouchedGround);
+		addTransitionOnEventObject(READY, GAME_OVER, null, e -> showSceneText("title"), TOUCHED_GROUND);
 
 		// GameOver ---
 
@@ -132,8 +132,8 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 		}
 
 		app().collisionHandler().clear();
-		app().collisionHandler().registerEnd(ent.theBird(), ent.ofClass(Area.class).findAny().get(), BirdLeftWorld);
-		app().collisionHandler().registerStart(ent.theBird(), ent.theGround(), BirdTouchedGround);
+		app().collisionHandler().registerEnd(ent.theBird(), ent.ofClass(Area.class).findAny().get(), LEFT_WORLD);
+		app().collisionHandler().registerStart(ent.theBird(), ent.theGround(), TOUCHED_GROUND);
 
 		showSceneText("title");
 	}

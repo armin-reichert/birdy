@@ -2,11 +2,11 @@ package de.amr.games.birdy.play.scenes;
 
 import static de.amr.easy.game.Application.app;
 import static de.amr.easy.game.assets.Assets.sound;
-import static de.amr.games.birdy.play.BirdEvent.BirdCrashed;
-import static de.amr.games.birdy.play.BirdEvent.BirdLeftPassage;
-import static de.amr.games.birdy.play.BirdEvent.BirdLeftWorld;
-import static de.amr.games.birdy.play.BirdEvent.BirdTouchedGround;
-import static de.amr.games.birdy.play.BirdEvent.BirdTouchedPipe;
+import static de.amr.games.birdy.play.BirdEvent.CRASHED;
+import static de.amr.games.birdy.play.BirdEvent.LEFT_PASSAGE;
+import static de.amr.games.birdy.play.BirdEvent.LEFT_WORLD;
+import static de.amr.games.birdy.play.BirdEvent.TOUCHED_GROUND;
+import static de.amr.games.birdy.play.BirdEvent.TOUCHED_PIPE;
 import static de.amr.games.birdy.play.scenes.PlayScene.PlaySceneState.GAME_OVER;
 import static de.amr.games.birdy.play.scenes.PlayScene.PlaySceneState.PLAYING;
 import static de.amr.games.birdy.play.scenes.PlayScene.PlaySceneState.STARTING;
@@ -70,37 +70,37 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		addTransitionOnEventObject(PLAYING, PLAYING, () -> score.points > 3, e -> {
 			score.points -= 3;
 			ent.theBird().tf.x = (ent.theBird().tf.x + app().settings().getAsInt("pipe-width") + ent.theBird().tf.width);
-			ent.theBird().receiveEvent(BirdTouchedPipe);
+			ent.theBird().receiveEvent(TOUCHED_PIPE);
 			sound("sfx/hit.mp3").play();
-		}, BirdTouchedPipe);
+		}, TOUCHED_PIPE);
 
 		addTransitionOnEventObject(PLAYING, GAME_OVER, () -> score.points <= 3, t -> {
-			ent.theBird().receiveEvent(BirdCrashed);
+			ent.theBird().receiveEvent(CRASHED);
 			sound("sfx/hit.mp3").play();
-		}, BirdTouchedPipe);
+		}, TOUCHED_PIPE);
 
 		addTransitionOnEventObject(PLAYING, PLAYING, null, e -> {
 			score.points++;
 			sound("sfx/point.mp3").play();
-		}, BirdLeftPassage);
+		}, LEFT_PASSAGE);
 
 		addTransitionOnEventObject(PLAYING, GAME_OVER, null, e -> {
-			ent.theBird().receiveEvent(BirdTouchedGround);
+			ent.theBird().receiveEvent(TOUCHED_GROUND);
 			sound("music/bgmusic.mp3").stop();
-		}, BirdTouchedGround);
+		}, TOUCHED_GROUND);
 
 		addTransitionOnEventObject(PLAYING, GAME_OVER, null, e -> {
-			ent.theBird().receiveEvent(BirdLeftWorld);
+			ent.theBird().receiveEvent(LEFT_WORLD);
 			sound("music/bgmusic.mp3").stop();
-		}, BirdLeftWorld);
+		}, LEFT_WORLD);
 
 		state(GAME_OVER).setOnEntry(() -> stop());
 
 		addTransition(GAME_OVER, STARTING, () -> Keyboard.keyPressedOnce(KeyEvent.VK_SPACE), null);
 
-		addTransitionOnEventObject(GAME_OVER, GAME_OVER, null, null, BirdTouchedPipe);
-		addTransitionOnEventObject(GAME_OVER, GAME_OVER, null, null, BirdLeftPassage);
-		addTransitionOnEventObject(GAME_OVER, GAME_OVER, null, e -> sound("music/bgmusic.mp3").stop(), BirdTouchedGround);
+		addTransitionOnEventObject(GAME_OVER, GAME_OVER, null, null, TOUCHED_PIPE);
+		addTransitionOnEventObject(GAME_OVER, GAME_OVER, null, null, LEFT_PASSAGE);
+		addTransitionOnEventObject(GAME_OVER, GAME_OVER, null, e -> sound("music/bgmusic.mp3").stop(), TOUCHED_GROUND);
 
 		state(STARTING).setOnEntry(() -> BirdyGameApp.setScene(Scene.START_SCENE));
 	}
@@ -129,8 +129,8 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		obstacles.setLogger(Application.LOGGER);
 		ent.store("obstacles", obstacles);
 
-		app().collisionHandler().registerStart(ent.theBird(), ent.theGround(), BirdTouchedGround);
-		app().collisionHandler().registerEnd(ent.theBird(), world, BirdLeftWorld);
+		app().collisionHandler().registerStart(ent.theBird(), ent.theGround(), TOUCHED_GROUND);
+		app().collisionHandler().registerEnd(ent.theBird(), world, LEFT_WORLD);
 
 		super.init();
 	}

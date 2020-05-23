@@ -4,8 +4,8 @@ import static de.amr.easy.game.Application.app;
 import static de.amr.games.birdy.entities.ObstacleControllerState.EMITTING;
 import static de.amr.games.birdy.entities.ObstacleControllerState.BREEDING;
 import static de.amr.games.birdy.entities.ObstacleControllerState.STOPPED;
-import static de.amr.games.birdy.play.BirdEvent.BirdLeftPassage;
-import static de.amr.games.birdy.play.BirdEvent.BirdTouchedPipe;
+import static de.amr.games.birdy.play.BirdEvent.LEFT_PASSAGE;
+import static de.amr.games.birdy.play.BirdEvent.TOUCHED_PIPE;
 import static de.amr.games.birdy.utils.Util.randomInt;
 
 import java.awt.Graphics2D;
@@ -114,9 +114,9 @@ public class ObstacleController extends Entity implements Lifecycle, View {
 		obstacle.setLighted(ent.theCity().isNight() && randomInt(0, 5) == 0);
 		obstacles.add(obstacle);
 
-		app().collisionHandler().registerStart(ent.theBird(), obstacle.getUpperPart(), BirdTouchedPipe);
-		app().collisionHandler().registerStart(ent.theBird(), obstacle.getLowerPart(), BirdTouchedPipe);
-		app().collisionHandler().registerEnd(ent.theBird(), obstacle.getPassage(), BirdLeftPassage);
+		app().collisionHandler().registerStart(ent.theBird(), obstacle.getUpperPart(), TOUCHED_PIPE);
+		app().collisionHandler().registerStart(ent.theBird(), obstacle.getLowerPart(), TOUCHED_PIPE);
+		app().collisionHandler().registerEnd(ent.theBird(), obstacle.getPassage(), LEFT_PASSAGE);
 
 		// Remove obstacles that ran out of screen
 		Iterator<Obstacle> it = obstacles.iterator();
