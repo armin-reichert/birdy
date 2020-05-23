@@ -2,6 +2,7 @@ package de.amr.games.birdy;
 
 import static de.amr.easy.game.assets.Assets.sound;
 import static de.amr.easy.game.assets.Assets.storeTrueTypeFont;
+import static de.amr.games.birdy.utils.SpritesheetReader.extractSpriteSheet;
 
 import java.awt.DisplayMode;
 import java.awt.Font;
@@ -18,7 +19,6 @@ import de.amr.games.birdy.entities.bird.Bird;
 import de.amr.games.birdy.play.scenes.IntroScene;
 import de.amr.games.birdy.play.scenes.PlayScene;
 import de.amr.games.birdy.play.scenes.StartScene;
-import de.amr.games.birdy.utils.SpritesheetReader;
 
 /**
  * "Flappy Bird"-like game.
@@ -32,7 +32,7 @@ public class BirdyGameApp extends Application {
 	}
 
 	public enum Scene {
-		INTRO, START, PLAY
+		INTRO_SCENE, START_SCENE, PLAY_SCENE
 	};
 
 	public static void setScene(Scene scene) {
@@ -41,7 +41,6 @@ public class BirdyGameApp extends Application {
 	}
 
 	private EnumMap<Scene, Lifecycle> scenes = new EnumMap<>(Scene.class);
-	private BirdyGameEntities entities = new BirdyGameEntities();
 
 	@Override
 	protected void configure(AppSettings settings) {
@@ -71,15 +70,16 @@ public class BirdyGameApp extends Application {
 
 	@Override
 	public void init() {
-		SpritesheetReader.extractSpriteSheet();
+		extractSpriteSheet();
 		sound("music/bgmusic.mp3").volume(0.5f);
 		storeTrueTypeFont("Pacifico-Regular", "fonts/Pacifico-Regular.ttf", Font.BOLD, 40);
+		BirdyGameEntities entities = new BirdyGameEntities();
 		entities.store("city", new City(entities));
 		entities.store("ground", new Ground());
 		entities.store("bird", new Bird());
-		scenes.put(Scene.INTRO, new IntroScene(entities));
-		scenes.put(Scene.START, new StartScene(entities));
-		scenes.put(Scene.PLAY, new PlayScene(entities));
-		setScene(Scene.INTRO);
+		scenes.put(Scene.INTRO_SCENE, new IntroScene(entities));
+		scenes.put(Scene.START_SCENE, new StartScene(entities));
+		scenes.put(Scene.PLAY_SCENE, new PlayScene(entities));
+		setScene(Scene.INTRO_SCENE);
 	}
 }

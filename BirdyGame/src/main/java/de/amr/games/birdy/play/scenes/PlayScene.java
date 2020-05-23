@@ -102,7 +102,7 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		addTransitionOnEventObject(GAME_OVER, GAME_OVER, null, null, BirdLeftPassage);
 		addTransitionOnEventObject(GAME_OVER, GAME_OVER, null, e -> sound("music/bgmusic.mp3").stop(), BirdTouchedGround);
 
-		state(STARTING).setOnEntry(() -> BirdyGameApp.setScene(Scene.START));
+		state(STARTING).setOnEntry(() -> BirdyGameApp.setScene(Scene.START_SCENE));
 	}
 
 	public void receive(BirdEvent event) {

@@ -1,15 +1,14 @@
 package de.amr.games.birdy.play.scenes;
 
 import static de.amr.easy.game.Application.app;
-import static de.amr.games.birdy.play.scenes.IntroScene.State.COMPLETE;
-import static de.amr.games.birdy.play.scenes.IntroScene.State.CREDITS;
-import static de.amr.games.birdy.play.scenes.IntroScene.State.LOGO;
-import static de.amr.games.birdy.play.scenes.IntroScene.State.WAITING;
+import static de.amr.games.birdy.play.scenes.IntroScene.IntroSceneState.COMPLETE;
+import static de.amr.games.birdy.play.scenes.IntroScene.IntroSceneState.CREDITS;
+import static de.amr.games.birdy.play.scenes.IntroScene.IntroSceneState.LOGO;
+import static de.amr.games.birdy.play.scenes.IntroScene.IntroSceneState.WAITING;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Random;
-import java.util.function.IntSupplier;
 
 import de.amr.easy.game.Application;
 import de.amr.easy.game.assets.Assets;
@@ -21,7 +20,7 @@ import de.amr.easy.game.view.View;
 import de.amr.games.birdy.BirdyGameApp;
 import de.amr.games.birdy.BirdyGameApp.Scene;
 import de.amr.games.birdy.entities.BirdyGameEntities;
-import de.amr.games.birdy.play.scenes.IntroScene.State;
+import de.amr.games.birdy.play.scenes.IntroScene.IntroSceneState;
 import de.amr.statemachine.api.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 
@@ -30,23 +29,23 @@ import de.amr.statemachine.core.StateMachine;
  * 
  * @author Armin Reichert
  */
-public class IntroScene extends StateMachine<State, Void> implements View, Lifecycle {
+public class IntroScene extends StateMachine<IntroSceneState, Void> implements View, Lifecycle {
 
-	public enum State {
+	public enum IntroSceneState {
 		CREDITS, WAITING, LOGO, COMPLETE
 	}
 
-	private static final String CREDITS_TEXT = String.join("\n",
+	static final String CREDITS_TEXT = String.join("\n",
 	/*@formatter:off*/
-	"Anna proudly presents", 
-	"in cooperation with",
-	"Prof. Zwickmann", 
-	"Geräteschuppen Software, 2017"
+		"Anna proudly presents", 
+		"in cooperation with",
+		"Prof. Zwickmann", 
+		"Geräteschuppen Software, 2017"
 	/*@formatter:on*/
 	);
 
-	private static IntSupplier sec(float amount) {
-		return () -> app().clock().sec(amount);
+	static int sec(float amount) {
+		return app().clock().sec(amount);
 	}
 
 	private BirdyGameEntities ent;
@@ -54,7 +53,7 @@ public class IntroScene extends StateMachine<State, Void> implements View, Lifec
 	private TextWidget creditsText;
 
 	public IntroScene(BirdyGameEntities entities) {
-		super(State.class, EventMatchStrategy.BY_EQUALITY);
+		super(IntroSceneState.class, EventMatchStrategy.BY_EQUALITY);
 		ent = entities;
 		/*@formatter:off*/
 		beginStateMachine()
@@ -74,7 +73,7 @@ public class IntroScene extends StateMachine<State, Void> implements View, Lifec
 					.state(LOGO)
 						.timeoutAfter(sec(4)) 
 						.onEntry(() -> logoImage.visible = true)
-						.onExit(() -> BirdyGameApp.setScene(Scene.START))
+						.onExit(() -> BirdyGameApp.setScene(Scene.START_SCENE))
 						
 				.transitions()
 					.when(CREDITS).then(WAITING).condition(() -> creditsText.isComplete())

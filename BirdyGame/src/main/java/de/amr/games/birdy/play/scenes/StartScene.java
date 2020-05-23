@@ -83,7 +83,7 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 
 		state(READY).setOnExit(this::hideSceneText);
 
-		addTransitionOnTimeout(READY, STARTING_TO_PLAY, null, e -> setScene(Scene.PLAY));
+		addTransitionOnTimeout(READY, STARTING_TO_PLAY, null, e -> setScene(Scene.PLAY_SCENE));
 
 		addTransitionOnEventObject(READY, GAME_OVER, null, e -> showSceneText("title"), BirdTouchedGround);
 
