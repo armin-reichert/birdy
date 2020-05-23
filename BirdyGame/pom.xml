@@ -40,12 +40,12 @@
 		<dependency>
 			<groupId>de.amr.easy.game</groupId>
 			<artifactId>EasyGame</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>de.amr.statemachine</groupId>
 			<artifactId>StateMachine</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0</version>
 		</dependency>
 	</dependencies>
 </project>
