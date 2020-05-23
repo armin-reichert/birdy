@@ -10,7 +10,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Random;
 import java.util.function.IntSupplier;
-import java.util.stream.Stream;
 
 import de.amr.easy.game.Application;
 import de.amr.easy.game.assets.Assets;
@@ -21,7 +20,7 @@ import de.amr.easy.game.ui.widgets.TextWidget;
 import de.amr.easy.game.view.View;
 import de.amr.games.birdy.BirdyGameApp;
 import de.amr.games.birdy.BirdyGameApp.Scene;
-import de.amr.games.birdy.entities.City;
+import de.amr.games.birdy.entities.BirdyGameEntities;
 import de.amr.games.birdy.play.scenes.IntroScene.State;
 import de.amr.statemachine.api.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
@@ -50,12 +49,13 @@ public class IntroScene extends StateMachine<State, Void> implements View, Lifec
 		return () -> app().clock().sec(amount);
 	}
 
-	private City city;
+	private BirdyGameEntities ent;
 	private PumpingImageWidget logoImage;
 	private TextWidget creditsText;
 
-	public IntroScene() {
+	public IntroScene(BirdyGameEntities entities) {
 		super(State.class, EventMatchStrategy.BY_EQUALITY);
+		ent = entities;
 		/*@formatter:off*/
 		beginStateMachine()
 				.description("Intro Scene")
@@ -89,17 +89,15 @@ public class IntroScene extends StateMachine<State, Void> implements View, Lifec
 	@Override
 	public void init() {
 		int width = app().settings().width, height = app().settings().height;
-
-		city = new City();
-		city.setWidth(width);
+		ent.theCity().setWidth(width);
 		if (new Random().nextBoolean()) {
-			city.sunset();
+			ent.theCity().sunset();
 		} else {
-			city.sunrise();
+			ent.theCity().sunrise();
 		}
 
 		creditsText = TextWidget.create().text(CREDITS_TEXT).font(Assets.font("Pacifico-Regular"))
-				.color(city.isNight() ? Color.WHITE : Color.DARK_GRAY).build();
+				.color(ent.theCity().isNight() ? Color.WHITE : Color.DARK_GRAY).build();
 		creditsText.tf.centerX(width);
 		creditsText.tf.y = (height);
 		creditsText.tf.vy = -1.5f;
@@ -117,6 +115,8 @@ public class IntroScene extends StateMachine<State, Void> implements View, Lifec
 
 	@Override
 	public void draw(Graphics2D g) {
-		Stream.of(city, logoImage, creditsText).forEach(e -> e.draw(g));
+		ent.theCity().draw(g);
+		logoImage.draw(g);
+		creditsText.draw(g);
 	}
 }

@@ -11,7 +11,7 @@ import java.util.EnumMap;
 import de.amr.easy.game.Application;
 import de.amr.easy.game.config.AppSettings;
 import de.amr.easy.game.controller.Lifecycle;
-import de.amr.easy.game.entity.EntityMap;
+import de.amr.games.birdy.entities.BirdyGameEntities;
 import de.amr.games.birdy.entities.City;
 import de.amr.games.birdy.entities.Ground;
 import de.amr.games.birdy.entities.bird.Bird;
@@ -40,13 +40,8 @@ public class BirdyGameApp extends Application {
 		app.setController(app.scenes.get(scene));
 	}
 
-	public static EntityMap entities() {
-		BirdyGameApp app = (BirdyGameApp) app();
-		return app.entities;
-	}
-
 	private EnumMap<Scene, Lifecycle> scenes = new EnumMap<>(Scene.class);
-	private EntityMap entities = new EntityMap();
+	private BirdyGameEntities entities = new BirdyGameEntities();
 
 	@Override
 	protected void configure(AppSettings settings) {
@@ -79,12 +74,12 @@ public class BirdyGameApp extends Application {
 		SpritesheetReader.extractSpriteSheet();
 		sound("music/bgmusic.mp3").volume(0.5f);
 		storeTrueTypeFont("Pacifico-Regular", "fonts/Pacifico-Regular.ttf", Font.BOLD, 40);
-		entities.store(new City());
-		entities.store(new Ground());
-		entities.store(new Bird());
-		scenes.put(Scene.INTRO, new IntroScene());
-		scenes.put(Scene.START, new StartScene());
-		scenes.put(Scene.PLAY, new PlayScene());
+		entities.store("city", new City(entities));
+		entities.store("ground", new Ground());
+		entities.store("bird", new Bird());
+		scenes.put(Scene.INTRO, new IntroScene(entities));
+		scenes.put(Scene.START, new StartScene(entities));
+		scenes.put(Scene.PLAY, new PlayScene(entities));
 		setScene(Scene.INTRO);
 	}
 }

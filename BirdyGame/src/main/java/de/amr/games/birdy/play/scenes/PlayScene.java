@@ -2,8 +2,6 @@ package de.amr.games.birdy.play.scenes;
 
 import static de.amr.easy.game.Application.app;
 import static de.amr.easy.game.assets.Assets.sound;
-import static de.amr.games.birdy.BirdyGameApp.entities;
-import static de.amr.games.birdy.BirdyGameApp.setScene;
 import static de.amr.games.birdy.play.BirdEvent.BirdCrashed;
 import static de.amr.games.birdy.play.BirdEvent.BirdLeftPassage;
 import static de.amr.games.birdy.play.BirdEvent.BirdLeftWorld;
@@ -27,11 +25,9 @@ import de.amr.easy.game.view.View;
 import de.amr.games.birdy.BirdyGameApp;
 import de.amr.games.birdy.BirdyGameApp.Scene;
 import de.amr.games.birdy.entities.Area;
-import de.amr.games.birdy.entities.City;
-import de.amr.games.birdy.entities.Ground;
-import de.amr.games.birdy.entities.ObstacleManager;
+import de.amr.games.birdy.entities.BirdyGameEntities;
+import de.amr.games.birdy.entities.ObstacleController;
 import de.amr.games.birdy.entities.ScoreDisplay;
-import de.amr.games.birdy.entities.bird.Bird;
 import de.amr.games.birdy.play.BirdEvent;
 import de.amr.games.birdy.play.scenes.PlayScene.PlaySceneState;
 import de.amr.games.birdy.utils.Score;
@@ -51,15 +47,13 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 
 	private Score score = new Score();
 
-	private ObstacleManager obstacleManager;
-	private Bird bird;
-	private City city;
-	private Ground ground;
+	private BirdyGameEntities ent;
 	private ImageWidget gameOverText;
 	private ScoreDisplay scoreDisplay;
 
-	public PlayScene() {
+	public PlayScene(BirdyGameEntities entities) {
 		super(PlaySceneState.class, EventMatchStrategy.BY_EQUALITY);
+		this.ent = entities;
 		buildStateMachine();
 	}
 
@@ -69,19 +63,19 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 
 		state(PLAYING).setOnEntry(() -> {
 			score.reset();
-			obstacleManager.init();
+			ent.theObstacles().init();
 			start();
 		});
 
 		addTransitionOnEventObject(PLAYING, PLAYING, () -> score.points > 3, e -> {
 			score.points -= 3;
-			bird.tf.x = (bird.tf.x + app().settings().getAsInt("pipe width") + bird.tf.width);
-			bird.receiveEvent(BirdTouchedPipe);
+			ent.theBird().tf.x = (ent.theBird().tf.x + app().settings().getAsInt("pipe width") + ent.theBird().tf.width);
+			ent.theBird().receiveEvent(BirdTouchedPipe);
 			sound("sfx/hit.mp3").play();
 		}, BirdTouchedPipe);
 
 		addTransitionOnEventObject(PLAYING, GAME_OVER, () -> score.points <= 3, t -> {
-			bird.receiveEvent(BirdCrashed);
+			ent.theBird().receiveEvent(BirdCrashed);
 			sound("sfx/hit.mp3").play();
 		}, BirdTouchedPipe);
 
@@ -91,12 +85,12 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		}, BirdLeftPassage);
 
 		addTransitionOnEventObject(PLAYING, GAME_OVER, null, e -> {
-			bird.receiveEvent(BirdTouchedGround);
+			ent.theBird().receiveEvent(BirdTouchedGround);
 			sound("music/bgmusic.mp3").stop();
 		}, BirdTouchedGround);
 
 		addTransitionOnEventObject(PLAYING, GAME_OVER, null, e -> {
-			bird.receiveEvent(BirdLeftWorld);
+			ent.theBird().receiveEvent(BirdLeftWorld);
 			sound("music/bgmusic.mp3").stop();
 		}, BirdLeftWorld);
 
@@ -108,39 +102,35 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		addTransitionOnEventObject(GAME_OVER, GAME_OVER, null, null, BirdLeftPassage);
 		addTransitionOnEventObject(GAME_OVER, GAME_OVER, null, e -> sound("music/bgmusic.mp3").stop(), BirdTouchedGround);
 
-		state(STARTING).setOnEntry(() -> setScene(Scene.START));
+		state(STARTING).setOnEntry(() -> BirdyGameApp.setScene(Scene.START));
 	}
 
 	public void receive(BirdEvent event) {
 		enqueue(event);
-		bird.receiveEvent(event);
+		ent.theBird().receiveEvent(event);
 	}
 
 	@Override
 	public void init() {
-		ground = entities().ofClass(Ground.class).findAny().get();
-		city = entities().ofClass(City.class).findAny().get();
-		bird = entities().ofClass(Bird.class).findAny().get();
-
 		int w = app().settings().width, h = BirdyGameApp.app().settings().height;
 		scoreDisplay = new ScoreDisplay(score, 1.5f);
 		scoreDisplay.tf.centerX(w);
-		scoreDisplay.tf.y = (ground.tf.y / 4);
-		entities().store(scoreDisplay);
+		scoreDisplay.tf.y = (ent.theGround().tf.y / 4);
+		ent.store(scoreDisplay);
 
-		gameOverText = entities().store(new ImageWidget(Assets.image("text_game_over")));
+		gameOverText = ent.store(new ImageWidget(Assets.image("text_game_over")));
 		gameOverText.tf.center(w, h);
-		entities().store(gameOverText);
+		ent.store(gameOverText);
 
 		Area world = new Area(w, 2 * h);
 		world.tf.setPosition(0, -h);
 
-		obstacleManager = new ObstacleManager();
-		obstacleManager.setLogger(Application.LOGGER);
-		entities().store(obstacleManager);
+		ObstacleController obstacles = new ObstacleController(ent);
+		obstacles.setLogger(Application.LOGGER);
+		ent.store("obstacles", obstacles);
 
-		app().collisionHandler().registerStart(bird, ground, BirdTouchedGround);
-		app().collisionHandler().registerEnd(bird, world, BirdLeftWorld);
+		app().collisionHandler().registerStart(ent.theBird(), ent.theGround(), BirdTouchedGround);
+		app().collisionHandler().registerEnd(ent.theBird(), world, BirdLeftWorld);
 
 		super.init();
 	}
@@ -150,7 +140,7 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		for (Collision collision : app().collisionHandler().collisions()) {
 			receive((BirdEvent) collision.getAppEvent());
 		}
-		entities().all().forEach(entity -> {
+		ent.all().forEach(entity -> {
 			if (entity instanceof Lifecycle) {
 				((Lifecycle) entity).update();
 			}
@@ -160,29 +150,29 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 
 	@Override
 	public void start() {
-		ground.tf.setVelocity(app().settings().get("world speed"), 0);
-		obstacleManager.start();
+		ent.theGround().tf.setVelocity(app().settings().get("world speed"), 0);
+		ent.theObstacles().start();
 	}
 
 	@Override
 	public void stop() {
-		ground.stopMoving();
-		obstacleManager.stop();
+		ent.theGround().stopMoving();
+		ent.theObstacles().stop();
 	}
 
 	@Override
 	public void draw(Graphics2D g) {
-		city.draw(g);
-		obstacleManager.draw(g);
-		ground.draw(g);
+		ent.theCity().draw(g);
+		ent.theObstacles().draw(g);
+		ent.theGround().draw(g);
 		scoreDisplay.draw(g);
-		bird.draw(g);
+		ent.theBird().draw(g);
 		if (getState() == GAME_OVER) {
 			gameOverText.draw(g);
 		}
 		if (app().settings().getAsBoolean("show-state")) {
-			String text = String.format("%s: %s,  Bird: %s and %s", getDescription(), getState(), bird.getFlightState(),
-					bird.getHealthState());
+			String text = String.format("%s: %s,  Bird: %s and %s", getDescription(), getState(),
+					ent.theBird().getFlightState(), ent.theBird().getHealthState());
 			g.setFont(new Font(Font.DIALOG, Font.PLAIN, 10));
 			g.drawString(text, 20, app().settings().height - 20);
 		}

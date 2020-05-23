@@ -20,7 +20,6 @@ import de.amr.easy.game.input.Keyboard;
 import de.amr.easy.game.ui.sprites.Sprite;
 import de.amr.easy.game.ui.sprites.SpriteMap;
 import de.amr.easy.game.view.View;
-import de.amr.games.birdy.BirdyGameApp;
 import de.amr.statemachine.api.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 
@@ -39,10 +38,13 @@ public class City extends Entity implements Lifecycle, View {
 		SUNSET, SUNRISE
 	}
 
+	private final BirdyGameEntities ent;
 	private final SpriteMap sprites = new SpriteMap();
 	private final StateMachine<DayTime, DayEvent> fsm;
 
-	public City() {
+	public City(BirdyGameEntities entities) {
+
+		ent = entities;
 
 		sprites.set("s_night", Sprite.ofAssets("bg_night"));
 		sprites.set("s_day", Sprite.ofAssets("bg_day"));
@@ -72,7 +74,7 @@ public class City extends Entity implements Lifecycle, View {
 		});
 
 		fsm.state(NIGHT).setOnExit(() -> {
-			BirdyGameApp.entities().removeAll(Star.class);
+			ent.removeAll(Star.class);
 		});
 
 		fsm.addTransitionOnTimeout(NIGHT, NIGHT, null, e -> {
@@ -100,10 +102,10 @@ public class City extends Entity implements Lifecycle, View {
 	}
 
 	private void replaceStars() {
-		BirdyGameApp.entities().removeAll(Star.class);
+		ent.removeAll(Star.class);
 		int numStars = randomInt(1, app().settings().get("max stars"));
 		IntStream.range(1, numStars).forEach(i -> {
-			Star star = BirdyGameApp.entities().store(new Star());
+			Star star = ent.store(new Star());
 			star.tf.setPosition(randomInt(50, tf.width - 50), randomInt(100, 180));
 		});
 		Application.LOGGER.info("Created " + numStars + " new stars");
@@ -138,7 +140,7 @@ public class City extends Entity implements Lifecycle, View {
 			for (int x = 0; x < tf.width; x += image.getWidth(null)) {
 				g.drawImage(image, x, 0, null);
 			}
-			BirdyGameApp.entities().ofClass(Star.class).forEach(star -> star.draw(g));
+			ent.ofClass(Star.class).forEach(star -> star.draw(g));
 			g.translate(-tf.x, -tf.y);
 		});
 	}
