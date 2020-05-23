@@ -1,22 +1,22 @@
 package de.amr.games.birdy.play.scenes;
 
 import static de.amr.easy.game.Application.app;
+import static de.amr.easy.game.assets.Assets.sound;
+import static de.amr.easy.game.assets.Assets.sounds;
 import static de.amr.games.birdy.BirdyGameApp.entities;
+import static de.amr.games.birdy.BirdyGameApp.setScene;
 import static de.amr.games.birdy.play.BirdEvent.BirdLeftWorld;
 import static de.amr.games.birdy.play.BirdEvent.BirdTouchedGround;
-import static de.amr.games.birdy.play.scenes.StartScene.State.GameOver;
-import static de.amr.games.birdy.play.scenes.StartScene.State.Ready;
-import static de.amr.games.birdy.play.scenes.StartScene.State.StartPlaying;
-import static de.amr.games.birdy.play.scenes.StartScene.State.Starting;
+import static de.amr.games.birdy.play.scenes.StartScene.StartSceneState.GAME_OVER;
+import static de.amr.games.birdy.play.scenes.StartScene.StartSceneState.READY;
+import static de.amr.games.birdy.play.scenes.StartScene.StartSceneState.STARTING;
+import static de.amr.games.birdy.play.scenes.StartScene.StartSceneState.STARTING_TO_PLAY;
 import static de.amr.games.birdy.utils.Util.randomInt;
-import static java.lang.String.format;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
-import de.amr.easy.game.Application;
 import de.amr.easy.game.assets.Assets;
 import de.amr.easy.game.assets.Sound;
 import de.amr.easy.game.controller.Lifecycle;
@@ -25,13 +25,13 @@ import de.amr.easy.game.input.Keyboard;
 import de.amr.easy.game.ui.widgets.ImageWidget;
 import de.amr.easy.game.ui.widgets.PumpingImageWidget;
 import de.amr.easy.game.view.View;
-import de.amr.games.birdy.BirdyGameApp;
 import de.amr.games.birdy.BirdyGameApp.Scene;
 import de.amr.games.birdy.entities.Area;
 import de.amr.games.birdy.entities.City;
 import de.amr.games.birdy.entities.Ground;
 import de.amr.games.birdy.entities.bird.Bird;
 import de.amr.games.birdy.play.BirdEvent;
+import de.amr.games.birdy.play.scenes.StartScene.StartSceneState;
 import de.amr.statemachine.api.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 
@@ -41,69 +41,78 @@ import de.amr.statemachine.core.StateMachine;
  * 
  * @author Armin Reichert
  */
-public class StartScene implements Lifecycle, View {
+public class StartScene extends StateMachine<StartSceneState, BirdEvent> implements Lifecycle, View {
 
-	public enum State {
-		Starting, Ready, GameOver, StartPlaying, StartSpriteBrowser
+	public enum StartSceneState {
+		STARTING, READY, GAME_OVER, STARTING_TO_PLAY, SPRITE_BROWSER
 	}
 
-	private class StartSceneControl extends StateMachine<State, BirdEvent> {
-
-		public StartSceneControl() {
-			super(State.class, EventMatchStrategy.BY_EQUALITY);
-
-			BirdyGameApp app = (BirdyGameApp) Application.app();
-			setDescription("Start Scene Control");
-			setInitialState(Starting);
-
-			// Starting ---
-
-			state(Starting).setOnEntry(() -> {
-				reset();
-				if (!Assets.sound("music/bgmusic.mp3").isRunning()) {
-					Assets.sound("music/bgmusic.mp3").loop();
-				}
-			});
-
-			state(Starting).setOnTick(() -> keepBirdInAir());
-
-			addTransition(Starting, Ready, () -> Keyboard.keyDown(app.settings().get("jump key")), null);
-			addTransitionOnEventObject(Starting, GameOver, null, null, BirdTouchedGround);
-
-			// Ready ---
-
-			state(Ready).setTimer(() -> app().clock().sec(app.settings().getAsFloat("ready time sec")));
-			state(Ready).setOnEntry(() -> displayText("readyText"));
-			addTransitionOnTimeout(Ready, StartPlaying, null, e -> BirdyGameApp.setScene(Scene.PLAY));
-			addTransitionOnEventObject(Ready, GameOver, null, e -> displayText("title"), BirdTouchedGround);
-			state(Ready).setOnExit(() -> displayedText = null);
-
-			// GameOver ---
-
-			state(GameOver).setOnEntry(() -> {
-				stop();
-				displayedText = entities().ofName("game_over");
-				Assets.sounds().forEach(Sound::stop);
-			});
-
-			addTransition(GameOver, Starting, () -> Keyboard.keyPressedOnce(KeyEvent.VK_SPACE), null);
-		}
-	}
-
-	private final StartSceneControl control;
 	private Bird bird;
 	private City city;
 	private Ground ground;
-	private ImageWidget displayedText;
+	private ImageWidget sceneText;
 
 	public StartScene() {
-		control = new StartSceneControl();
+		super(StartSceneState.class, EventMatchStrategy.BY_EQUALITY);
+		buildStateMachine();
+	}
+
+	private void buildStateMachine() {
+		setDescription("[Start Scene]");
+		setInitialState(STARTING);
+
+		// Starting ---
+
+		state(STARTING).setOnEntry(() -> {
+			reset();
+			if (!sound("music/bgmusic.mp3").isRunning()) {
+				sound("music/bgmusic.mp3").loop();
+			}
+		});
+
+		state(STARTING).setOnTick(() -> keepBirdInAir());
+
+		addTransition(STARTING, READY, () -> Keyboard.keyDown(app().settings().get("jump key")), null);
+
+		addTransitionOnEventObject(STARTING, GAME_OVER, null, null, BirdTouchedGround);
+
+		// Ready ---
+
+		state(READY).setTimer(() -> {
+			float readyTime = app().settings().getAsFloat("ready time sec");
+			return app().clock().sec(readyTime);
+		});
+
+		state(READY).setOnEntry(() -> showSceneText("readyText"));
+
+		state(READY).setOnExit(this::hideSceneText);
+
+		addTransitionOnTimeout(READY, STARTING_TO_PLAY, null, e -> setScene(Scene.PLAY));
+
+		addTransitionOnEventObject(READY, GAME_OVER, null, e -> showSceneText("title"), BirdTouchedGround);
+
+		// GameOver ---
+
+		state(GAME_OVER).setOnEntry(() -> {
+			stop();
+			sounds().forEach(Sound::stop);
+			showSceneText("game_over");
+		});
+
+		addTransition(GAME_OVER, STARTING, () -> Keyboard.keyPressedOnce(KeyEvent.VK_SPACE), null);
 	}
 
 	@Override
-	public void init() {
-		// control.setLogger(Application.LOG);
-		control.init();
+	public void update() {
+		for (Collision c : app().collisionHandler().collisions()) {
+			BirdEvent event = (BirdEvent) c.getAppEvent();
+			bird.receiveEvent(event);
+			enqueue(event);
+		}
+		city.update();
+		ground.update();
+		bird.update();
+		super.update();
 	}
 
 	@Override
@@ -117,8 +126,12 @@ public class StartScene implements Lifecycle, View {
 		}
 	}
 
-	private void displayText(String name) {
-		displayedText = entities().ofName(name);
+	private void showSceneText(String imageName) {
+		sceneText = entities().ofName(imageName);
+	}
+
+	private void hideSceneText() {
+		sceneText = null;
 	}
 
 	private void reset() {
@@ -162,20 +175,7 @@ public class StartScene implements Lifecycle, View {
 		app().collisionHandler().registerEnd(bird, entities().ofClass(Area.class).findAny().get(), BirdLeftWorld);
 		app().collisionHandler().registerStart(bird, ground, BirdTouchedGround);
 
-		displayText("title");
-	}
-
-	@Override
-	public void update() {
-		for (Collision c : app().collisionHandler().collisions()) {
-			BirdEvent event = (BirdEvent) c.getAppEvent();
-			bird.receiveEvent(event);
-			control.enqueue(event);
-		}
-		city.update();
-		ground.update();
-		bird.update();
-		control.update();
+		showSceneText("title");
 	}
 
 	@Override
@@ -184,13 +184,15 @@ public class StartScene implements Lifecycle, View {
 		city.draw(g);
 		ground.draw(g);
 		bird.draw(g);
-		if (displayedText != null) {
-			displayedText.tf.center(w, h - ground.tf.height);
-			displayedText.draw(g);
+		if (sceneText != null) {
+			sceneText.tf.center(w, h - ground.tf.height);
+			sceneText.draw(g);
 		}
-		g.setColor(Color.BLACK);
-		g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 10));
-		g.drawString(format("%s: (%s)  Bird: Flight: (%s) Sanity: (%s)", control.getDescription(), control.getState(),
-				bird.getFlightState(), bird.getHealthState()), 20, h - 50);
+		if (app().settings().getAsBoolean("show-state")) {
+			String text = String.format("%s: (%s)  Bird: Flight: (%s) Sanity: (%s)", getDescription(), getState(),
+					bird.getFlightState(), bird.getHealthState());
+			g.setFont(new Font(Font.DIALOG, Font.PLAIN, 10));
+			g.drawString(text, 20, app().settings().height - 20);
+		}
 	}
 }

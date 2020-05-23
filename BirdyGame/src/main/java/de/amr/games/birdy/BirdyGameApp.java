@@ -69,6 +69,7 @@ public class BirdyGameApp extends Application {
 		settings.set("pipe width", 52);
 		settings.set("min pipe height", 100);
 		settings.set("passage height", 100);
+		settings.set("show-state", true);
 	}
 
 	@Override

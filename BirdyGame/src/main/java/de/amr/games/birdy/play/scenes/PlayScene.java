@@ -1,7 +1,6 @@
 package de.amr.games.birdy.play.scenes;
 
 import static de.amr.easy.game.Application.app;
-import static de.amr.easy.game.Application.loginfo;
 import static de.amr.easy.game.assets.Assets.sound;
 import static de.amr.games.birdy.BirdyGameApp.entities;
 import static de.amr.games.birdy.BirdyGameApp.setScene;
@@ -10,10 +9,11 @@ import static de.amr.games.birdy.play.BirdEvent.BirdLeftPassage;
 import static de.amr.games.birdy.play.BirdEvent.BirdLeftWorld;
 import static de.amr.games.birdy.play.BirdEvent.BirdTouchedGround;
 import static de.amr.games.birdy.play.BirdEvent.BirdTouchedPipe;
-import static de.amr.games.birdy.play.scenes.PlayScene.State.GAME_OVER;
-import static de.amr.games.birdy.play.scenes.PlayScene.State.PLAYING;
-import static de.amr.games.birdy.play.scenes.PlayScene.State.STARTING;
+import static de.amr.games.birdy.play.scenes.PlayScene.PlaySceneState.GAME_OVER;
+import static de.amr.games.birdy.play.scenes.PlayScene.PlaySceneState.PLAYING;
+import static de.amr.games.birdy.play.scenes.PlayScene.PlaySceneState.STARTING;
 
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
@@ -33,7 +33,7 @@ import de.amr.games.birdy.entities.ObstacleManager;
 import de.amr.games.birdy.entities.ScoreDisplay;
 import de.amr.games.birdy.entities.bird.Bird;
 import de.amr.games.birdy.play.BirdEvent;
-import de.amr.games.birdy.play.scenes.PlayScene.State;
+import de.amr.games.birdy.play.scenes.PlayScene.PlaySceneState;
 import de.amr.games.birdy.utils.Score;
 import de.amr.statemachine.api.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
@@ -43,9 +43,9 @@ import de.amr.statemachine.core.StateMachine;
  * 
  * @author Armin Reichert
  */
-public class PlayScene extends StateMachine<State, BirdEvent> implements Lifecycle, View {
+public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implements Lifecycle, View {
 
-	public enum State {
+	public enum PlaySceneState {
 		STARTING, PLAYING, GAME_OVER;
 	}
 
@@ -58,7 +58,7 @@ public class PlayScene extends StateMachine<State, BirdEvent> implements Lifecyc
 	private ScoreDisplay scoreDisplay;
 
 	public PlayScene() {
-		super(State.class, EventMatchStrategy.BY_EQUALITY);
+		super(PlaySceneState.class, EventMatchStrategy.BY_EQUALITY);
 		buildStateMachine();
 		obstacleManager.setLogger(Application.LOGGER);
 	}
@@ -160,7 +160,6 @@ public class PlayScene extends StateMachine<State, BirdEvent> implements Lifecyc
 		gameOverText.update();
 		scoreDisplay.update();
 		super.update();
-//		loginfo("%s: %s,  Bird: %s and %s", getDescription(), getState(), bird.getFlightState(), bird.getHealthState());
 	}
 
 	@Override
@@ -172,6 +171,12 @@ public class PlayScene extends StateMachine<State, BirdEvent> implements Lifecyc
 		bird.draw(g);
 		if (getState() == GAME_OVER) {
 			gameOverText.draw(g);
+		}
+		if (app().settings().getAsBoolean("show-state")) {
+			String text = String.format("%s: %s,  Bird: %s and %s", getDescription(), getState(), bird.getFlightState(),
+					bird.getHealthState());
+			g.setFont(new Font(Font.DIALOG, Font.PLAIN, 10));
+			g.drawString(text, 20, app().settings().height - 20);
 		}
 	}
 }
