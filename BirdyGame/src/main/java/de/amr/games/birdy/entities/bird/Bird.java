@@ -61,7 +61,7 @@ public class Bird extends Entity implements Lifecycle, View {
 			addTransitionOnEventObject(Sane, Dead, null, null, BirdTouchedGround);
 			addTransitionOnEventObject(Sane, Dead, null, null, BirdLeftWorld);
 
-			state(Injured).setTimer(() -> app().clock().sec(app().settings().get("bird injured seconds")));
+			state(Injured).setTimer(() -> app().clock().sec(app().settings().get("bird-injured-seconds")));
 			state(Injured).setOnEntry(() -> sprites.select("s_red"));
 
 			addTransitionOnEventObject(Injured, Injured, null, e -> restartTimer(Injured), BirdTouchedPipe);
@@ -92,7 +92,7 @@ public class Bird extends Entity implements Lifecycle, View {
 			setInitialState(Flying);
 
 			state(Flying).setOnTick(() -> {
-				if (Keyboard.keyDown(app().settings().get("jump key"))) {
+				if (Keyboard.keyDown(app().settings().get("jump-key"))) {
 					flap();
 				} else {
 					fly();
@@ -133,12 +133,12 @@ public class Bird extends Entity implements Lifecycle, View {
 		sprites.select("s_yellow");
 		tf.width = (sprites.current().get().getWidth());
 		tf.height = (sprites.current().get().getHeight());
-		gravity = app().settings().getAsFloat("world gravity");
+		gravity = app().settings().getAsFloat("world-gravity");
 	}
 
 	private Sprite createFeatherSprite(String birdName) {
 		Sprite sprite = Sprite.ofAssets(birdName + "_0", birdName + "_1", birdName + "_2");
-		sprite.animate(AnimationType.BACK_AND_FORTH, app().settings().get("bird flap millis"));
+		sprite.animate(AnimationType.BACK_AND_FORTH, app().settings().get("bird-flap-millis"));
 		return sprite;
 	}
 

@@ -41,8 +41,8 @@ public class ObstacleController extends Entity implements Lifecycle, View {
 		// Stay breeding for some random time from interval [MIN_PIPE_TIME,
 		// MAX_PIPE_TIME]:
 		control.state(BREEDING).setTimer(() -> {
-			int minCreationTime = app().clock().sec(app().settings().getAsFloat("min pipe creation sec"));
-			int maxCreationTime = app().clock().sec(app().settings().getAsFloat("max pipe creation sec"));
+			int minCreationTime = app().clock().sec(app().settings().getAsFloat("min-pipe-creation-sec"));
+			int maxCreationTime = app().clock().sec(app().settings().getAsFloat("max-pipe-creation-sec"));
 			return randomInt(minCreationTime, maxCreationTime);
 		});
 
@@ -100,13 +100,13 @@ public class ObstacleController extends Entity implements Lifecycle, View {
 
 	private void updateObstacles() {
 		// Add new obstacle
-		int minHeight = app().settings().get("min pipe height");
-		int passageHeight = app().settings().get("passage height");
-		int width = app().settings().get("pipe width");
-		int height = app().settings().get("pipe height");
+		int minHeight = app().settings().get("min-pipe-height");
+		int passageHeight = app().settings().get("passage-height");
+		int width = app().settings().get("pipe-width");
+		int height = app().settings().get("pipe-height");
 		int passageCenterY = randomInt(minHeight + passageHeight / 2,
 				(int) ent.theGround().tf.y - minHeight - passageHeight / 2);
-		float speed = app().settings().get("world speed");
+		float speed = app().settings().get("world-speed");
 
 		Obstacle obstacle = new Obstacle(width, height, passageHeight, passageCenterY);
 		obstacle.tf.vx = speed;

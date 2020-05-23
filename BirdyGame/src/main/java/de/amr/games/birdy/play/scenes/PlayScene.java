@@ -69,7 +69,7 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 
 		addTransitionOnEventObject(PLAYING, PLAYING, () -> score.points > 3, e -> {
 			score.points -= 3;
-			ent.theBird().tf.x = (ent.theBird().tf.x + app().settings().getAsInt("pipe width") + ent.theBird().tf.width);
+			ent.theBird().tf.x = (ent.theBird().tf.x + app().settings().getAsInt("pipe-width") + ent.theBird().tf.width);
 			ent.theBird().receiveEvent(BirdTouchedPipe);
 			sound("sfx/hit.mp3").play();
 		}, BirdTouchedPipe);
@@ -150,7 +150,7 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 
 	@Override
 	public void start() {
-		ent.theGround().tf.setVelocity(app().settings().get("world speed"), 0);
+		ent.theGround().tf.setVelocity(app().settings().get("world-speed"), 0);
 		ent.theObstacles().start();
 	}
 

@@ -1,6 +1,7 @@
 package de.amr.games.birdy.play.scenes;
 
 import static de.amr.easy.game.Application.app;
+import static de.amr.games.birdy.BirdyGameApp.sec;
 import static de.amr.games.birdy.play.scenes.IntroScene.IntroSceneState.COMPLETE;
 import static de.amr.games.birdy.play.scenes.IntroScene.IntroSceneState.CREDITS;
 import static de.amr.games.birdy.play.scenes.IntroScene.IntroSceneState.LOGO;
@@ -43,10 +44,6 @@ public class IntroScene extends StateMachine<IntroSceneState, Void> implements V
 		"Geräteschuppen Software, 2017"
 	/*@formatter:on*/
 	);
-
-	static int sec(float amount) {
-		return app().clock().sec(amount);
-	}
 
 	private BirdyGameEntities ent;
 	private PumpingImageWidget logoImage;

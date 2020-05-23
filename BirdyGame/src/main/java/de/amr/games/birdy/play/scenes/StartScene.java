@@ -3,6 +3,7 @@ package de.amr.games.birdy.play.scenes;
 import static de.amr.easy.game.Application.app;
 import static de.amr.easy.game.assets.Assets.sound;
 import static de.amr.easy.game.assets.Assets.sounds;
+import static de.amr.games.birdy.BirdyGameApp.sec;
 import static de.amr.games.birdy.BirdyGameApp.setScene;
 import static de.amr.games.birdy.play.BirdEvent.BirdLeftWorld;
 import static de.amr.games.birdy.play.BirdEvent.BirdTouchedGround;
@@ -68,16 +69,13 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 
 		state(STARTING).setOnTick(() -> keepBirdInAir());
 
-		addTransition(STARTING, READY, () -> Keyboard.keyDown(app().settings().get("jump key")), null);
+		addTransition(STARTING, READY, () -> Keyboard.keyDown(app().settings().get("jump-key")), null);
 
 		addTransitionOnEventObject(STARTING, GAME_OVER, null, null, BirdTouchedGround);
 
 		// Ready ---
 
-		state(READY).setTimer(() -> {
-			float readyTime = app().settings().getAsFloat("ready time sec");
-			return app().clock().sec(readyTime);
-		});
+		state(READY).setTimer(() -> sec(app().settings().getAsFloat("ready-time-sec")));
 
 		state(READY).setOnEntry(() -> showSceneText("readyText"));
 
@@ -96,6 +94,48 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 		});
 
 		addTransition(GAME_OVER, STARTING, () -> Keyboard.keyPressedOnce(KeyEvent.VK_SPACE), null);
+	}
+
+	private void reset() {
+		int w = app().settings().width, h = app().settings().height;
+
+		ent.theCity().setWidth(w);
+		ent.theCity().init();
+
+		ent.theGround().setWidth(w);
+		ent.theGround().tf.setPosition(0, h - ent.theGround().tf.height);
+		ent.theGround().tf.setVelocity(app().settings().getAsFloat("world-speed"), 0);
+
+		ent.theBird().init();
+		ent.theBird().tf.setPosition(w / 8, ent.theGround().tf.y / 2);
+		ent.theBird().tf.setVelocity(0, 0);
+
+		if (!ent.contains("title")) {
+			ImageWidget titleText = new ImageWidget(Assets.image("title"));
+			ent.store("title", titleText);
+		}
+
+		if (!ent.contains("text_game_over")) {
+			ImageWidget gameOverText = new ImageWidget(Assets.image("text_game_over"));
+			ent.store("text_game_over", gameOverText);
+		}
+
+		if (!ent.contains("text_ready")) {
+			PumpingImageWidget readyText = PumpingImageWidget.create().image(Assets.image("text_ready")).build();
+			ent.store("text_ready", readyText);
+		}
+
+		if (!ent.contains("world")) {
+			Area world = new Area(w, 2 * h);
+			world.tf.setPosition(0, -h);
+			ent.store("world", world);
+		}
+
+		app().collisionHandler().clear();
+		app().collisionHandler().registerEnd(ent.theBird(), ent.ofClass(Area.class).findAny().get(), BirdLeftWorld);
+		app().collisionHandler().registerStart(ent.theBird(), ent.theGround(), BirdTouchedGround);
+
+		showSceneText("title");
 	}
 
 	@Override
@@ -148,46 +188,5 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 
 	private void hideSceneText() {
 		sceneText = null;
-	}
-
-	private void reset() {
-		int w = app().settings().width, h = app().settings().height;
-		ent.theCity().setWidth(w);
-		ent.theCity().init();
-
-		ent.theGround().setWidth(w);
-		ent.theGround().tf.setPosition(0, h - ent.theGround().tf.height);
-		ent.theGround().tf.setVelocity(app().settings().getAsFloat("world speed"), 0);
-
-		ent.theBird().init();
-		ent.theBird().tf.setPosition(w / 8, ent.theGround().tf.y / 2);
-		ent.theBird().tf.setVelocity(0, 0);
-
-		if (!ent.contains("title")) {
-			ImageWidget titleText = new ImageWidget(Assets.image("title"));
-			ent.store("title", titleText);
-		}
-
-		if (!ent.contains("text_game_over")) {
-			ImageWidget gameOverText = new ImageWidget(Assets.image("text_game_over"));
-			ent.store("text_game_over", gameOverText);
-		}
-
-		if (!ent.contains("text_ready")) {
-			PumpingImageWidget readyText = PumpingImageWidget.create().image(Assets.image("text_ready")).build();
-			ent.store("text_ready", readyText);
-		}
-
-		if (!ent.contains("world")) {
-			Area world = new Area(w, 2 * h);
-			world.tf.setPosition(0, -h);
-			ent.store("world", world);
-		}
-
-		app().collisionHandler().clear();
-		app().collisionHandler().registerEnd(ent.theBird(), ent.ofClass(Area.class).findAny().get(), BirdLeftWorld);
-		app().collisionHandler().registerStart(ent.theBird(), ent.theGround(), BirdTouchedGround);
-
-		showSceneText("title");
 	}
 }

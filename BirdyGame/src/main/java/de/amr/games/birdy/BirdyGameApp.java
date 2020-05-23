@@ -35,12 +35,15 @@ public class BirdyGameApp extends Application {
 		INTRO_SCENE, START_SCENE, PLAY_SCENE
 	};
 
+	private static EnumMap<Scene, Lifecycle> scenes = new EnumMap<>(Scene.class);
+
 	public static void setScene(Scene scene) {
-		BirdyGameApp app = (BirdyGameApp) app();
-		app.setController(app.scenes.get(scene));
+		app().setController(scenes.get(scene));
 	}
 
-	private EnumMap<Scene, Lifecycle> scenes = new EnumMap<>(Scene.class);
+	public static int sec(float amount) {
+		return app().clock().sec(amount);
+	}
 
 	@Override
 	protected void configure(AppSettings settings) {
@@ -52,19 +55,19 @@ public class BirdyGameApp extends Application {
 		settings.fullScreenOnStart = false;
 
 		// specific settings
-		settings.set("jump key", KeyEvent.VK_UP);
-		settings.set("world gravity", 0.4f);
-		settings.set("world speed", -2.5f);
-		settings.set("ready time sec", 2f);
-		settings.set("max stars", 5);
-		settings.set("bird flap millis", 50);
-		settings.set("bird injured seconds", 1f);
-		settings.set("min pipe creation sec", 1f);
-		settings.set("max pipe creation sec", 5f);
-		settings.set("pipe height", 480 - 112);
-		settings.set("pipe width", 52);
-		settings.set("min pipe height", 100);
-		settings.set("passage height", 100);
+		settings.set("jump-key", KeyEvent.VK_UP);
+		settings.set("world-gravity", 0.4f);
+		settings.set("world-speed", -2.5f);
+		settings.set("ready-time-sec", 2f);
+		settings.set("max-stars", 5);
+		settings.set("bird-flap-millis", 50);
+		settings.set("bird-injured-seconds", 1f);
+		settings.set("min-pipe-creation-sec", 1f);
+		settings.set("max-pipe-creation-sec", 5f);
+		settings.set("pipe-height", 480 - 112);
+		settings.set("pipe-width", 52);
+		settings.set("min-pipe-height", 100);
+		settings.set("passage-height", 100);
 		settings.set("show-state", true);
 	}
 

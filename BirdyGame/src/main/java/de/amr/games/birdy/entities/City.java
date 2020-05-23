@@ -103,7 +103,7 @@ public class City extends Entity implements Lifecycle, View {
 
 	private void replaceStars() {
 		ent.removeAll(Star.class);
-		int numStars = randomInt(1, app().settings().get("max stars"));
+		int numStars = randomInt(1, app().settings().get("max-stars"));
 		IntStream.range(1, numStars).forEach(i -> {
 			Star star = ent.store(new Star());
 			star.tf.setPosition(randomInt(50, tf.width - 50), randomInt(100, 180));
