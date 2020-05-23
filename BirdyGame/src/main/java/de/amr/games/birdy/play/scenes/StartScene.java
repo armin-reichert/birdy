@@ -120,6 +120,24 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 		ground.tf.setVelocity(0, 0);
 	}
 
+	@Override
+	public void draw(Graphics2D g) {
+		int w = app().settings().width, h = app().settings().height;
+		city.draw(g);
+		ground.draw(g);
+		bird.draw(g);
+		if (sceneText != null) {
+			sceneText.tf.center(w, h - ground.tf.height);
+			sceneText.draw(g);
+		}
+		if (app().settings().getAsBoolean("show-state")) {
+			String text = String.format("%s: (%s)  Bird: Flight: (%s) Sanity: (%s)", getDescription(), getState(),
+					bird.getFlightState(), bird.getHealthState());
+			g.setFont(new Font(Font.DIALOG, Font.PLAIN, 10));
+			g.drawString(text, 20, app().settings().height - 20);
+		}
+	}
+
 	private void keepBirdInAir() {
 		while (bird.tf.y > ground.tf.y / 2) {
 			bird.flap(randomInt(1, 4));
@@ -176,23 +194,5 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 		app().collisionHandler().registerStart(bird, ground, BirdTouchedGround);
 
 		showSceneText("title");
-	}
-
-	@Override
-	public void draw(Graphics2D g) {
-		int w = app().settings().width, h = app().settings().height;
-		city.draw(g);
-		ground.draw(g);
-		bird.draw(g);
-		if (sceneText != null) {
-			sceneText.tf.center(w, h - ground.tf.height);
-			sceneText.draw(g);
-		}
-		if (app().settings().getAsBoolean("show-state")) {
-			String text = String.format("%s: (%s)  Bird: Flight: (%s) Sanity: (%s)", getDescription(), getState(),
-					bird.getFlightState(), bird.getHealthState());
-			g.setFont(new Font(Font.DIALOG, Font.PLAIN, 10));
-			g.drawString(text, 20, app().settings().height - 20);
-		}
 	}
 }

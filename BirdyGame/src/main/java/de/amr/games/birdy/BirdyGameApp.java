@@ -1,12 +1,14 @@
 package de.amr.games.birdy;
 
+import static de.amr.easy.game.assets.Assets.sound;
+import static de.amr.easy.game.assets.Assets.storeTrueTypeFont;
+
 import java.awt.DisplayMode;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.util.EnumMap;
 
 import de.amr.easy.game.Application;
-import de.amr.easy.game.assets.Assets;
 import de.amr.easy.game.config.AppSettings;
 import de.amr.easy.game.controller.Lifecycle;
 import de.amr.easy.game.entity.EntityMap;
@@ -75,11 +77,11 @@ public class BirdyGameApp extends Application {
 	@Override
 	public void init() {
 		SpritesheetReader.extractSpriteSheet();
-		Assets.sound("music/bgmusic.mp3").volume(0.5f);
-		Assets.storeTrueTypeFont("Pacifico-Regular", "fonts/Pacifico-Regular.ttf", Font.BOLD, 40);
-		entities.store(new Bird());
-		entities.store(new Ground());
+		sound("music/bgmusic.mp3").volume(0.5f);
+		storeTrueTypeFont("Pacifico-Regular", "fonts/Pacifico-Regular.ttf", Font.BOLD, 40);
 		entities.store(new City());
+		entities.store(new Ground());
+		entities.store(new Bird());
 		scenes.put(Scene.INTRO, new IntroScene());
 		scenes.put(Scene.START, new StartScene());
 		scenes.put(Scene.PLAY, new PlayScene());

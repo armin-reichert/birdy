@@ -49,8 +49,9 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		STARTING, PLAYING, GAME_OVER;
 	}
 
-	private final Score score = new Score();
-	private final ObstacleManager obstacleManager = new ObstacleManager();;
+	private Score score = new Score();
+
+	private ObstacleManager obstacleManager;
 	private Bird bird;
 	private City city;
 	private Ground ground;
@@ -60,7 +61,6 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 	public PlayScene() {
 		super(PlaySceneState.class, EventMatchStrategy.BY_EQUALITY);
 		buildStateMachine();
-		obstacleManager.setLogger(Application.LOGGER);
 	}
 
 	private void buildStateMachine() {
@@ -118,17 +118,26 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 
 	@Override
 	public void init() {
-		int w = app().settings().width, h = BirdyGameApp.app().settings().height;
 		ground = entities().ofClass(Ground.class).findAny().get();
 		city = entities().ofClass(City.class).findAny().get();
 		bird = entities().ofClass(Bird.class).findAny().get();
+
+		int w = app().settings().width, h = BirdyGameApp.app().settings().height;
 		scoreDisplay = new ScoreDisplay(score, 1.5f);
 		scoreDisplay.tf.centerX(w);
 		scoreDisplay.tf.y = (ground.tf.y / 4);
+		entities().store(scoreDisplay);
+
 		gameOverText = entities().store(new ImageWidget(Assets.image("text_game_over")));
 		gameOverText.tf.center(w, h);
+		entities().store(gameOverText);
+
 		Area world = new Area(w, 2 * h);
 		world.tf.setPosition(0, -h);
+
+		obstacleManager = new ObstacleManager();
+		obstacleManager.setLogger(Application.LOGGER);
+		entities().store(obstacleManager);
 
 		app().collisionHandler().registerStart(bird, ground, BirdTouchedGround);
 		app().collisionHandler().registerEnd(bird, world, BirdLeftWorld);
@@ -137,8 +146,21 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 	}
 
 	@Override
+	public void update() {
+		for (Collision collision : app().collisionHandler().collisions()) {
+			receive((BirdEvent) collision.getAppEvent());
+		}
+		entities().all().forEach(entity -> {
+			if (entity instanceof Lifecycle) {
+				((Lifecycle) entity).update();
+			}
+		});
+		super.update();
+	}
+
+	@Override
 	public void start() {
-		ground.tf.setVelocity(BirdyGameApp.app().settings().get("world speed"), 0);
+		ground.tf.setVelocity(app().settings().get("world speed"), 0);
 		obstacleManager.start();
 	}
 
@@ -146,20 +168,6 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 	public void stop() {
 		ground.stopMoving();
 		obstacleManager.stop();
-	}
-
-	@Override
-	public void update() {
-		for (Collision collision : app().collisionHandler().collisions()) {
-			receive((BirdEvent) collision.getAppEvent());
-		}
-		obstacleManager.update();
-		bird.update();
-		city.update();
-		ground.update();
-		gameOverText.update();
-		scoreDisplay.update();
-		super.update();
 	}
 
 	@Override
