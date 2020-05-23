@@ -5,7 +5,7 @@ import static de.amr.games.birdy.BirdyGameApp.sec;
 import static de.amr.games.birdy.entities.ObstacleControllerState.BREEDING;
 import static de.amr.games.birdy.entities.ObstacleControllerState.GIVING_BIRTH;
 import static de.amr.games.birdy.entities.ObstacleControllerState.STOPPED;
-import static de.amr.games.birdy.entities.bird.BirdEvent.LEFT_PASSAGE;
+import static de.amr.games.birdy.entities.bird.BirdEvent.PASSED_OBSTACLE;
 import static de.amr.games.birdy.entities.bird.BirdEvent.TOUCHED_PIPE;
 import static de.amr.games.birdy.utils.Util.randomInt;
 
@@ -98,7 +98,7 @@ public class ObstacleController extends StateMachine<ObstacleControllerState, St
 
 		app().collisionHandler().registerStart(ent.theBird(), obstacle.getUpperPart(), TOUCHED_PIPE);
 		app().collisionHandler().registerStart(ent.theBird(), obstacle.getLowerPart(), TOUCHED_PIPE);
-		app().collisionHandler().registerEnd(ent.theBird(), obstacle.getPassage(), LEFT_PASSAGE);
+		app().collisionHandler().registerEnd(ent.theBird(), obstacle.getPassage(), PASSED_OBSTACLE);
 
 		// Remove obstacles that ran out of screen
 		Iterator<Obstacle> it = obstacles.iterator();

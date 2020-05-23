@@ -3,7 +3,7 @@ package de.amr.games.birdy.scenes;
 import static de.amr.easy.game.Application.app;
 import static de.amr.easy.game.assets.Assets.sound;
 import static de.amr.games.birdy.entities.bird.BirdEvent.CRASHED;
-import static de.amr.games.birdy.entities.bird.BirdEvent.LEFT_PASSAGE;
+import static de.amr.games.birdy.entities.bird.BirdEvent.PASSED_OBSTACLE;
 import static de.amr.games.birdy.entities.bird.BirdEvent.LEFT_WORLD;
 import static de.amr.games.birdy.entities.bird.BirdEvent.TOUCHED_GROUND;
 import static de.amr.games.birdy.entities.bird.BirdEvent.TOUCHED_PIPE;
@@ -84,7 +84,7 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		addTransitionOnEventObject(PLAYING, PLAYING, null, e -> {
 			score.points++;
 			sound("sfx/point.mp3").play();
-		}, LEFT_PASSAGE);
+		}, PASSED_OBSTACLE);
 
 		addTransitionOnEventObject(PLAYING, GAME_OVER, null, e -> {
 			ent.theBird().consume(TOUCHED_GROUND);
@@ -101,7 +101,7 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		addTransition(GAME_OVER, STARTING, () -> Keyboard.keyPressedOnce(KeyEvent.VK_SPACE), null);
 
 		addTransitionOnEventObject(GAME_OVER, GAME_OVER, null, null, TOUCHED_PIPE);
-		addTransitionOnEventObject(GAME_OVER, GAME_OVER, null, null, LEFT_PASSAGE);
+		addTransitionOnEventObject(GAME_OVER, GAME_OVER, null, null, PASSED_OBSTACLE);
 		addTransitionOnEventObject(GAME_OVER, GAME_OVER, null, e -> sound("music/bgmusic.mp3").stop(), TOUCHED_GROUND);
 
 		state(STARTING).setOnEntry(() -> BirdyGameApp.setScene(Scene.START_SCENE));

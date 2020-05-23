@@ -4,8 +4,8 @@ import static de.amr.easy.game.Application.LOGGER;
 import static de.amr.easy.game.Application.app;
 import static de.amr.games.birdy.BirdyGameApp.sec;
 import static de.amr.games.birdy.entities.bird.BirdEvent.CRASHED;
-import static de.amr.games.birdy.entities.bird.BirdEvent.LEFT_PASSAGE;
 import static de.amr.games.birdy.entities.bird.BirdEvent.LEFT_WORLD;
+import static de.amr.games.birdy.entities.bird.BirdEvent.PASSED_OBSTACLE;
 import static de.amr.games.birdy.entities.bird.BirdEvent.TOUCHED_GROUND;
 import static de.amr.games.birdy.entities.bird.BirdEvent.TOUCHED_PIPE;
 import static de.amr.games.birdy.entities.bird.FlightState.CRASHING;
@@ -34,10 +34,9 @@ import de.amr.statemachine.core.StateMachine;
 /**
  * The little bird.
  * <p>
- * The bird is controlled by two separate state machines, one controls the
- * flight state and the other the bird's health. Using the state machine builder
- * to define the state machines would result in prettier code, but I just wanted
- * to check that the API is working too.
+ * The bird is controlled by two separate state machines, one controls the flight state and the
+ * other the bird's health. Using the state machine builder to define the state machines would
+ * result in prettier code, but I just wanted to check that the API is working too.
  * 
  * @author Armin Reichert
  */
@@ -62,7 +61,7 @@ public class Bird extends Entity implements Lifecycle, View {
 
 			state(SANE).setOnEntry(() -> sprites.select("s_yellow"));
 
-			addTransitionOnEventObject(SANE, SANE, null, null, LEFT_PASSAGE);
+			addTransitionOnEventObject(SANE, SANE, null, null, PASSED_OBSTACLE);
 			addTransitionOnEventObject(SANE, INJURED, null, null, TOUCHED_PIPE);
 			addTransitionOnEventObject(SANE, DEAD, null, null, TOUCHED_GROUND);
 			addTransitionOnEventObject(SANE, DEAD, null, null, LEFT_WORLD);
@@ -73,7 +72,7 @@ public class Bird extends Entity implements Lifecycle, View {
 			addTransitionOnEventObject(INJURED, INJURED, null, e -> restartTimer(INJURED), TOUCHED_PIPE);
 			addTransitionOnTimeout(INJURED, SANE, null, null);
 			addTransitionOnEventObject(INJURED, INJURED, null, null, CRASHED);
-			addTransitionOnEventObject(INJURED, INJURED, null, null, LEFT_PASSAGE);
+			addTransitionOnEventObject(INJURED, INJURED, null, null, PASSED_OBSTACLE);
 			addTransitionOnEventObject(INJURED, DEAD, null, null, TOUCHED_GROUND);
 			addTransitionOnEventObject(INJURED, DEAD, null, null, LEFT_WORLD);
 
@@ -92,39 +91,44 @@ public class Bird extends Entity implements Lifecycle, View {
 	private class FlightControl extends StateMachine<FlightState, BirdEvent> {
 
 		public FlightControl() {
-
 			super(FlightState.class, EventMatchStrategy.BY_EQUALITY);
-			setDescription("[Flight]");
-			setInitialState(FLYING);
+			setMissingTransitionBehavior(MissingTransitionBehavior.LOG);
+			//@formatter:off
+			beginStateMachine()
+				.description("[Flight]")
+				.initialState(FLYING)
 
-			state(FLYING).setOnTick(() -> {
-				if (Keyboard.keyDown(app().settings().get("jump-key"))) {
-					flap();
-				} else {
-					fly();
-				}
-			});
+			.states()
+				
+				.state(FLYING).onTick(() -> {
+					if (Keyboard.keyDown(app().settings().get("jump-key"))) {
+						flap();
+					} else {
+						fly();
+					}
+				})
 
-			addTransitionOnEventObject(FLYING, FLYING, null, null, LEFT_PASSAGE);
-			addTransitionOnEventObject(FLYING, CRASHING, null, null, TOUCHED_PIPE);
-			addTransitionOnEventObject(FLYING, CRASHING, null, null, CRASHED);
-			addTransitionOnEventObject(FLYING, CRASHING, null, null, LEFT_WORLD);
-			addTransitionOnEventObject(FLYING, DOWN, null, null, TOUCHED_GROUND);
+				.state(CRASHING)
+					.onEntry(() -> turnDown())
+					.onTick(() -> fall(3))
+					
+				.state(DOWN)
+					.onEntry(() -> {
+						Assets.sound("sfx/die.mp3").play();
+						turnDown();
+					})
 
-			state(CRASHING).setOnEntry(() -> turnDown());
-			state(CRASHING).setOnTick(() -> fall(3));
+			.transitions()
 
-			addTransitionOnEventObject(CRASHING, CRASHING, null, null, CRASHED);
-			addTransitionOnEventObject(CRASHING, CRASHING, null, null, LEFT_PASSAGE);
-			addTransitionOnEventObject(CRASHING, CRASHING, null, null, TOUCHED_PIPE);
-			addTransitionOnEventObject(CRASHING, DOWN, null, null, TOUCHED_GROUND);
+					.when(FLYING).then(CRASHING).on(TOUCHED_PIPE)
+					.when(FLYING).then(CRASHING).on(CRASHED)
+					.when(FLYING).then(CRASHING).on(LEFT_WORLD)
+					.when(FLYING).then(DOWN).on(TOUCHED_GROUND)
 
-			state(DOWN).setOnEntry(() -> {
-				Assets.sound("sfx/die.mp3").play();
-				turnDown();
-			});
+					.when(CRASHING).then(DOWN).on(TOUCHED_GROUND)
 
-			addTransitionOnEventObject(DOWN, DOWN, null, null, TOUCHED_GROUND);
+			.endStateMachine();
+			//@formatter:off
 		}
 	}
 

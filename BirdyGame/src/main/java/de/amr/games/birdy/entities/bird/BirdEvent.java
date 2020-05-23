@@ -1,5 +1,5 @@
 package de.amr.games.birdy.entities.bird;
 
 public enum BirdEvent {
-	TOUCHED_GROUND, TOUCHED_PIPE, LEFT_PASSAGE, LEFT_WORLD, CRASHED;
+	TOUCHED_GROUND, TOUCHED_PIPE, PASSED_OBSTACLE, LEFT_WORLD, CRASHED;
 }
