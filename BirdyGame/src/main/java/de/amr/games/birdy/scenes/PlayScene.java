@@ -84,7 +84,6 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 			.state(GAME_OVER)
 				.onEntry(() -> stop())
 
-		
 		.transitions()
 		
 			.stay(PLAYING)
@@ -104,8 +103,6 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 					points++;
 					sound("sfx/point.mp3").play();
 				})
-
-
 			
 			.when(PLAYING).then(GAME_OVER)
 				.on(TOUCHED_PIPE)
