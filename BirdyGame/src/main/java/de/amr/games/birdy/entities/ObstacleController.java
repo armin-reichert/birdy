@@ -101,9 +101,9 @@ public class ObstacleController extends StateMachine<Phase, String> implements L
 		app().collisionHandler().registerEnd(bird, obstacle.getPassage(), PASSED_OBSTACLE);
 
 		// Remove obstacles that ran out of screen
-		Iterator<Obstacle> it = ent.ofClass(Obstacle.class).iterator();
-		while (it.hasNext()) {
-			obstacle = it.next();
+		Iterator<Obstacle> obstacles = ent.ofClass(Obstacle.class).iterator();
+		while (obstacles.hasNext()) {
+			obstacle = obstacles.next();
 			if (obstacle.tf.x + obstacle.tf.width < 0) {
 				app().collisionHandler().unregisterStart(bird, obstacle.getUpperPart());
 				app().collisionHandler().unregisterStart(bird, obstacle.getLowerPart());
