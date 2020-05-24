@@ -23,6 +23,7 @@ import de.amr.easy.game.ui.sprites.SpriteMap;
 import de.amr.easy.game.view.View;
 import de.amr.statemachine.api.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
+import de.amr.statemachine.core.StateMachine.MissingTransitionBehavior;
 
 /**
  * The city shown in the background.
@@ -57,6 +58,8 @@ public class City extends Entity implements Lifecycle, View {
 		});
 
 		fsm = new StateMachine<>(DayTime.class, EventMatchStrategy.BY_EQUALITY);
+		fsm.getTracer().setLogger(LOGGER);
+		fsm.setMissingTransitionBehavior(MissingTransitionBehavior.LOG);
 		fsm.setDescription("City");
 		fsm.setInitialState(DAY);
 
@@ -65,7 +68,6 @@ public class City extends Entity implements Lifecycle, View {
 		});
 
 		fsm.addTransitionOnEventObject(DAY, NIGHT, null, null, SUNSET);
-		fsm.addTransitionOnEventObject(DAY, DAY, null, null, SUNRISE);
 
 		fsm.state(NIGHT).setTimer(() -> app().clock().sec(10));
 
@@ -89,7 +91,6 @@ public class City extends Entity implements Lifecycle, View {
 	@Override
 	public void init() {
 		fsm.init();
-		fsm.getTracer().setLogger(LOGGER);
 	}
 
 	@Override
