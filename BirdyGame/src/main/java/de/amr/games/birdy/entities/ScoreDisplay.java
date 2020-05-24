@@ -5,12 +5,12 @@ import static java.lang.Math.round;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.util.function.Supplier;
 
 import de.amr.easy.game.assets.Assets;
 import de.amr.easy.game.controller.Lifecycle;
 import de.amr.easy.game.entity.Entity;
 import de.amr.easy.game.view.View;
-import de.amr.games.birdy.utils.Score;
 
 /**
  * Displays the game score.
@@ -19,12 +19,12 @@ import de.amr.games.birdy.utils.Score;
  */
 public class ScoreDisplay extends Entity implements Lifecycle, View {
 
-	private final Score score;
+	private final Supplier<Integer> score;
 	private final float scale;
 	private final Image[] digits;
 	private String scoreText;
 
-	public ScoreDisplay(Score score, float scale) {
+	public ScoreDisplay(Supplier<Integer> score, float scale) {
 		this.score = score;
 		this.scale = scale;
 		this.digits = new Image[10];
@@ -36,7 +36,7 @@ public class ScoreDisplay extends Entity implements Lifecycle, View {
 	}
 
 	private String pointsText() {
-		return String.format("%d", score.points);
+		return String.format("%d", score.get());
 	}
 
 	@Override
@@ -46,16 +46,15 @@ public class ScoreDisplay extends Entity implements Lifecycle, View {
 	@Override
 	public void update() {
 		scoreText = pointsText();
-		tf.width =(scoreText.length() * digits[0].getWidth(null));
-		tf.height =(digits[0].getHeight(null));
+		tf.width = (scoreText.length() * digits[0].getWidth(null));
+		tf.height = (digits[0].getHeight(null));
 	}
 
 	@Override
 	public void draw(Graphics2D g) {
 		for (int i = 0; i < scoreText.length(); i++) {
 			int digit = "0123456789".indexOf(scoreText.charAt(i));
-			g.drawImage(digits[digit], (int) tf.x + i * (digits[0].getWidth(null) - round(3 * scale)), (int) tf.y,
-					null);
+			g.drawImage(digits[digit], (int) tf.x + i * (digits[0].getWidth(null) - round(3 * scale)), (int) tf.y, null);
 		}
 	}
 }

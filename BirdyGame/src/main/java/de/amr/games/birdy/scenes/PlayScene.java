@@ -30,7 +30,6 @@ import de.amr.games.birdy.entities.ObstacleController;
 import de.amr.games.birdy.entities.ScoreDisplay;
 import de.amr.games.birdy.entities.bird.BirdEvent;
 import de.amr.games.birdy.scenes.PlayScene.PlaySceneState;
-import de.amr.games.birdy.utils.Score;
 import de.amr.statemachine.api.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 
@@ -45,7 +44,7 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		STARTING, PLAYING, GAME_OVER;
 	}
 
-	private Score score = new Score();
+	private int points;
 	private ObstacleController obstacleController;
 	private BirdyGameEntities ent;
 	private ImageWidget gameOverText;
@@ -65,24 +64,24 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		setInitialState(PLAYING);
 
 		state(PLAYING).setOnEntry(() -> {
-			score.reset();
+			points = 0;
 			start();
 		});
 
-		addTransitionOnEventObject(PLAYING, PLAYING, () -> score.points > 3, e -> {
-			score.points -= 3;
+		addTransitionOnEventObject(PLAYING, PLAYING, () -> points > 3, e -> {
+			points -= 3;
 			ent.theBird().tf.x = (ent.theBird().tf.x + app().settings().getAsInt("pipe-width") + ent.theBird().tf.width);
 			ent.theBird().dispatch(TOUCHED_PIPE);
 			sound("sfx/hit.mp3").play();
 		}, TOUCHED_PIPE);
 
-		addTransitionOnEventObject(PLAYING, GAME_OVER, () -> score.points <= 3, t -> {
+		addTransitionOnEventObject(PLAYING, GAME_OVER, () -> points <= 3, t -> {
 			ent.theBird().dispatch(CRASHED);
 			sound("sfx/hit.mp3").play();
 		}, TOUCHED_PIPE);
 
 		addTransitionOnEventObject(PLAYING, PLAYING, null, e -> {
-			score.points++;
+			points++;
 			sound("sfx/point.mp3").play();
 		}, PASSED_OBSTACLE);
 
@@ -110,7 +109,7 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 	@Override
 	public void init() {
 		int w = app().settings().width, h = app().settings().height;
-		scoreDisplay = new ScoreDisplay(score, 1.5f);
+		scoreDisplay = new ScoreDisplay(() -> points, 1.5f);
 		scoreDisplay.tf.centerX(w);
 		scoreDisplay.tf.y = (ent.theGround().tf.y / 4);
 		ent.store(scoreDisplay);
