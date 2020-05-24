@@ -5,9 +5,9 @@ import static de.amr.games.birdy.BirdyGameApp.randomInt;
 import static de.amr.games.birdy.BirdyGameApp.sec;
 import static de.amr.games.birdy.entities.BirdEvent.PASSED_OBSTACLE;
 import static de.amr.games.birdy.entities.BirdEvent.TOUCHED_PIPE;
-import static de.amr.games.birdy.entities.ObstacleControllerState.BREEDING;
-import static de.amr.games.birdy.entities.ObstacleControllerState.GIVING_BIRTH;
-import static de.amr.games.birdy.entities.ObstacleControllerState.STOPPED;
+import static de.amr.games.birdy.entities.ObstacleController.Phase.BREEDING;
+import static de.amr.games.birdy.entities.ObstacleController.Phase.GIVING_BIRTH;
+import static de.amr.games.birdy.entities.ObstacleController.Phase.STOPPED;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -15,6 +15,7 @@ import java.util.List;
 
 import de.amr.easy.game.controller.Lifecycle;
 import de.amr.easy.game.entity.EntityMap;
+import de.amr.games.birdy.entities.ObstacleController.Phase;
 import de.amr.statemachine.api.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 
@@ -23,13 +24,17 @@ import de.amr.statemachine.core.StateMachine;
  * 
  * @author Armin Reichert
  */
-public class ObstacleController extends StateMachine<ObstacleControllerState, String> implements Lifecycle {
+public class ObstacleController extends StateMachine<Phase, String> implements Lifecycle {
+
+	public enum Phase {
+		STOPPED, BREEDING, GIVING_BIRTH
+	}
 
 	private final EntityMap ent;
 	public final List<Obstacle> obstacles = new LinkedList<>();
 
 	public ObstacleController(EntityMap entities) {
-		super(ObstacleControllerState.class, EventMatchStrategy.BY_EQUALITY);
+		super(Phase.class, EventMatchStrategy.BY_EQUALITY);
 		ent = entities;
 		buildStateMachine();
 	}
