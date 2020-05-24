@@ -24,7 +24,6 @@ import de.amr.easy.game.input.Keyboard;
 import de.amr.easy.game.ui.widgets.ImageWidget;
 import de.amr.easy.game.view.View;
 import de.amr.games.birdy.BirdyGameApp;
-import de.amr.games.birdy.entities.Area;
 import de.amr.games.birdy.entities.Bird;
 import de.amr.games.birdy.entities.BirdEvent;
 import de.amr.games.birdy.entities.City;
@@ -151,12 +150,9 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		gameOverText.tf.center(w, h);
 		ent.store(gameOverText);
 
-		Area world = new Area(w, 2 * h);
-		world.tf.setPosition(0, -h);
-
 		Bird bird = ent.named("bird");
 		app().collisionHandler().registerStart(bird, ground, TOUCHED_GROUND);
-		app().collisionHandler().registerEnd(bird, world, LEFT_WORLD);
+		app().collisionHandler().registerEnd(bird, ent.named("world"), LEFT_WORLD);
 
 		obstacleController.init();
 		super.init();

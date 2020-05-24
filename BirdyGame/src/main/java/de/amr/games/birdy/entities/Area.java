@@ -9,7 +9,9 @@ import de.amr.easy.game.entity.Entity;
  */
 public class Area extends Entity {
 
-	public Area(int width, int height) {
+	public Area(int x, int y, int width, int height) {
+		tf.x = x;
+		tf.vy = y;
 		tf.width = width;
 		tf.height = height;
 	}

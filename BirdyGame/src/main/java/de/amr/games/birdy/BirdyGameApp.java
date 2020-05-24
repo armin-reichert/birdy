@@ -15,6 +15,7 @@ import de.amr.easy.game.Application;
 import de.amr.easy.game.config.AppSettings;
 import de.amr.easy.game.controller.Lifecycle;
 import de.amr.easy.game.entity.EntityMap;
+import de.amr.games.birdy.entities.Area;
 import de.amr.games.birdy.entities.Bird;
 import de.amr.games.birdy.entities.City;
 import de.amr.games.birdy.entities.City.DayTime;
@@ -92,6 +93,8 @@ public class BirdyGameApp extends Application {
 		int hour = ZonedDateTime.now().getHour(); // 0-23
 		DayTime dayTime = hour > 5 && hour < 21 ? DayTime.DAY : DayTime.NIGHT;
 		loginfo("Its %s now", dayTime);
+		int w = app().settings().width, h = app().settings().height;
+		entities.store("world", new Area(0, -h, w, 2 * h));
 		entities.store("city", new City(entities, dayTime));
 		entities.store("ground", new Ground());
 		entities.store("bird", new Bird());

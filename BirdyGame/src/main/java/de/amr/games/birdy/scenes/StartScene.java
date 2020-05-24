@@ -53,6 +53,9 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 	public StartScene(EntityMap entities) {
 		super(StartSceneState.class, EventMatchStrategy.BY_EQUALITY);
 		this.ent = entities;
+		ent.store("title", new ImageWidget(Assets.image("title")));
+		ent.store("text_game_over", new ImageWidget(Assets.image("text_game_over")));
+		ent.store("text_ready", PumpingImageWidget.create().image(Assets.image("text_ready")).build());
 		buildStateMachine();
 	}
 
@@ -118,27 +121,6 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 		bird.init();
 		bird.tf.setPosition(w / 8, ground.tf.y / 2);
 		bird.tf.setVelocity(0, 0);
-
-		if (!ent.contains("title")) {
-			ImageWidget titleText = new ImageWidget(Assets.image("title"));
-			ent.store("title", titleText);
-		}
-
-		if (!ent.contains("text_game_over")) {
-			ImageWidget gameOverText = new ImageWidget(Assets.image("text_game_over"));
-			ent.store("text_game_over", gameOverText);
-		}
-
-		if (!ent.contains("text_ready")) {
-			PumpingImageWidget readyText = PumpingImageWidget.create().image(Assets.image("text_ready")).build();
-			ent.store("text_ready", readyText);
-		}
-
-		if (!ent.contains("world")) {
-			Area world = new Area(w, 2 * h);
-			world.tf.setPosition(0, -h);
-			ent.store("world", world);
-		}
 
 		app().collisionHandler().clear();
 		app().collisionHandler().registerEnd(bird, ent.ofClass(Area.class).findAny().get(), LEFT_WORLD);
