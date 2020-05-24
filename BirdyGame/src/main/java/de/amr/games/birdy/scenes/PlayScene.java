@@ -48,7 +48,7 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 	private ObstacleController obstacleController;
 	private BirdyGameEntities ent;
 	private ImageWidget gameOverText;
-	private ScoreDisplay scoreDisplay;
+	private ScoreDisplay score;
 
 	public PlayScene(BirdyGameEntities entities) {
 		super(PlaySceneState.class, EventMatchStrategy.BY_EQUALITY);
@@ -109,10 +109,11 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 	@Override
 	public void init() {
 		int w = app().settings().width, h = app().settings().height;
-		scoreDisplay = new ScoreDisplay(() -> points, 1.5f);
-		scoreDisplay.tf.centerX(w);
-		scoreDisplay.tf.y = (ent.theGround().tf.y / 4);
-		ent.store(scoreDisplay);
+
+		score = new ScoreDisplay(() -> points, 1.5f);
+		score.tf.centerX(w);
+		score.tf.y = (ent.theGround().tf.y / 4);
+		ent.store(score);
 
 		gameOverText = new ImageWidget(Assets.image("text_game_over"));
 		gameOverText.tf.center(w, h);
@@ -164,7 +165,7 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		ent.theCity().draw(g);
 		obstacleController.obstacles.forEach(obstacle -> obstacle.draw(g));
 		ent.theGround().draw(g);
-		scoreDisplay.draw(g);
+		score.draw(g);
 		ent.theBird().draw(g);
 		if (getState() == GAME_OVER) {
 			gameOverText.draw(g);
