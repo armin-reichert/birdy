@@ -44,7 +44,7 @@ import de.amr.statemachine.core.StateMachine;
 public class StartScene extends StateMachine<StartSceneState, BirdEvent> implements Lifecycle, View {
 
 	public enum StartSceneState {
-		STARTING, READY, GAME_OVER, LEAVING, SPRITE_BROWSER
+		STARTING, READY, GAME_OVER, LEAVING
 	}
 
 	private EntityMap ent;
