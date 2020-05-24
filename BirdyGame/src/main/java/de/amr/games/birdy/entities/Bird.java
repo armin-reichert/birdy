@@ -1,19 +1,19 @@
-package de.amr.games.birdy.entities.bird;
+package de.amr.games.birdy.entities;
 
 import static de.amr.easy.game.Application.LOGGER;
 import static de.amr.easy.game.Application.app;
 import static de.amr.games.birdy.BirdyGameApp.sec;
-import static de.amr.games.birdy.entities.bird.BirdEvent.CRASHED;
-import static de.amr.games.birdy.entities.bird.BirdEvent.LEFT_WORLD;
-import static de.amr.games.birdy.entities.bird.BirdEvent.PASSED_OBSTACLE;
-import static de.amr.games.birdy.entities.bird.BirdEvent.TOUCHED_GROUND;
-import static de.amr.games.birdy.entities.bird.BirdEvent.TOUCHED_PIPE;
-import static de.amr.games.birdy.entities.bird.FlightState.CRASHING;
-import static de.amr.games.birdy.entities.bird.FlightState.DOWN;
-import static de.amr.games.birdy.entities.bird.FlightState.FLYING;
-import static de.amr.games.birdy.entities.bird.HealthState.DEAD;
-import static de.amr.games.birdy.entities.bird.HealthState.INJURED;
-import static de.amr.games.birdy.entities.bird.HealthState.SANE;
+import static de.amr.games.birdy.entities.BirdEvent.CRASHED;
+import static de.amr.games.birdy.entities.BirdEvent.LEFT_WORLD;
+import static de.amr.games.birdy.entities.BirdEvent.PASSED_OBSTACLE;
+import static de.amr.games.birdy.entities.BirdEvent.TOUCHED_GROUND;
+import static de.amr.games.birdy.entities.BirdEvent.TOUCHED_PIPE;
+import static de.amr.games.birdy.entities.FlightState.CRASHING;
+import static de.amr.games.birdy.entities.FlightState.DOWN;
+import static de.amr.games.birdy.entities.FlightState.FLYING;
+import static de.amr.games.birdy.entities.HealthState.DEAD;
+import static de.amr.games.birdy.entities.HealthState.INJURED;
+import static de.amr.games.birdy.entities.HealthState.SANE;
 import static java.lang.Math.PI;
 
 import java.awt.Graphics2D;

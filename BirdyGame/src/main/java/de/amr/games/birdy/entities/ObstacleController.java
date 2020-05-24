@@ -3,11 +3,11 @@ package de.amr.games.birdy.entities;
 import static de.amr.easy.game.Application.app;
 import static de.amr.games.birdy.BirdyGameApp.randomInt;
 import static de.amr.games.birdy.BirdyGameApp.sec;
+import static de.amr.games.birdy.entities.BirdEvent.PASSED_OBSTACLE;
+import static de.amr.games.birdy.entities.BirdEvent.TOUCHED_PIPE;
 import static de.amr.games.birdy.entities.ObstacleControllerState.BREEDING;
 import static de.amr.games.birdy.entities.ObstacleControllerState.GIVING_BIRTH;
 import static de.amr.games.birdy.entities.ObstacleControllerState.STOPPED;
-import static de.amr.games.birdy.entities.bird.BirdEvent.PASSED_OBSTACLE;
-import static de.amr.games.birdy.entities.bird.BirdEvent.TOUCHED_PIPE;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -15,7 +15,6 @@ import java.util.List;
 
 import de.amr.easy.game.controller.Lifecycle;
 import de.amr.easy.game.entity.EntityMap;
-import de.amr.games.birdy.entities.bird.Bird;
 import de.amr.statemachine.api.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 
