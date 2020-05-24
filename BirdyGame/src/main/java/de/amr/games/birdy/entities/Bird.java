@@ -54,8 +54,9 @@ public class Bird extends Entity implements Lifecycle, View {
 	private class HealthControl extends StateMachine<HealthState, BirdEvent> {
 
 		public HealthControl() {
-
 			super(HealthState.class, EventMatchStrategy.BY_EQUALITY);
+			
+			setMissingTransitionBehavior(MissingTransitionBehavior.LOG);
 			setDescription("[Health]");
 			setInitialState(SANE);
 

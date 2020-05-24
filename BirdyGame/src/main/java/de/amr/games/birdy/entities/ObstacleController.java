@@ -10,8 +10,6 @@ import static de.amr.games.birdy.entities.ObstacleController.Phase.GIVING_BIRTH;
 import static de.amr.games.birdy.entities.ObstacleController.Phase.STOPPED;
 
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 import de.amr.easy.game.controller.Lifecycle;
 import de.amr.easy.game.entity.EntityMap;
@@ -31,7 +29,6 @@ public class ObstacleController extends StateMachine<Phase, String> implements L
 	}
 
 	private final EntityMap ent;
-	public final List<Obstacle> obstacles = new LinkedList<>();
 
 	public ObstacleController(EntityMap entities) {
 		super(Phase.class, EventMatchStrategy.BY_EQUALITY);
@@ -45,7 +42,6 @@ public class ObstacleController extends StateMachine<Phase, String> implements L
 
 				.state(BREEDING)
 					.timeoutAfter(this::breedingTime)
-					.onTick(() -> obstacles.forEach(Obstacle::update))
 
 				.state(GIVING_BIRTH)
 					.onEntry(this::updateObstacleList)
@@ -64,7 +60,7 @@ public class ObstacleController extends StateMachine<Phase, String> implements L
 
 	@Override
 	public void init() {
-		obstacles.clear();
+		ent.removeAll(Obstacle.class);
 		super.init();
 	}
 
@@ -97,24 +93,24 @@ public class ObstacleController extends StateMachine<Phase, String> implements L
 		int passageCenterY = randomInt(minHeight + passageHeight / 2, (int) ground.tf.y - minHeight - passageHeight / 2);
 
 		Obstacle obstacle = new Obstacle(width, height, passageHeight, passageCenterY);
-		obstacle.tf.vx = app().settings().get("world-speed");
 		obstacle.tf.x = app().settings().width;
+		obstacle.tf.vx = app().settings().getAsFloat("world-speed");
 		obstacle.setLighted(city.isNight() && randomInt(0, 4) == 0);
-		obstacles.add(obstacle);
+		ent.store(obstacle);
 
 		app().collisionHandler().registerStart(bird, obstacle.getUpperPart(), TOUCHED_PIPE);
 		app().collisionHandler().registerStart(bird, obstacle.getLowerPart(), TOUCHED_PIPE);
 		app().collisionHandler().registerEnd(bird, obstacle.getPassage(), PASSED_OBSTACLE);
 
 		// Remove obstacles that ran out of screen
-		Iterator<Obstacle> it = obstacles.iterator();
+		Iterator<Obstacle> it = ent.ofClass(Obstacle.class).iterator();
 		while (it.hasNext()) {
 			obstacle = it.next();
 			if (obstacle.tf.x + obstacle.tf.width < 0) {
 				app().collisionHandler().unregisterStart(bird, obstacle.getUpperPart());
 				app().collisionHandler().unregisterStart(bird, obstacle.getLowerPart());
 				app().collisionHandler().unregisterEnd(bird, obstacle.getPassage());
-				it.remove();
+				ent.removeEntity(obstacle);
 			}
 		}
 	}

@@ -30,6 +30,7 @@ import de.amr.games.birdy.entities.Bird;
 import de.amr.games.birdy.entities.BirdEvent;
 import de.amr.games.birdy.entities.City;
 import de.amr.games.birdy.entities.Ground;
+import de.amr.games.birdy.entities.Obstacle;
 import de.amr.games.birdy.entities.ObstacleController;
 import de.amr.games.birdy.entities.Score;
 import de.amr.games.birdy.scenes.PlayScene.PlaySceneState;
@@ -155,7 +156,9 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 	@Override
 	public void start() {
 		Ground ground = ent.named("ground");
-		ground.tf.vx = app().settings().get("world-speed");
+		float speed = app().settings().get("world-speed");
+		ground.tf.vx = speed;
+		ent.ofClass(Obstacle.class).forEach(obstacle -> obstacle.tf.vx = speed);
 		obstacleController.start();
 	}
 
@@ -163,6 +166,7 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 	public void stop() {
 		Ground ground = ent.named("ground");
 		ground.tf.vx = 0;
+		ent.ofClass(Obstacle.class).forEach(obstacle -> obstacle.tf.vx = 0);
 		obstacleController.stop();
 	}
 
@@ -177,9 +181,8 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		Bird bird = ent.named("bird");
 		City city = ent.named("city");
 		Ground ground = ent.named("ground");
-
 		city.draw(g);
-		obstacleController.obstacles.forEach(obstacle -> obstacle.draw(g));
+		ent.ofClass(Obstacle.class).forEach(obstacle -> obstacle.draw(g));
 		ground.draw(g);
 		score.draw(g);
 		bird.draw(g);

@@ -14,8 +14,7 @@ import de.amr.easy.game.entity.collision.Collider;
 import de.amr.easy.game.view.View;
 
 /**
- * An obstacle consisting of a hanging and a standing pipe with a passage in the
- * middle.
+ * An obstacle consisting of a hanging and a standing pipe with a passage in the middle.
  * 
  * @author Armin Reichert
  */
