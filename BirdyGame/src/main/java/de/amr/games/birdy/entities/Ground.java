@@ -44,10 +44,6 @@ public class Ground extends Entity implements Lifecycle, View {
 		sprites.current().ifPresent(sprite -> sprite.scale(width, sprite.getHeight()));
 	}
 
-	public void stopMoving() {
-		tf.vx = 0;
-	}
-
 	@Override
 	public void draw(Graphics2D g) {
 		Image image = sprites.current().get().currentFrame();

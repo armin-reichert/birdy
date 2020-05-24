@@ -169,7 +169,7 @@ public class Bird extends Entity implements Lifecycle, View {
 		sprites.current().get().enableAnimation(tf.vy < 0);
 	}
 
-	public void consume(BirdEvent event) {
+	public void dispatch(BirdEvent event) {
 		flightControl.enqueue(event);
 		healthControl.enqueue(event);
 	}

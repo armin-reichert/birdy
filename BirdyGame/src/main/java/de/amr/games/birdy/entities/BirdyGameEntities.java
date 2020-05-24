@@ -7,10 +7,8 @@ import de.amr.games.birdy.entities.bird.Bird;
 public class BirdyGameEntities extends EntityMap {
 
 	public void update() {
-		all().forEach(entity -> {
-			if (entity instanceof Lifecycle) {
-				((Lifecycle) entity).update();
-			}
+		filter(entity -> entity instanceof Lifecycle).forEach(entity -> {
+			((Lifecycle) entity).update();
 		});
 	}
 

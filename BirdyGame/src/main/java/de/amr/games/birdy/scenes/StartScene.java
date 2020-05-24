@@ -155,7 +155,7 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 	private void checkCollisions() {
 		for (Collision c : app().collisionHandler().collisions()) {
 			BirdEvent event = (BirdEvent) c.getAppEvent();
-			ent.theBird().consume(event);
+			ent.theBird().dispatch(event);
 			enqueue(event);
 		}
 	}

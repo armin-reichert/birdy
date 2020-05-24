@@ -3,8 +3,8 @@ package de.amr.games.birdy.scenes;
 import static de.amr.easy.game.Application.app;
 import static de.amr.easy.game.assets.Assets.sound;
 import static de.amr.games.birdy.entities.bird.BirdEvent.CRASHED;
-import static de.amr.games.birdy.entities.bird.BirdEvent.PASSED_OBSTACLE;
 import static de.amr.games.birdy.entities.bird.BirdEvent.LEFT_WORLD;
+import static de.amr.games.birdy.entities.bird.BirdEvent.PASSED_OBSTACLE;
 import static de.amr.games.birdy.entities.bird.BirdEvent.TOUCHED_GROUND;
 import static de.amr.games.birdy.entities.bird.BirdEvent.TOUCHED_PIPE;
 import static de.amr.games.birdy.scenes.PlayScene.PlaySceneState.GAME_OVER;
@@ -72,12 +72,12 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		addTransitionOnEventObject(PLAYING, PLAYING, () -> score.points > 3, e -> {
 			score.points -= 3;
 			ent.theBird().tf.x = (ent.theBird().tf.x + app().settings().getAsInt("pipe-width") + ent.theBird().tf.width);
-			ent.theBird().consume(TOUCHED_PIPE);
+			ent.theBird().dispatch(TOUCHED_PIPE);
 			sound("sfx/hit.mp3").play();
 		}, TOUCHED_PIPE);
 
 		addTransitionOnEventObject(PLAYING, GAME_OVER, () -> score.points <= 3, t -> {
-			ent.theBird().consume(CRASHED);
+			ent.theBird().dispatch(CRASHED);
 			sound("sfx/hit.mp3").play();
 		}, TOUCHED_PIPE);
 
@@ -87,12 +87,12 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		}, PASSED_OBSTACLE);
 
 		addTransitionOnEventObject(PLAYING, GAME_OVER, null, e -> {
-			ent.theBird().consume(TOUCHED_GROUND);
+			ent.theBird().dispatch(TOUCHED_GROUND);
 			sound("music/bgmusic.mp3").stop();
 		}, TOUCHED_GROUND);
 
 		addTransitionOnEventObject(PLAYING, GAME_OVER, null, e -> {
-			ent.theBird().consume(LEFT_WORLD);
+			ent.theBird().dispatch(LEFT_WORLD);
 			sound("music/bgmusic.mp3").stop();
 		}, LEFT_WORLD);
 
@@ -107,11 +107,6 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		state(STARTING).setOnEntry(() -> BirdyGameApp.setScene(Scene.START_SCENE));
 	}
 
-	public void consume(BirdEvent event) {
-		enqueue(event);
-		ent.theBird().consume(event);
-	}
-
 	@Override
 	public void init() {
 		int w = app().settings().width, h = app().settings().height;
@@ -120,7 +115,7 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		scoreDisplay.tf.y = (ent.theGround().tf.y / 4);
 		ent.store(scoreDisplay);
 
-		gameOverText = ent.store(new ImageWidget(Assets.image("text_game_over")));
+		gameOverText = new ImageWidget(Assets.image("text_game_over"));
 		gameOverText.tf.center(w, h);
 		ent.store(gameOverText);
 
@@ -141,13 +136,9 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 			app().settings().set("show-state", !showState);
 		}
 		for (Collision collision : app().collisionHandler().collisions()) {
-			consume((BirdEvent) collision.getAppEvent());
+			dispatch((BirdEvent) collision.getAppEvent());
 		}
-		ent.all().forEach(entity -> {
-			if (entity instanceof Lifecycle) {
-				((Lifecycle) entity).update();
-			}
-		});
+		ent.update();
 		obstacleController.update();
 		super.update();
 	}
@@ -160,8 +151,13 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 
 	@Override
 	public void stop() {
-		ent.theGround().stopMoving();
+		ent.theGround().tf.vx = 0;
 		obstacleController.stop();
+	}
+
+	public void dispatch(BirdEvent event) {
+		enqueue(event);
+		ent.theBird().dispatch(event);
 	}
 
 	@Override
