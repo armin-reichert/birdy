@@ -54,7 +54,7 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 
 	public PlayScene(EntityMap entities) {
 		super(PlaySceneState.class, EventMatchStrategy.BY_EQUALITY);
-		this.ent = entities;
+		ent = entities;
 		buildStateMachine();
 		obstacleController = new ObstacleController(ent);
 		obstacleController.getTracer().setLogger(Application.LOGGER);
@@ -119,9 +119,9 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 			.when(PLAYING).then(GAME_OVER)
 				.on(LEFT_WORLD)
 				.act(e -> {
+					sound("music/bgmusic.mp3").stop();
 					Bird bird = ent.named("bird");
 					bird.dispatch(LEFT_WORLD);
-					sound("music/bgmusic.mp3").stop();
 				})
 
 			.stay(GAME_OVER)
