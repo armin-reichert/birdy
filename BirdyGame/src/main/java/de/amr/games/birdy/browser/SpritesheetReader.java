@@ -1,4 +1,4 @@
-package de.amr.games.birdy.utils;
+package de.amr.games.birdy.browser;
 
 import java.awt.image.BufferedImage;
 
