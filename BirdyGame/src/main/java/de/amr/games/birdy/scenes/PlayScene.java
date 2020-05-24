@@ -171,7 +171,7 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		for (Collision collision : app().collisionHandler().collisions()) {
 			dispatch((BirdEvent) collision.getAppEvent());
 		}
-		ent.filter(entity -> entity instanceof Lifecycle).map(Lifecycle.class::cast).forEach(Lifecycle::update);
+		ent.implementing(Lifecycle.class).forEach(Lifecycle::update);
 		obstacleController.update();
 		super.update();
 	}
