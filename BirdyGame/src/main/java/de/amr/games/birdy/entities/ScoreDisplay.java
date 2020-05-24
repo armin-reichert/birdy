@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 import java.util.function.Supplier;
 
 import de.amr.easy.game.assets.Assets;
-import de.amr.easy.game.controller.Lifecycle;
 import de.amr.easy.game.entity.Entity;
 import de.amr.easy.game.view.View;
 
@@ -17,7 +16,7 @@ import de.amr.easy.game.view.View;
  * 
  * @author Armin Reichert
  */
-public class ScoreDisplay extends Entity implements Lifecycle, View {
+public class ScoreDisplay extends Entity implements View {
 
 	private final Supplier<Integer> score;
 	private final float scale;
@@ -32,19 +31,14 @@ public class ScoreDisplay extends Entity implements Lifecycle, View {
 			BufferedImage digitImage = Assets.image("number_score_0" + d);
 			digits[d] = digitImage.getScaledInstance(-1, round(scale) * digitImage.getHeight(), Image.SCALE_SMOOTH);
 		}
-		update();
+		updateText();
 	}
 
 	private String pointsText() {
 		return String.format("%d", score.get());
 	}
 
-	@Override
-	public void init() {
-	}
-
-	@Override
-	public void update() {
+	private void updateText() {
 		scoreText = pointsText();
 		tf.width = (scoreText.length() * digits[0].getWidth(null));
 		tf.height = (digits[0].getHeight(null));
@@ -52,6 +46,7 @@ public class ScoreDisplay extends Entity implements Lifecycle, View {
 
 	@Override
 	public void draw(Graphics2D g) {
+		updateText();
 		for (int i = 0; i < scoreText.length(); i++) {
 			int digit = "0123456789".indexOf(scoreText.charAt(i));
 			g.drawImage(digits[digit], (int) tf.x + i * (digits[0].getWidth(null) - round(3 * scale)), (int) tf.y, null);
