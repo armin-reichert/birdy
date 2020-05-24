@@ -8,8 +8,8 @@ import static de.amr.games.birdy.BirdyGameApp.sec;
 import static de.amr.games.birdy.BirdyGameApp.setScene;
 import static de.amr.games.birdy.entities.BirdEvent.LEFT_WORLD;
 import static de.amr.games.birdy.entities.BirdEvent.TOUCHED_GROUND;
-import static de.amr.games.birdy.scenes.StartScene.StartSceneState.GAME_OVER;
 import static de.amr.games.birdy.scenes.StartScene.StartSceneState.COMPLETE;
+import static de.amr.games.birdy.scenes.StartScene.StartSceneState.GAME_OVER;
 import static de.amr.games.birdy.scenes.StartScene.StartSceneState.READY;
 import static de.amr.games.birdy.scenes.StartScene.StartSceneState.STARTING;
 
@@ -27,7 +27,6 @@ import de.amr.easy.game.ui.widgets.ImageWidget;
 import de.amr.easy.game.ui.widgets.PumpingImageWidget;
 import de.amr.easy.game.view.View;
 import de.amr.games.birdy.BirdyGameApp.Scene;
-import de.amr.games.birdy.entities.Area;
 import de.amr.games.birdy.entities.Bird;
 import de.amr.games.birdy.entities.BirdEvent;
 import de.amr.games.birdy.entities.City;
@@ -127,7 +126,7 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 		bird.tf.setPosition(w / 8, ground.tf.y / 2);
 		bird.tf.setVelocity(0, 0);
 		app().collisionHandler().clear();
-		app().collisionHandler().registerEnd(bird, ent.ofClass(Area.class).findAny().get(), LEFT_WORLD);
+		app().collisionHandler().registerEnd(bird, ent.named("world"), LEFT_WORLD);
 		app().collisionHandler().registerStart(bird, ground, TOUCHED_GROUND);
 	}
 
@@ -138,7 +137,7 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 			app().settings().set("show-state", !showState);
 		}
 		checkCollisions();
-		ent.filter(entity -> entity instanceof Lifecycle).map(Lifecycle.class::cast).forEach(Lifecycle::update);
+		ent.implementing(Lifecycle.class).forEach(Lifecycle::update);
 		super.update();
 	}
 
