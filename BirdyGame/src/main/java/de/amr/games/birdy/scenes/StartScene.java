@@ -9,7 +9,7 @@ import static de.amr.games.birdy.BirdyGameApp.setScene;
 import static de.amr.games.birdy.entities.BirdEvent.LEFT_WORLD;
 import static de.amr.games.birdy.entities.BirdEvent.TOUCHED_GROUND;
 import static de.amr.games.birdy.scenes.StartScene.StartSceneState.GAME_OVER;
-import static de.amr.games.birdy.scenes.StartScene.StartSceneState.LEAVING;
+import static de.amr.games.birdy.scenes.StartScene.StartSceneState.COMPLETE;
 import static de.amr.games.birdy.scenes.StartScene.StartSceneState.READY;
 import static de.amr.games.birdy.scenes.StartScene.StartSceneState.STARTING;
 
@@ -44,7 +44,7 @@ import de.amr.statemachine.core.StateMachine;
 public class StartScene extends StateMachine<StartSceneState, BirdEvent> implements Lifecycle, View {
 
 	public enum StartSceneState {
-		STARTING, READY, GAME_OVER, LEAVING
+		STARTING, READY, GAME_OVER, COMPLETE
 	}
 
 	private EntityMap ent;
@@ -52,7 +52,7 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 
 	public StartScene(EntityMap entities) {
 		super(StartSceneState.class, EventMatchStrategy.BY_EQUALITY);
-		this.ent = entities;
+		ent = entities;
 		ent.store("title", new ImageWidget(Assets.image("title")));
 		ent.store("text_game_over", new ImageWidget(Assets.image("text_game_over")));
 		ent.store("text_ready", PumpingImageWidget.create().image(Assets.image("text_ready")).build());
@@ -83,9 +83,6 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 					displayedText = null;
 				})
 
-			.state(LEAVING)
-				.onEntry(() -> setScene(Scene.PLAY_SCENE))
-				
 			.state(GAME_OVER)
 				.onEntry(() -> {
 					stop();
@@ -100,7 +97,8 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 				
 			.when(STARTING).then(GAME_OVER).on(TOUCHED_GROUND)
 			
-			.when(READY).then(LEAVING).onTimeout()
+			.when(READY).then(COMPLETE).onTimeout()
+				.act(() -> setScene(Scene.PLAY_SCENE))
 			
 			.when(READY).then(GAME_OVER).on(TOUCHED_GROUND)
 				.act(e -> {
