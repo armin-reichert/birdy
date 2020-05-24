@@ -48,7 +48,7 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 	}
 
 	private EntityMap ent;
-	private ImageWidget sceneText;
+	private ImageWidget text;
 
 	public StartScene(EntityMap entities) {
 		super(StartSceneState.class, EventMatchStrategy.BY_EQUALITY);
@@ -82,13 +82,19 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 
 		state(READY).setTimer(() -> sec(app().settings().getAsFloat("ready-time-sec")));
 
-		state(READY).setOnEntry(() -> showSceneText("readyText"));
+		state(READY).setOnEntry(() -> {
+			text = ent.named("readyText");
+		});
 
-		state(READY).setOnExit(this::hideSceneText);
+		state(READY).setOnExit(() -> {
+			text = null;
+		});
 
 		addTransitionOnTimeout(READY, LEAVING, null, null);
 
-		addTransitionOnEventObject(READY, GAME_OVER, null, e -> showSceneText("title"), TOUCHED_GROUND);
+		addTransitionOnEventObject(READY, GAME_OVER, null, e -> {
+			text = ent.named("title");
+		}, TOUCHED_GROUND);
 
 		// Leaving ---
 
@@ -99,7 +105,7 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 		state(GAME_OVER).setOnEntry(() -> {
 			stop();
 			sounds().forEach(Sound::stop);
-			showSceneText("game_over");
+			text = ent.named("game_over");
 		});
 
 		addTransition(GAME_OVER, STARTING, () -> Keyboard.keyPressedOnce(KeyEvent.VK_SPACE), null);
@@ -107,6 +113,8 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 
 	private void reset() {
 		int w = app().settings().width, h = app().settings().height;
+
+		text = ent.named("title");
 
 		City city = ent.named("city");
 		city.setWidth(w);
@@ -125,8 +133,6 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 		app().collisionHandler().clear();
 		app().collisionHandler().registerEnd(bird, ent.ofClass(Area.class).findAny().get(), LEFT_WORLD);
 		app().collisionHandler().registerStart(bird, ground, TOUCHED_GROUND);
-
-		showSceneText("title");
 	}
 
 	@Override
@@ -165,9 +171,9 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 		city.draw(g);
 		ground.draw(g);
 		bird.draw(g);
-		if (sceneText != null) {
-			sceneText.tf.center(w, h - ground.tf.height);
-			sceneText.draw(g);
+		if (text != null) {
+			text.tf.center(w, h - ground.tf.height);
+			text.draw(g);
 		}
 		if (app().settings().getAsBoolean("show-state")) {
 			String text = String.format("%s: (%s)  Bird: Flight: (%s) Sanity: (%s)", getDescription(), getState(),
@@ -183,13 +189,5 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 		while (bird.tf.y > ground.tf.y / 2) {
 			bird.flap(randomInt(1, 4));
 		}
-	}
-
-	private void showSceneText(String imageName) {
-		sceneText = ent.named(imageName);
-	}
-
-	private void hideSceneText() {
-		sceneText = null;
 	}
 }
