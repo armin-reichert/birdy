@@ -9,6 +9,7 @@ import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.time.ZonedDateTime;
 import java.util.EnumMap;
+import java.util.Random;
 
 import de.amr.easy.game.Application;
 import de.amr.easy.game.config.AppSettings;
@@ -45,6 +46,15 @@ public class BirdyGameApp extends Application {
 
 	public static int sec(float amount) {
 		return app().clock().sec(amount);
+	}
+
+	/**
+	 * @param min lower bound (inclusive)
+	 * @param max upper bound (inclusive)
+	 * @return random integer from given closed interval
+	 */
+	public static int randomInt(int min, int max) {
+		return min + new Random().nextInt(max - min + 1);
 	}
 
 	@Override

@@ -2,11 +2,11 @@ package de.amr.games.birdy.entities;
 
 import static de.amr.easy.game.Application.LOGGER;
 import static de.amr.easy.game.Application.app;
+import static de.amr.games.birdy.BirdyGameApp.randomInt;
 import static de.amr.games.birdy.entities.City.DayEvent.SUNRISE;
 import static de.amr.games.birdy.entities.City.DayEvent.SUNSET;
 import static de.amr.games.birdy.entities.City.DayTime.DAY;
 import static de.amr.games.birdy.entities.City.DayTime.NIGHT;
-import static de.amr.games.birdy.utils.Util.randomInt;
 
 import java.awt.Graphics2D;
 import java.awt.Image;

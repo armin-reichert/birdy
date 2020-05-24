@@ -3,6 +3,7 @@ package de.amr.games.birdy.scenes;
 import static de.amr.easy.game.Application.app;
 import static de.amr.easy.game.assets.Assets.sound;
 import static de.amr.easy.game.assets.Assets.sounds;
+import static de.amr.games.birdy.BirdyGameApp.randomInt;
 import static de.amr.games.birdy.BirdyGameApp.sec;
 import static de.amr.games.birdy.BirdyGameApp.setScene;
 import static de.amr.games.birdy.entities.bird.BirdEvent.LEFT_WORLD;
@@ -11,7 +12,6 @@ import static de.amr.games.birdy.scenes.StartScene.StartSceneState.GAME_OVER;
 import static de.amr.games.birdy.scenes.StartScene.StartSceneState.LEAVING;
 import static de.amr.games.birdy.scenes.StartScene.StartSceneState.READY;
 import static de.amr.games.birdy.scenes.StartScene.StartSceneState.STARTING;
-import static de.amr.games.birdy.utils.Util.randomInt;
 
 import java.awt.Font;
 import java.awt.Graphics2D;

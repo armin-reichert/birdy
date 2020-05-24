@@ -2,7 +2,7 @@ package de.amr.games.birdy.entities;
 
 import static de.amr.easy.game.ui.sprites.AnimationType.BACK_AND_FORTH;
 import static de.amr.easy.game.ui.sprites.AnimationType.CYCLIC;
-import static de.amr.games.birdy.utils.Util.randomInt;
+import static de.amr.games.birdy.BirdyGameApp.randomInt;
 
 import java.awt.Graphics2D;
 import java.util.Random;
