@@ -96,9 +96,9 @@ public class City extends Entity implements Lifecycle, View {
 	@Override
 	public void update() {
 		if (Keyboard.keyPressedOnce(KeyEvent.VK_N)) {
-			sunset();
+			fsm.enqueue(SUNSET);
 		} else if (Keyboard.keyPressedOnce(KeyEvent.VK_D)) {
-			sunrise();
+			fsm.enqueue(SUNRISE);
 		}
 		fsm.update();
 	}
@@ -115,14 +115,6 @@ public class City extends Entity implements Lifecycle, View {
 
 	public boolean isNight() {
 		return fsm.getState() == NIGHT;
-	}
-
-	public void sunset() {
-		fsm.enqueue(SUNSET);
-	}
-
-	public void sunrise() {
-		fsm.enqueue(SUNRISE);
 	}
 
 	public void setWidth(int width) {

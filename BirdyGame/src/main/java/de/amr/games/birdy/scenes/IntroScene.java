@@ -9,7 +9,6 @@ import static de.amr.games.birdy.scenes.IntroScene.IntroSceneState.WAITING;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.util.Random;
 
 import de.amr.easy.game.Application;
 import de.amr.easy.game.assets.Assets;
@@ -89,11 +88,6 @@ public class IntroScene extends StateMachine<IntroSceneState, Void> implements V
 
 		City city = ent.named("city");
 		city.setWidth(width);
-		if (new Random().nextBoolean()) {
-			city.sunset();
-		} else {
-			city.sunrise();
-		}
 
 		creditsText = TextWidget.create().text(CREDITS_TEXT).font(Assets.font("Pacifico-Regular"))
 				.color(city.isNight() ? Color.WHITE : Color.DARK_GRAY).build();
