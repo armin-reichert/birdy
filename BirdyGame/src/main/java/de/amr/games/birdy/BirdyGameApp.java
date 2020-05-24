@@ -76,9 +76,9 @@ public class BirdyGameApp extends Application {
 		settings.set("bird-injured-seconds", 1f);
 		settings.set("min-pipe-creation-sec", 1f);
 		settings.set("max-pipe-creation-sec", 5f);
-		settings.set("pipe-height", 480 - 112);
-		settings.set("pipe-width", 52);
-		settings.set("min-pipe-height", 100);
+		settings.set("obstacle-height", 480 - 112);
+		settings.set("obstacle-width", 52);
+		settings.set("min-obstacle-height", 100);
 		settings.set("passage-height", 100);
 		settings.set("show-state", false);
 	}

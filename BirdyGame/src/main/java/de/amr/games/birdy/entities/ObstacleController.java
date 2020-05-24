@@ -86,16 +86,14 @@ public class ObstacleController extends StateMachine<Phase, String> implements L
 		Ground ground = ent.named("ground");
 
 		// Add new obstacle
-		int minHeight = app().settings().get("min-pipe-height");
+		int minHeight = app().settings().get("min-obstacle-height");
 		int passageHeight = app().settings().get("passage-height");
-		int width = app().settings().get("pipe-width");
-		int height = app().settings().get("pipe-height");
 		int passageCenterY = randomInt(minHeight + passageHeight / 2, (int) ground.tf.y - minHeight - passageHeight / 2);
 
-		Obstacle obstacle = new Obstacle(width, height, passageHeight, passageCenterY);
+		Obstacle obstacle = new Obstacle(passageHeight / 2, passageCenterY);
 		obstacle.tf.x = app().settings().width;
 		obstacle.tf.vx = app().settings().getAsFloat("world-speed");
-		obstacle.setLighted(city.isNight() && randomInt(0, 4) == 0);
+		obstacle.illuminated = city.isNight() && randomInt(0, 100) == 20;
 		ent.store(obstacle);
 
 		app().collisionHandler().registerStart(bird, obstacle.getUpperPart(), TOUCHED_PIPE);

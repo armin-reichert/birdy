@@ -1,9 +1,11 @@
 package de.amr.games.birdy.entities;
 
+import static de.amr.easy.game.Application.app;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.geom.Rectangle2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
@@ -20,25 +22,23 @@ import de.amr.easy.game.view.View;
  */
 public class Obstacle extends Entity implements Lifecycle, View {
 
-	private Rectangle2D upperPart;
-	private Rectangle2D lowerPart;
-	private Rectangle2D passage;
-	private Image pipeDown;
-	private Image pipeUp;
-	private boolean lighted;
-	private final Random rand = new Random();
+	public int width, height;
+	public Rectangle hanging, passage, standing;
+	public Image hangingImage, standingImage;
+	public boolean illuminated;
 
-	public Obstacle(int width, int height, int passageHeight, int passageCenterY) {
+	public Obstacle(int passageRadius, int passageCenterY) {
+		width = app().settings().get("obstacle-width");
+		height = app().settings().get("obstacle-height");
 		tf.width = width;
 		tf.height = height;
-		int passageRadius = passageHeight / 2;
-		upperPart = new Rectangle2D.Double(0, 0, width, passageCenterY - passageRadius);
-		passage = new Rectangle2D.Double(0, passageCenterY - passageRadius, width, passageHeight);
-		lowerPart = new Rectangle2D.Double(0, passageCenterY + passageRadius, width,
-				height - passageRadius - passageCenterY);
-		pipeDown = Assets.image("pipe_down").getScaledInstance(width, (int) upperPart.getHeight(),
+		hanging = new Rectangle(0, 0, width, passageCenterY - passageRadius);
+		passage = new Rectangle(0, passageCenterY - passageRadius, width, 2 * passageRadius);
+		standing = new Rectangle(0, passageCenterY + passageRadius, width, height - passageRadius - passageCenterY);
+		hangingImage = Assets.image("pipe_down").getScaledInstance(width, (int) hanging.getHeight(),
 				BufferedImage.SCALE_SMOOTH);
-		pipeUp = Assets.image("pipe_up").getScaledInstance(width, (int) lowerPart.getHeight(), BufferedImage.SCALE_SMOOTH);
+		standingImage = Assets.image("pipe_up").getScaledInstance(width, (int) standing.getHeight(),
+				BufferedImage.SCALE_SMOOTH);
 	}
 
 	@Override
@@ -53,31 +53,26 @@ public class Obstacle extends Entity implements Lifecycle, View {
 	@Override
 	public void draw(Graphics2D g) {
 		g.translate(tf.x, tf.y);
-		g.drawImage(pipeDown, 0, 0, null);
-		if (lighted) {
-			int inset = (int) passage.getWidth() / 10;
-			g.setColor(new Color(255, 255, 0, rand.nextInt(170)));
-			g.fillRect((int) passage.getX() + inset, (int) passage.getY(), (int) (passage.getWidth() - 2 * inset),
-					(int) passage.getHeight());
+		g.drawImage(hangingImage, 0, 0, width, hanging.height, null);
+		if (illuminated) {
+			int inset = passage.width / 10;
+			g.setColor(new Color(255, 255, 0, new Random().nextInt(170)));
+			g.fillRect(passage.x + inset, passage.y, passage.width - 2 * inset, passage.height);
 		}
-		g.drawImage(pipeUp, 0, (int) (upperPart.getHeight() + passage.getHeight()), null);
+		g.drawImage(standingImage, 0, hanging.height + passage.height, null);
 		g.translate(-tf.x, -tf.y);
 	}
 
-	public void setLighted(boolean lighted) {
-		this.lighted = lighted;
-	}
-
 	public Collider getUpperPart() {
-		return () -> new Rectangle2D.Double(tf.x, tf.y, upperPart.getWidth(), upperPart.getHeight());
+		return () -> new Rectangle((int) tf.x, (int) tf.y, hanging.width, hanging.height);
 	}
 
 	public Collider getLowerPart() {
-		return () -> new Rectangle2D.Double(tf.x, tf.y + upperPart.getHeight() + passage.getHeight(), lowerPart.getWidth(),
-				lowerPart.getHeight());
+		return () -> new Rectangle((int) tf.x, (int) tf.y + hanging.height + passage.height, standing.width,
+				standing.height);
 	}
 
 	public Collider getPassage() {
-		return () -> new Rectangle2D.Double(tf.x, tf.y + upperPart.getHeight(), passage.getWidth(), passage.getHeight());
+		return () -> new Rectangle((int) tf.x, (int) tf.y + hanging.height, passage.width, passage.height);
 	}
 }

@@ -75,7 +75,7 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		addTransitionOnEventObject(PLAYING, PLAYING, () -> points > 3, e -> {
 			Bird bird = ent.named("bird");
 			points -= 3;
-			bird.tf.x = bird.tf.x + app().settings().getAsInt("pipe-width") + bird.tf.width;
+			bird.tf.x = bird.tf.x + app().settings().getAsInt("obstacle-width") + bird.tf.width;
 			bird.dispatch(TOUCHED_PIPE);
 			sound("sfx/hit.mp3").play();
 		}, TOUCHED_PIPE);
