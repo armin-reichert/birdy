@@ -58,60 +58,88 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		super(PlaySceneState.class, EventMatchStrategy.BY_EQUALITY);
 		this.ent = entities;
 		buildStateMachine();
-		getTracer().setLogger(Application.LOGGER);
 		obstacleController = new ObstacleController(ent);
 		obstacleController.getTracer().setLogger(Application.LOGGER);
 	}
 
 	private void buildStateMachine() {
-		setDescription("[Play Scene]");
-		setInitialState(PLAYING);
+		setMissingTransitionBehavior(MissingTransitionBehavior.LOG);
+		getTracer().setLogger(Application.LOGGER);
+		//@formatter:off
+		beginStateMachine()
+			.description("[Play Scene]")
+			.initialState(PLAYING)
+		
+		.states()
 
-		state(PLAYING).setOnEntry(() -> {
-			points = 0;
-			start();
-		});
+			.state(STARTING)
+				.onEntry(() -> BirdyGameApp.setScene(Scene.START_SCENE))
+				
+			.state(PLAYING)
+				.onEntry(() -> {
+					points = 0;
+					start();
+				})
+				
+			.state(GAME_OVER)
+				.onEntry(() -> stop())
 
-		addTransitionOnEventObject(PLAYING, PLAYING, () -> points > 3, e -> {
-			Bird bird = ent.named("bird");
-			points -= 3;
-			bird.tf.x = bird.tf.x + app().settings().getAsInt("obstacle-width") + bird.tf.width;
-			bird.dispatch(TOUCHED_PIPE);
-			sound("sfx/hit.mp3").play();
-		}, TOUCHED_PIPE);
+		
+		.transitions()
+		
+			.stay(PLAYING)
+				.on(TOUCHED_PIPE)
+				.condition(() -> points > 3)
+				.act(e -> {
+					points -= 3;
+					sound("sfx/hit.mp3").play();
+					Bird bird = ent.named("bird");
+					bird.tf.x += app().settings().getAsInt("obstacle-width") + bird.tf.width;
+					bird.dispatch(TOUCHED_PIPE);
+				})
 
-		addTransitionOnEventObject(PLAYING, GAME_OVER, () -> points <= 3, t -> {
-			Bird bird = ent.named("bird");
-			bird.dispatch(CRASHED);
-			sound("sfx/hit.mp3").play();
-		}, TOUCHED_PIPE);
+			.stay(PLAYING)
+				.on(PASSED_OBSTACLE)
+				.act(e -> {
+					points++;
+					sound("sfx/point.mp3").play();
+				})
 
-		addTransitionOnEventObject(PLAYING, PLAYING, null, e -> {
-			points++;
-			sound("sfx/point.mp3").play();
-		}, PASSED_OBSTACLE);
 
-		addTransitionOnEventObject(PLAYING, GAME_OVER, null, e -> {
-			Bird bird = ent.named("bird");
-			bird.dispatch(TOUCHED_GROUND);
-			sound("music/bgmusic.mp3").stop();
-		}, TOUCHED_GROUND);
+			
+			.when(PLAYING).then(GAME_OVER)
+				.on(TOUCHED_PIPE)
+				.condition(() -> points <= 3)
+				.act(t -> {
+					sound("sfx/hit.mp3").play();
+					Bird bird = ent.named("bird");
+					bird.dispatch(CRASHED);
+				})
 
-		addTransitionOnEventObject(PLAYING, GAME_OVER, null, e -> {
-			Bird bird = ent.named("bird");
-			bird.dispatch(LEFT_WORLD);
-			sound("music/bgmusic.mp3").stop();
-		}, LEFT_WORLD);
+			.when(PLAYING).then(GAME_OVER)
+				.on(TOUCHED_GROUND)
+				.act(e -> {
+					sound("music/bgmusic.mp3").stop();
+					Bird bird = ent.named("bird");
+					bird.dispatch(TOUCHED_GROUND);
+				})
 
-		state(GAME_OVER).setOnEntry(() -> stop());
+			.when(PLAYING).then(GAME_OVER)
+				.on(LEFT_WORLD)
+				.act(e -> {
+					Bird bird = ent.named("bird");
+					bird.dispatch(LEFT_WORLD);
+					sound("music/bgmusic.mp3").stop();
+				})
 
-		addTransition(GAME_OVER, STARTING, () -> Keyboard.keyPressedOnce(KeyEvent.VK_SPACE), null);
+			.when(GAME_OVER).then(STARTING).condition(() -> Keyboard.keyPressedOnce(KeyEvent.VK_SPACE))
 
-		addTransitionOnEventObject(GAME_OVER, GAME_OVER, null, null, TOUCHED_PIPE);
-		addTransitionOnEventObject(GAME_OVER, GAME_OVER, null, null, PASSED_OBSTACLE);
-		addTransitionOnEventObject(GAME_OVER, GAME_OVER, null, e -> sound("music/bgmusic.mp3").stop(), TOUCHED_GROUND);
-
-		state(STARTING).setOnEntry(() -> BirdyGameApp.setScene(Scene.START_SCENE));
+			.stay(GAME_OVER)
+				.on(TOUCHED_GROUND)
+				.act(() -> sound("music/bgmusic.mp3").stop())
+				
+		.endStateMachine();
+		//@formatter:on
 	}
 
 	@Override
