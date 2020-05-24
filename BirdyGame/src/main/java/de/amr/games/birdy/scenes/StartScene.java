@@ -48,7 +48,7 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 	}
 
 	private EntityMap ent;
-	private ImageWidget text;
+	private ImageWidget displayedText;
 
 	public StartScene(EntityMap entities) {
 		super(StartSceneState.class, EventMatchStrategy.BY_EQUALITY);
@@ -60,76 +60,74 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 	}
 
 	private void buildStateMachine() {
-		setDescription("[Start Scene]");
-		setInitialState(STARTING);
+		//@formatter:off
+		beginStateMachine()
+		.description("[Start Scene]")
+		.initialState(STARTING)
+		.states()
+			.state(STARTING)
+				.onEntry(() -> {
+					reset();
+					if (!sound("music/bgmusic.mp3").isRunning()) {
+						sound("music/bgmusic.mp3").loop();
+					}
+				})
+			.onTick(() -> keepBirdInAir())
+			
+			.state(READY)
+				.timeoutAfter(() -> sec(app().settings().getAsFloat("ready-time-sec")))
+				.onEntry(() -> {
+					displayedText = ent.named("readyText");
+				})
+				.onExit(() -> {
+					displayedText = null;
+				})
 
-		// Starting ---
+			.state(LEAVING)
+				.onEntry(() -> setScene(Scene.PLAY_SCENE))
+				
+			.state(GAME_OVER)
+				.onEntry(() -> {
+					stop();
+					sounds().forEach(Sound::stop);
+					displayedText = ent.named("game_over");
+				})
 
-		state(STARTING).setOnEntry(() -> {
-			reset();
-			if (!sound("music/bgmusic.mp3").isRunning()) {
-				sound("music/bgmusic.mp3").loop();
-			}
-		});
+		.transitions()
 
-		state(STARTING).setOnTick(() -> keepBirdInAir());
-
-		addTransition(STARTING, READY, () -> Keyboard.keyDown(app().settings().get("jump-key")), null);
-
-		addTransitionOnEventObject(STARTING, GAME_OVER, null, null, TOUCHED_GROUND);
-
-		// Ready ---
-
-		state(READY).setTimer(() -> sec(app().settings().getAsFloat("ready-time-sec")));
-
-		state(READY).setOnEntry(() -> {
-			text = ent.named("readyText");
-		});
-
-		state(READY).setOnExit(() -> {
-			text = null;
-		});
-
-		addTransitionOnTimeout(READY, LEAVING, null, null);
-
-		addTransitionOnEventObject(READY, GAME_OVER, null, e -> {
-			text = ent.named("title");
-		}, TOUCHED_GROUND);
-
-		// Leaving ---
-
-		state(LEAVING).setOnEntry(() -> setScene(Scene.PLAY_SCENE));
-
-		// GameOver ---
-
-		state(GAME_OVER).setOnEntry(() -> {
-			stop();
-			sounds().forEach(Sound::stop);
-			text = ent.named("game_over");
-		});
-
-		addTransition(GAME_OVER, STARTING, () -> Keyboard.keyPressedOnce(KeyEvent.VK_SPACE), null);
+			.when(STARTING).then(READY)
+				.condition(() -> Keyboard.keyDown(app().settings().get("jump-key")))
+				
+			.when(STARTING).then(GAME_OVER).on(TOUCHED_GROUND)
+			
+			.when(READY).then(LEAVING).onTimeout()
+			
+			.when(READY).then(GAME_OVER).on(TOUCHED_GROUND)
+				.act(e -> {
+					displayedText = ent.named("title");
+				})
+			
+			.when(GAME_OVER).then(STARTING)
+				.condition(() -> Keyboard.keyPressedOnce(KeyEvent.VK_SPACE))
+		
+		.endStateMachine();
+		//@formatter:on
 	}
 
 	private void reset() {
 		int w = app().settings().width, h = app().settings().height;
-
-		text = ent.named("title");
-
+		displayedText = ent.named("title");
 		City city = ent.named("city");
 		city.setWidth(w);
 		city.init();
-
 		Ground ground = ent.named("ground");
 		ground.setWidth(w);
 		ground.tf.setPosition(0, h - ground.tf.height);
 		ground.tf.setVelocity(app().settings().getAsFloat("world-speed"), 0);
-
 		Bird bird = ent.named("bird");
 		bird.init();
 		bird.tf.setPosition(w / 8, ground.tf.y / 2);
 		bird.tf.setVelocity(0, 0);
-
 		app().collisionHandler().clear();
 		app().collisionHandler().registerEnd(bird, ent.ofClass(Area.class).findAny().get(), LEFT_WORLD);
 		app().collisionHandler().registerStart(bird, ground, TOUCHED_GROUND);
@@ -171,9 +169,9 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 		city.draw(g);
 		ground.draw(g);
 		bird.draw(g);
-		if (text != null) {
-			text.tf.center(w, h - ground.tf.height);
-			text.draw(g);
+		if (displayedText != null) {
+			displayedText.tf.center(w, h - ground.tf.height);
+			displayedText.draw(g);
 		}
 		if (app().settings().getAsBoolean("show-state")) {
 			String text = String.format("%s: (%s)  Bird: Flight: (%s) Sanity: (%s)", getDescription(), getState(),
