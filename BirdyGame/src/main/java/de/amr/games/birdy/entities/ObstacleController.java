@@ -36,39 +36,30 @@ public class ObstacleController extends StateMachine<Phase, String> implements L
 	public ObstacleController(EntityMap entities) {
 		super(Phase.class, EventMatchStrategy.BY_EQUALITY);
 		ent = entities;
-		buildStateMachine();
-	}
+		//@formatter:off
+		beginStateMachine()
+			.description("[ObstacleController]")
+			.initialState(STOPPED)
+			
+			.states()
 
-	private void buildStateMachine() {
-		setDescription("[ObstacleController]");
-		setInitialState(STOPPED);
+				.state(BREEDING)
+					.timeoutAfter(this::breedingTime)
+					.onTick(() -> obstacles.forEach(Obstacle::update))
 
-		// On "Start" event, become breeding:
-		addTransitionOnEventObject(STOPPED, BREEDING, null, null, "Start");
-
-		// Stay breeding for some random time from interval [MIN_PIPE_TIME, MAX_PIPE_TIME]
-		state(BREEDING).setTimer(() -> {
-			int minCreationTime = sec(app().settings().getAsFloat("min-pipe-creation-sec"));
-			int maxCreationTime = sec(app().settings().getAsFloat("max-pipe-creation-sec"));
-			return randomInt(minCreationTime, maxCreationTime);
-		});
-
-		// Update (move) pipes during breeding:
-		state(BREEDING).setOnTick(() -> obstacles.forEach(Obstacle::update));
-
-		// On "Stop" event, enter "Stopped" state:
-		addTransitionOnEventObject(BREEDING, STOPPED, null, null, "Stop");
-
-		// When breeding time is over, it's birthday:
-		addTransitionOnTimeout(BREEDING, GIVING_BIRTH, null, null);
-
-		// On birth, update (add/remove) obstacles:
-		state(GIVING_BIRTH).setOnEntry(this::addAndRemoveObstacles);
-
-		// And immediately become breeding again
-		addTransition(GIVING_BIRTH, BREEDING, null, null);
-
-		addTransitionOnEventObject(GIVING_BIRTH, STOPPED, null, null, "Stop");
+				.state(GIVING_BIRTH)
+					.onEntry(this::updateObstacleList)
+			
+			.transitions()
+			
+				.when(STOPPED).then(BREEDING).on("Start")
+				.when(BREEDING).then(STOPPED).on("Stop")
+				.when(BREEDING).then(GIVING_BIRTH).onTimeout()
+				.when(GIVING_BIRTH).then(BREEDING)
+				.when(GIVING_BIRTH).then(STOPPED).on("Stop")
+				
+		.endStateMachine();
+		//@formatter:on
 	}
 
 	@Override
@@ -87,7 +78,13 @@ public class ObstacleController extends StateMachine<Phase, String> implements L
 		process("Stop");
 	}
 
-	private void addAndRemoveObstacles() {
+	private int breedingTime() {
+		int min = sec(app().settings().getAsFloat("min-pipe-creation-sec"));
+		int max = sec(app().settings().getAsFloat("max-pipe-creation-sec"));
+		return randomInt(min, max);
+	}
+
+	private void updateObstacleList() {
 		Bird bird = ent.named("bird");
 		City city = ent.named("city");
 		Ground ground = ent.named("ground");
