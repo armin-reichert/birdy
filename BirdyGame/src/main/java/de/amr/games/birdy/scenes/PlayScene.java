@@ -2,6 +2,7 @@ package de.amr.games.birdy.scenes;
 
 import static de.amr.easy.game.Application.app;
 import static de.amr.easy.game.assets.Assets.sound;
+import static de.amr.games.birdy.BirdyGameApp.Scene.START_SCENE;
 import static de.amr.games.birdy.entities.BirdEvent.CRASHED;
 import static de.amr.games.birdy.entities.BirdEvent.LEFT_WORLD;
 import static de.amr.games.birdy.entities.BirdEvent.PASSED_OBSTACLE;
@@ -9,7 +10,6 @@ import static de.amr.games.birdy.entities.BirdEvent.TOUCHED_GROUND;
 import static de.amr.games.birdy.entities.BirdEvent.TOUCHED_PIPE;
 import static de.amr.games.birdy.scenes.PlayScene.PlaySceneState.GAME_OVER;
 import static de.amr.games.birdy.scenes.PlayScene.PlaySceneState.PLAYING;
-import static de.amr.games.birdy.scenes.PlayScene.PlaySceneState.STARTING;
 
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -24,7 +24,6 @@ import de.amr.easy.game.input.Keyboard;
 import de.amr.easy.game.ui.widgets.ImageWidget;
 import de.amr.easy.game.view.View;
 import de.amr.games.birdy.BirdyGameApp;
-import de.amr.games.birdy.BirdyGameApp.Scene;
 import de.amr.games.birdy.entities.Area;
 import de.amr.games.birdy.entities.Bird;
 import de.amr.games.birdy.entities.BirdEvent;
@@ -72,9 +71,6 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		
 		.states()
 
-			.state(STARTING)
-				.onEntry(() -> BirdyGameApp.setScene(Scene.START_SCENE))
-				
 			.state(PLAYING)
 				.onEntry(() -> {
 					points = 0;
@@ -129,8 +125,10 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 					sound("music/bgmusic.mp3").stop();
 				})
 
-			.when(GAME_OVER).then(STARTING).condition(() -> Keyboard.keyPressedOnce(KeyEvent.VK_SPACE))
-
+			.stay(GAME_OVER)
+				.condition(() -> Keyboard.keyPressedOnce(KeyEvent.VK_SPACE))
+				.act(() -> BirdyGameApp.setScene(START_SCENE))
+				
 			.stay(GAME_OVER)
 				.on(TOUCHED_GROUND)
 				.act(() -> sound("music/bgmusic.mp3").stop())
