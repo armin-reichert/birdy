@@ -35,8 +35,7 @@ import de.amr.statemachine.core.StateMachine;
  * The little bird.
  * <p>
  * The bird is controlled by two separate state machines, one controls the flight state and the
- * other the bird's health. Using the state machine builder to define the state machines would
- * result in prettier code, but I just wanted to check that the API is working too.
+ * other the bird's health.
  * 
  * @author Armin Reichert
  */
@@ -45,7 +44,6 @@ public class Bird extends Entity implements Lifecycle, View {
 	private final FlightControl flightControl;
 	private final HealthControl healthControl;
 	private final SpriteMap sprites = new SpriteMap();
-
 	private float gravity;
 
 	/**
@@ -53,9 +51,13 @@ public class Bird extends Entity implements Lifecycle, View {
 	 */
 	private class HealthControl extends StateMachine<HealthState, BirdEvent> {
 
+		/*
+		 * Using the state machine builder result in prettier code, but I wanted to check that the API is
+		 * working too.
+		 */
 		public HealthControl() {
 			super(HealthState.class, EventMatchStrategy.BY_EQUALITY);
-			
+
 			setMissingTransitionBehavior(MissingTransitionBehavior.LOG);
 			setDescription("[Health]");
 			setInitialState(SANE);
