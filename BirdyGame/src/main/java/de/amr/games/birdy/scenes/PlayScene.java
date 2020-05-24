@@ -31,7 +31,7 @@ import de.amr.games.birdy.entities.BirdEvent;
 import de.amr.games.birdy.entities.City;
 import de.amr.games.birdy.entities.Ground;
 import de.amr.games.birdy.entities.ObstacleController;
-import de.amr.games.birdy.entities.ScoreDisplay;
+import de.amr.games.birdy.entities.Score;
 import de.amr.games.birdy.scenes.PlayScene.PlaySceneState;
 import de.amr.statemachine.api.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
@@ -51,7 +51,7 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 	private ObstacleController obstacleController;
 	private EntityMap ent;
 	private ImageWidget gameOverText;
-	private ScoreDisplay score;
+	private Score score;
 
 	public PlayScene(EntityMap entities) {
 		super(PlaySceneState.class, EventMatchStrategy.BY_EQUALITY);
@@ -118,7 +118,7 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		int w = app().settings().width, h = app().settings().height;
 		Ground ground = ent.named("ground");
 
-		score = new ScoreDisplay(() -> points, 1.5f);
+		score = new Score(() -> points, 1.5f);
 		score.tf.centerX(w);
 		score.tf.y = (ground.tf.y / 4);
 		ent.store(score);

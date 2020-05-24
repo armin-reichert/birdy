@@ -16,14 +16,14 @@ import de.amr.easy.game.view.View;
  * 
  * @author Armin Reichert
  */
-public class ScoreDisplay extends Entity implements View {
+public class Score extends Entity implements View {
 
 	private final Supplier<Integer> score;
 	private final float scale;
 	private final Image[] digits;
 	private String scoreText;
 
-	public ScoreDisplay(Supplier<Integer> score, float scale) {
+	public Score(Supplier<Integer> score, float scale) {
 		this.score = score;
 		this.scale = scale;
 		this.digits = new Image[10];
