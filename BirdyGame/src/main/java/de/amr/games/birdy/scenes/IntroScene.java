@@ -15,12 +15,13 @@ import de.amr.easy.game.Application;
 import de.amr.easy.game.assets.Assets;
 import de.amr.easy.game.assets.Sound;
 import de.amr.easy.game.controller.Lifecycle;
+import de.amr.easy.game.entity.EntityMap;
 import de.amr.easy.game.ui.widgets.PumpingImageWidget;
 import de.amr.easy.game.ui.widgets.TextWidget;
 import de.amr.easy.game.view.View;
 import de.amr.games.birdy.BirdyGameApp;
 import de.amr.games.birdy.BirdyGameApp.Scene;
-import de.amr.games.birdy.entities.BirdyGameEntities;
+import de.amr.games.birdy.entities.City;
 import de.amr.games.birdy.scenes.IntroScene.IntroSceneState;
 import de.amr.statemachine.api.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
@@ -45,11 +46,11 @@ public class IntroScene extends StateMachine<IntroSceneState, Void> implements V
 	/*@formatter:on*/
 	);
 
-	private BirdyGameEntities ent;
+	private EntityMap ent;
 	private PumpingImageWidget logoImage;
 	private TextWidget creditsText;
 
-	public IntroScene(BirdyGameEntities entities) {
+	public IntroScene(EntityMap entities) {
 		super(IntroSceneState.class, EventMatchStrategy.BY_EQUALITY);
 		ent = entities;
 		/*@formatter:off*/
@@ -85,15 +86,17 @@ public class IntroScene extends StateMachine<IntroSceneState, Void> implements V
 	@Override
 	public void init() {
 		int width = app().settings().width, height = app().settings().height;
-		ent.theCity().setWidth(width);
+
+		City city = ent.named("city");
+		city.setWidth(width);
 		if (new Random().nextBoolean()) {
-			ent.theCity().sunset();
+			city.sunset();
 		} else {
-			ent.theCity().sunrise();
+			city.sunrise();
 		}
 
 		creditsText = TextWidget.create().text(CREDITS_TEXT).font(Assets.font("Pacifico-Regular"))
-				.color(ent.theCity().isNight() ? Color.WHITE : Color.DARK_GRAY).build();
+				.color(city.isNight() ? Color.WHITE : Color.DARK_GRAY).build();
 		creditsText.tf.centerX(width);
 		creditsText.tf.y = (height);
 		creditsText.tf.vy = -1.5f;
@@ -111,7 +114,8 @@ public class IntroScene extends StateMachine<IntroSceneState, Void> implements V
 
 	@Override
 	public void draw(Graphics2D g) {
-		ent.theCity().draw(g);
+		City city = ent.named("city");
+		city.draw(g);
 		logoImage.draw(g);
 		creditsText.draw(g);
 	}

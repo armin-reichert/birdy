@@ -16,6 +16,7 @@ import java.util.stream.IntStream;
 import de.amr.easy.game.Application;
 import de.amr.easy.game.controller.Lifecycle;
 import de.amr.easy.game.entity.Entity;
+import de.amr.easy.game.entity.EntityMap;
 import de.amr.easy.game.input.Keyboard;
 import de.amr.easy.game.ui.sprites.Sprite;
 import de.amr.easy.game.ui.sprites.SpriteMap;
@@ -38,11 +39,11 @@ public class City extends Entity implements Lifecycle, View {
 		SUNSET, SUNRISE
 	}
 
-	private final BirdyGameEntities ent;
+	private final EntityMap ent;
 	private final SpriteMap sprites = new SpriteMap();
 	private final StateMachine<DayTime, DayEvent> fsm;
 
-	public City(BirdyGameEntities entities) {
+	public City(EntityMap entities) {
 
 		ent = entities;
 

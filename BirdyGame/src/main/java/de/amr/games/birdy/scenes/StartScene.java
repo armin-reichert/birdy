@@ -20,6 +20,7 @@ import java.awt.event.KeyEvent;
 import de.amr.easy.game.assets.Assets;
 import de.amr.easy.game.assets.Sound;
 import de.amr.easy.game.controller.Lifecycle;
+import de.amr.easy.game.entity.EntityMap;
 import de.amr.easy.game.entity.collision.Collision;
 import de.amr.easy.game.input.Keyboard;
 import de.amr.easy.game.ui.widgets.ImageWidget;
@@ -27,7 +28,9 @@ import de.amr.easy.game.ui.widgets.PumpingImageWidget;
 import de.amr.easy.game.view.View;
 import de.amr.games.birdy.BirdyGameApp.Scene;
 import de.amr.games.birdy.entities.Area;
-import de.amr.games.birdy.entities.BirdyGameEntities;
+import de.amr.games.birdy.entities.City;
+import de.amr.games.birdy.entities.Ground;
+import de.amr.games.birdy.entities.bird.Bird;
 import de.amr.games.birdy.entities.bird.BirdEvent;
 import de.amr.games.birdy.scenes.StartScene.StartSceneState;
 import de.amr.statemachine.api.EventMatchStrategy;
@@ -44,10 +47,10 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 		STARTING, READY, GAME_OVER, LEAVING, SPRITE_BROWSER
 	}
 
-	private BirdyGameEntities ent;
+	private EntityMap ent;
 	private ImageWidget sceneText;
 
-	public StartScene(BirdyGameEntities entities) {
+	public StartScene(EntityMap entities) {
 		super(StartSceneState.class, EventMatchStrategy.BY_EQUALITY);
 		this.ent = entities;
 		buildStateMachine();
@@ -102,16 +105,19 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 	private void reset() {
 		int w = app().settings().width, h = app().settings().height;
 
-		ent.theCity().setWidth(w);
-		ent.theCity().init();
+		City city = ent.named("city");
+		city.setWidth(w);
+		city.init();
 
-		ent.theGround().setWidth(w);
-		ent.theGround().tf.setPosition(0, h - ent.theGround().tf.height);
-		ent.theGround().tf.setVelocity(app().settings().getAsFloat("world-speed"), 0);
+		Ground ground = ent.named("ground");
+		ground.setWidth(w);
+		ground.tf.setPosition(0, h - ground.tf.height);
+		ground.tf.setVelocity(app().settings().getAsFloat("world-speed"), 0);
 
-		ent.theBird().init();
-		ent.theBird().tf.setPosition(w / 8, ent.theGround().tf.y / 2);
-		ent.theBird().tf.setVelocity(0, 0);
+		Bird bird = ent.named("bird");
+		bird.init();
+		bird.tf.setPosition(w / 8, ground.tf.y / 2);
+		bird.tf.setVelocity(0, 0);
 
 		if (!ent.contains("title")) {
 			ImageWidget titleText = new ImageWidget(Assets.image("title"));
@@ -135,8 +141,8 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 		}
 
 		app().collisionHandler().clear();
-		app().collisionHandler().registerEnd(ent.theBird(), ent.ofClass(Area.class).findAny().get(), LEFT_WORLD);
-		app().collisionHandler().registerStart(ent.theBird(), ent.theGround(), TOUCHED_GROUND);
+		app().collisionHandler().registerEnd(bird, ent.ofClass(Area.class).findAny().get(), LEFT_WORLD);
+		app().collisionHandler().registerStart(bird, ground, TOUCHED_GROUND);
 
 		showSceneText("title");
 	}
@@ -148,49 +154,57 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 			app().settings().set("show-state", !showState);
 		}
 		checkCollisions();
-		ent.update();
+		ent.filter(entity -> entity instanceof Lifecycle).map(Lifecycle.class::cast).forEach(Lifecycle::update);
 		super.update();
 	}
 
 	private void checkCollisions() {
+		Bird bird = ent.named("bird");
 		for (Collision c : app().collisionHandler().collisions()) {
 			BirdEvent event = (BirdEvent) c.getAppEvent();
-			ent.theBird().dispatch(event);
+			bird.dispatch(event);
 			enqueue(event);
 		}
 	}
 
 	@Override
 	public void stop() {
-		ent.theGround().tf.setVelocity(0, 0);
+		Ground ground = ent.named("ground");
+		ground.tf.setVelocity(0, 0);
 	}
 
 	@Override
 	public void draw(Graphics2D g) {
 		int w = app().settings().width, h = app().settings().height;
-		ent.theCity().draw(g);
-		ent.theGround().draw(g);
-		ent.theBird().draw(g);
+		Bird bird = ent.named("bird");
+		City city = ent.named("city");
+		Ground ground = ent.named("ground");
+
+		city.draw(g);
+		ground.draw(g);
+		bird.draw(g);
 		if (sceneText != null) {
-			sceneText.tf.center(w, h - ent.theGround().tf.height);
+			sceneText.tf.center(w, h - ground.tf.height);
 			sceneText.draw(g);
 		}
 		if (app().settings().getAsBoolean("show-state")) {
 			String text = String.format("%s: (%s)  Bird: Flight: (%s) Sanity: (%s)", getDescription(), getState(),
-					ent.theBird().getFlightState(), ent.theBird().getHealthState());
+					bird.getFlightState(), bird.getHealthState());
 			g.setFont(new Font(Font.DIALOG, Font.PLAIN, 10));
 			g.drawString(text, 20, app().settings().height - 20);
 		}
 	}
 
 	private void keepBirdInAir() {
-		while (ent.theBird().tf.y > ent.theGround().tf.y / 2) {
-			ent.theBird().flap(randomInt(1, 4));
+		Bird bird = ent.named("bird");
+		Ground ground = ent.named("ground");
+		while (bird.tf.y > ground.tf.y / 2) {
+			bird.flap(randomInt(1, 4));
 		}
 	}
 
 	private void showSceneText(String imageName) {
-		sceneText = ent.ofName(imageName);
+		sceneText = ent.named(imageName);
 	}
 
 	private void hideSceneText() {

@@ -14,6 +14,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.amr.easy.game.controller.Lifecycle;
+import de.amr.easy.game.entity.EntityMap;
+import de.amr.games.birdy.entities.bird.Bird;
 import de.amr.statemachine.api.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 
@@ -24,10 +26,10 @@ import de.amr.statemachine.core.StateMachine;
  */
 public class ObstacleController extends StateMachine<ObstacleControllerState, String> implements Lifecycle {
 
-	private final BirdyGameEntities ent;
+	private final EntityMap ent;
 	public final List<Obstacle> obstacles = new LinkedList<>();
 
-	public ObstacleController(BirdyGameEntities entities) {
+	public ObstacleController(EntityMap entities) {
 		super(ObstacleControllerState.class, EventMatchStrategy.BY_EQUALITY);
 		ent = entities;
 		buildStateMachine();
@@ -82,32 +84,35 @@ public class ObstacleController extends StateMachine<ObstacleControllerState, St
 	}
 
 	private void addAndRemoveObstacles() {
+		Bird bird = ent.named("bird");
+		City city = ent.named("city");
+		Ground ground = ent.named("ground");
+
 		// Add new obstacle
 		int minHeight = app().settings().get("min-pipe-height");
 		int passageHeight = app().settings().get("passage-height");
 		int width = app().settings().get("pipe-width");
 		int height = app().settings().get("pipe-height");
-		int passageCenterY = randomInt(minHeight + passageHeight / 2,
-				(int) ent.theGround().tf.y - minHeight - passageHeight / 2);
+		int passageCenterY = randomInt(minHeight + passageHeight / 2, (int) ground.tf.y - minHeight - passageHeight / 2);
 
 		Obstacle obstacle = new Obstacle(width, height, passageHeight, passageCenterY);
 		obstacle.tf.vx = app().settings().get("world-speed");
 		obstacle.tf.x = app().settings().width;
-		obstacle.setLighted(ent.theCity().isNight() && randomInt(0, 4) == 0);
+		obstacle.setLighted(city.isNight() && randomInt(0, 4) == 0);
 		obstacles.add(obstacle);
 
-		app().collisionHandler().registerStart(ent.theBird(), obstacle.getUpperPart(), TOUCHED_PIPE);
-		app().collisionHandler().registerStart(ent.theBird(), obstacle.getLowerPart(), TOUCHED_PIPE);
-		app().collisionHandler().registerEnd(ent.theBird(), obstacle.getPassage(), PASSED_OBSTACLE);
+		app().collisionHandler().registerStart(bird, obstacle.getUpperPart(), TOUCHED_PIPE);
+		app().collisionHandler().registerStart(bird, obstacle.getLowerPart(), TOUCHED_PIPE);
+		app().collisionHandler().registerEnd(bird, obstacle.getPassage(), PASSED_OBSTACLE);
 
 		// Remove obstacles that ran out of screen
 		Iterator<Obstacle> it = obstacles.iterator();
 		while (it.hasNext()) {
 			obstacle = it.next();
 			if (obstacle.tf.x + obstacle.tf.width < 0) {
-				app().collisionHandler().unregisterStart(ent.theBird(), obstacle.getUpperPart());
-				app().collisionHandler().unregisterStart(ent.theBird(), obstacle.getLowerPart());
-				app().collisionHandler().unregisterEnd(ent.theBird(), obstacle.getPassage());
+				app().collisionHandler().unregisterStart(bird, obstacle.getUpperPart());
+				app().collisionHandler().unregisterStart(bird, obstacle.getLowerPart());
+				app().collisionHandler().unregisterEnd(bird, obstacle.getPassage());
 				it.remove();
 			}
 		}
