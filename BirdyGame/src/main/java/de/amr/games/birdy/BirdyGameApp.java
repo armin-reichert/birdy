@@ -7,6 +7,7 @@ import static de.amr.games.birdy.utils.SpritesheetReader.extractSpriteSheet;
 import java.awt.DisplayMode;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
+import java.time.ZonedDateTime;
 import java.util.EnumMap;
 
 import de.amr.easy.game.Application;
@@ -14,6 +15,7 @@ import de.amr.easy.game.config.AppSettings;
 import de.amr.easy.game.controller.Lifecycle;
 import de.amr.easy.game.entity.EntityMap;
 import de.amr.games.birdy.entities.City;
+import de.amr.games.birdy.entities.City.DayTime;
 import de.amr.games.birdy.entities.Ground;
 import de.amr.games.birdy.entities.bird.Bird;
 import de.amr.games.birdy.scenes.IntroScene;
@@ -77,7 +79,10 @@ public class BirdyGameApp extends Application {
 		sound("music/bgmusic.mp3").volume(0.5f);
 		storeTrueTypeFont("Pacifico-Regular", "fonts/Pacifico-Regular.ttf", Font.BOLD, 40);
 		EntityMap entities = new EntityMap();
-		entities.store("city", new City(entities));
+		int hour = ZonedDateTime.now().getHour(); // 0-23
+		DayTime dayTime = hour > 5 && hour < 21 ? DayTime.DAY : DayTime.NIGHT;
+		loginfo("Its %s now", dayTime);
+		entities.store("city", new City(entities, dayTime));
 		entities.store("ground", new Ground());
 		entities.store("bird", new Bird());
 		scenes.put(Scene.INTRO_SCENE, new IntroScene(entities));

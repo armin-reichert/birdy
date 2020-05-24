@@ -44,13 +44,13 @@ public class City extends Entity implements Lifecycle, View {
 	private final SpriteMap sprites = new SpriteMap();
 	private final StateMachine<DayTime, DayEvent> fsm;
 
-	public City(EntityMap entities) {
+	public City(EntityMap entities, DayTime dayTime) {
 
 		ent = entities;
 
 		sprites.set("s_night", Sprite.ofAssets("bg_night"));
 		sprites.set("s_day", Sprite.ofAssets("bg_day"));
-		sprites.select("s_day");
+		sprites.select(dayTime == DAY ? "s_day": "s_night");
 
 		sprites.current().ifPresent(sprite -> {
 			tf.width = sprite.getWidth();
