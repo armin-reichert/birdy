@@ -64,52 +64,54 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 		getTracer().setLogger(Application.LOGGER);
 		//@formatter:off
 		beginStateMachine()
-		.description("[Start Scene]")
-		.initialState(STARTING)
-		.states()
-			.state(STARTING)
-				.onEntry(() -> {
-					reset();
-					if (!sound("music/bgmusic.mp3").isRunning()) {
-						sound("music/bgmusic.mp3").loop();
-					}
-				})
-			.onTick(() -> keepBirdInAir())
+			.description("[Start Scene]")
+			.initialState(STARTING)
 			
-			.state(READY)
-				.timeoutAfter(() -> sec(app().settings().getAsFloat("ready-time-sec")))
-				.onEntry(() -> {
-					displayedText = ent.named("readyText");
-				})
-				.onExit(() -> {
-					displayedText = null;
-				})
-
-			.state(GAME_OVER)
-				.onEntry(() -> {
-					stop();
-					sounds().forEach(Sound::stop);
-					displayedText = ent.named("game_over");
-				})
-
-		.transitions()
-
-			.when(STARTING).then(READY)
-				.condition(() -> Keyboard.keyDown(app().settings().get("jump-key")))
+			.states()
+			
+				.state(STARTING)
+					.onEntry(() -> {
+						reset();
+						if (!sound("music/bgmusic.mp3").isRunning()) {
+							sound("music/bgmusic.mp3").loop();
+						}
+					})
+				.onTick(() -> keepBirdInAir())
 				
-			.when(STARTING).then(GAME_OVER).on(TOUCHED_GROUND)
+				.state(READY)
+					.timeoutAfter(() -> sec(app().settings().getAsFloat("ready-time-sec")))
+					.onEntry(() -> {
+						displayedText = ent.named("readyText");
+					})
+					.onExit(() -> {
+						displayedText = null;
+					})
+	
+				.state(GAME_OVER)
+					.onEntry(() -> {
+						stop();
+						sounds().forEach(Sound::stop);
+						displayedText = ent.named("game_over");
+					})
+	
+			.transitions()
+	
+				.when(STARTING).then(READY)
+					.condition(() -> Keyboard.keyDown(app().settings().get("jump-key")))
+					
+				.when(STARTING).then(GAME_OVER).on(TOUCHED_GROUND)
+				
+				.when(READY).then(COMPLETE).onTimeout()
+					.act(() -> setScene(Scene.PLAY_SCENE))
+				
+				.when(READY).then(GAME_OVER).on(TOUCHED_GROUND)
+					.act(e -> {
+						displayedText = ent.named("title");
+					})
+				
+				.when(GAME_OVER).then(STARTING)
+					.condition(() -> Keyboard.keyPressedOnce(KeyEvent.VK_SPACE))
 			
-			.when(READY).then(COMPLETE).onTimeout()
-				.act(() -> setScene(Scene.PLAY_SCENE))
-			
-			.when(READY).then(GAME_OVER).on(TOUCHED_GROUND)
-				.act(e -> {
-					displayedText = ent.named("title");
-				})
-			
-			.when(GAME_OVER).then(STARTING)
-				.condition(() -> Keyboard.keyPressedOnce(KeyEvent.VK_SPACE))
-		
 		.endStateMachine();
 		//@formatter:on
 	}
