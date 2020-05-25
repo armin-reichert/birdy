@@ -1,4 +1,4 @@
-package de.amr.games.birdy.browser;
+package de.amr.games.birdy.sprites;
 
 import java.awt.Color;
 import java.awt.Font;

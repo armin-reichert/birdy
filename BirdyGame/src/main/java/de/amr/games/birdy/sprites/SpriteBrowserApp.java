@@ -1,4 +1,4 @@
-package de.amr.games.birdy.browser;
+package de.amr.games.birdy.sprites;
 
 import de.amr.easy.game.Application;
 import de.amr.easy.game.config.AppSettings;

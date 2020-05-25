@@ -2,7 +2,7 @@ package de.amr.games.birdy;
 
 import static de.amr.easy.game.assets.Assets.sound;
 import static de.amr.easy.game.assets.Assets.storeTrueTypeFont;
-import static de.amr.games.birdy.browser.SpritesheetReader.extractSpriteSheet;
+import static de.amr.games.birdy.sprites.SpritesheetReader.extractSpriteSheet;
 
 import java.awt.DisplayMode;
 import java.awt.Font;
