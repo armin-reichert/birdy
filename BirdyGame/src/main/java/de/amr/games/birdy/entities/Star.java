@@ -7,16 +7,15 @@ import static de.amr.games.birdy.BirdyGameApp.randomInt;
 import java.awt.Graphics2D;
 import java.util.Random;
 
-import de.amr.easy.game.entity.Entity;
+import de.amr.easy.game.controller.GameObject;
 import de.amr.easy.game.ui.sprites.Sprite;
-import de.amr.easy.game.view.View;
 
 /**
  * A shining and blinking star...
  * 
  * @author Armin Reichert
  */
-public class Star extends Entity implements View {
+public class Star extends GameObject {
 
 	private final Sprite sprite;
 

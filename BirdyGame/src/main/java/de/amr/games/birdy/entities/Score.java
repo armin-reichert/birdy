@@ -8,15 +8,14 @@ import java.awt.image.BufferedImage;
 import java.util.function.Supplier;
 
 import de.amr.easy.game.assets.Assets;
-import de.amr.easy.game.entity.Entity;
-import de.amr.easy.game.view.View;
+import de.amr.easy.game.controller.GameObject;
 
 /**
  * Displays the game score.
  * 
  * @author Armin Reichert
  */
-public class Score extends Entity implements View {
+public class Score extends GameObject {
 
 	private final Supplier<Integer> score;
 	private final float scale;
@@ -31,13 +30,19 @@ public class Score extends Entity implements View {
 			BufferedImage digitImage = Assets.image("number_score_0" + d);
 			digits[d] = digitImage.getScaledInstance(-1, round(scale) * digitImage.getHeight(), Image.SCALE_SMOOTH);
 		}
+		calculateSize();
+	}
+
+	private void calculateSize() {
+		scoreText = String.format("%d", score.get());
+		tf.width = (scoreText.length() * digits[0].getWidth(null));
+		tf.height = (digits[0].getHeight(null));
 	}
 
 	@Override
 	public void draw(Graphics2D g) {
+		calculateSize();
 		scoreText = String.format("%d", score.get());
-		tf.width = (scoreText.length() * digits[0].getWidth(null));
-		tf.height = (digits[0].getHeight(null));
 		for (int i = 0; i < scoreText.length(); i++) {
 			int digit = "0123456789".indexOf(scoreText.charAt(i));
 			g.drawImage(digits[digit], (int) tf.x + i * (digits[0].getWidth(null) - round(3 * scale)), (int) tf.y, null);
