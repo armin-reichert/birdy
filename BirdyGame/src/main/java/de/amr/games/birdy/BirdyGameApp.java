@@ -58,6 +58,11 @@ public class BirdyGameApp extends Application {
 		return min + new Random().nextInt(max - min + 1);
 	}
 
+	public static DayTime getDayTime() {
+		int hour = ZonedDateTime.now().getHour(); // 0-23
+		return hour > 5 && hour < 21 ? DayTime.DAY : DayTime.NIGHT;
+	}
+
 	@Override
 	protected void configure(AppSettings settings) {
 		// general settings
@@ -90,8 +95,7 @@ public class BirdyGameApp extends Application {
 		sound("music/bgmusic.mp3").volume(0.5f);
 		storeTrueTypeFont("Pacifico-Regular", "fonts/Pacifico-Regular.ttf", Font.BOLD, 40);
 		EntityMap entities = new EntityMap();
-		int hour = ZonedDateTime.now().getHour(); // 0-23
-		DayTime dayTime = hour > 5 && hour < 21 ? DayTime.DAY : DayTime.NIGHT;
+		DayTime dayTime = getDayTime();
 		loginfo("Its %s now", dayTime);
 		int w = app().settings().width, h = app().settings().height;
 		entities.store("world", new Area(0, -h, w, 2 * h));

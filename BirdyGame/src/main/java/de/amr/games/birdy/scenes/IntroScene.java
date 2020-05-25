@@ -21,6 +21,7 @@ import de.amr.easy.game.view.View;
 import de.amr.games.birdy.BirdyGameApp;
 import de.amr.games.birdy.BirdyGameApp.Scene;
 import de.amr.games.birdy.entities.City;
+import de.amr.games.birdy.entities.City.DayTime;
 import de.amr.games.birdy.scenes.IntroScene.IntroSceneState;
 import de.amr.statemachine.api.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
@@ -52,6 +53,9 @@ public class IntroScene extends StateMachine<IntroSceneState, Void> implements V
 	public IntroScene(EntityMap entities) {
 		super(IntroSceneState.class, EventMatchStrategy.BY_EQUALITY);
 		ent = entities;
+		scrollingText = TextWidget.create().text(CREDITS_TEXT).font(Assets.font("Pacifico-Regular"))
+				.color(BirdyGameApp.getDayTime() == DayTime.NIGHT ? Color.WHITE : new Color(50, 50, 255)).build();
+		flashingLogo = PumpingImageWidget.create().image(Assets.image("title")).scale(3).build();
 		/*@formatter:off*/
 		beginStateMachine()
 				.description("[Intro Scene]")
@@ -88,14 +92,11 @@ public class IntroScene extends StateMachine<IntroSceneState, Void> implements V
 		City city = ent.named("city");
 		city.setWidth(width);
 
-		scrollingText = TextWidget.create().text(CREDITS_TEXT).font(Assets.font("Pacifico-Regular"))
-				.color(city.isNight() ? Color.WHITE : new Color(50, 50, 255)).build();
 		scrollingText.tf.centerX(width);
 		scrollingText.tf.y = height;
 		scrollingText.tf.vy = -1.5f;
 		scrollingText.setCompletion(() -> scrollingText.tf.y < height / 4);
 
-		flashingLogo = PumpingImageWidget.create().image(Assets.image("title")).scale(3).build();
 		flashingLogo.tf.center(width, height);
 		flashingLogo.visible = false;
 
