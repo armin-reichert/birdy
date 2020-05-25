@@ -26,7 +26,7 @@ import de.amr.statemachine.api.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 
 /**
- * Intro scene.
+ * Intro scene. Show a scrolling text and a flashing logo before switching to the start scene.
  * 
  * @author Armin Reichert
  */
@@ -46,8 +46,8 @@ public class IntroScene extends StateMachine<IntroSceneState, Void> implements V
 	);
 
 	private EntityMap ent;
-	private PumpingImageWidget logoImage;
-	private TextWidget creditsText;
+	private PumpingImageWidget flashingLogo;
+	private TextWidget scrollingText;
 
 	public IntroScene(EntityMap entities) {
 		super(IntroSceneState.class, EventMatchStrategy.BY_EQUALITY);
@@ -59,21 +59,20 @@ public class IntroScene extends StateMachine<IntroSceneState, Void> implements V
 				.states()
 
 					.state(CREDITS)
-						.onEntry(() -> creditsText.start())
-						.onTick(() -> creditsText.update())
-						.onExit(() -> creditsText.stop())
+						.onEntry(() -> scrollingText.start())
+						.onTick(() -> scrollingText.update())
 
 					.state(WAITING)
 						.timeoutAfter(sec(2))
-						.onExit(() -> creditsText.visible = false)
+						.onExit(() -> scrollingText.visible = false)
 						
 					.state(LOGO)
 						.timeoutAfter(sec(4)) 
-						.onEntry(() -> logoImage.visible = true)
+						.onEntry(() -> flashingLogo.visible = true)
 						.onExit(() -> BirdyGameApp.setScene(Scene.START_SCENE))
 						
 				.transitions()
-					.when(CREDITS).then(WAITING).condition(() -> creditsText.isComplete())
+					.when(CREDITS).then(WAITING).condition(scrollingText::isComplete)
 					.when(WAITING).then(LOGO).onTimeout()
 					.when(LOGO).then(COMPLETE).onTimeout()
 				
@@ -89,16 +88,16 @@ public class IntroScene extends StateMachine<IntroSceneState, Void> implements V
 		City city = ent.named("city");
 		city.setWidth(width);
 
-		creditsText = TextWidget.create().text(CREDITS_TEXT).font(Assets.font("Pacifico-Regular"))
+		scrollingText = TextWidget.create().text(CREDITS_TEXT).font(Assets.font("Pacifico-Regular"))
 				.color(city.isNight() ? Color.WHITE : new Color(50, 50, 255)).build();
-		creditsText.tf.centerX(width);
-		creditsText.tf.y = (height);
-		creditsText.tf.vy = -1.5f;
-		creditsText.setCompletion(() -> creditsText.tf.y < height / 4);
+		scrollingText.tf.centerX(width);
+		scrollingText.tf.y = height;
+		scrollingText.tf.vy = -1.5f;
+		scrollingText.setCompletion(() -> scrollingText.tf.y < height / 4);
 
-		logoImage = PumpingImageWidget.create().image(Assets.image("title")).scale(3).build();
-		logoImage.tf.center(width, height);
-		logoImage.visible = false;
+		flashingLogo = PumpingImageWidget.create().image(Assets.image("title")).scale(3).build();
+		flashingLogo.tf.center(width, height);
+		flashingLogo.visible = false;
 
 		Sound music = Assets.sound("music/bgmusic.mp3");
 		music.volume(0.9f);
@@ -111,7 +110,7 @@ public class IntroScene extends StateMachine<IntroSceneState, Void> implements V
 	public void draw(Graphics2D g) {
 		City city = ent.named("city");
 		city.draw(g);
-		logoImage.draw(g);
-		creditsText.draw(g);
+		scrollingText.draw(g);
+		flashingLogo.draw(g);
 	}
 }
