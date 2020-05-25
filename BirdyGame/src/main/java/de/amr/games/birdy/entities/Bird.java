@@ -20,14 +20,12 @@ import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 
 import de.amr.easy.game.assets.Assets;
-import de.amr.easy.game.controller.Lifecycle;
-import de.amr.easy.game.entity.Entity;
+import de.amr.easy.game.controller.GameObject;
 import de.amr.easy.game.input.Keyboard;
 import de.amr.easy.game.math.Vector2f;
 import de.amr.easy.game.ui.sprites.AnimationType;
 import de.amr.easy.game.ui.sprites.Sprite;
 import de.amr.easy.game.ui.sprites.SpriteMap;
-import de.amr.easy.game.view.View;
 import de.amr.statemachine.api.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 
@@ -39,7 +37,7 @@ import de.amr.statemachine.core.StateMachine;
  * 
  * @author Armin Reichert
  */
-public class Bird extends Entity implements Lifecycle, View {
+public class Bird extends GameObject {
 
 	private final FlightControl flightControl;
 	private final HealthControl healthControl;

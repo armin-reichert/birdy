@@ -17,6 +17,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
+import de.amr.easy.game.Application;
 import de.amr.easy.game.assets.Assets;
 import de.amr.easy.game.assets.Sound;
 import de.amr.easy.game.controller.Lifecycle;
@@ -59,6 +60,8 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 	}
 
 	private void buildStateMachine() {
+		setMissingTransitionBehavior(MissingTransitionBehavior.LOG);
+		getTracer().setLogger(Application.LOGGER);
 		//@formatter:off
 		beginStateMachine()
 		.description("[Start Scene]")
@@ -171,8 +174,8 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 			displayedText.draw(g);
 		}
 		if (app().settings().getAsBoolean("show-state")) {
-			String text = String.format("%s: (%s)  Bird: Flight: (%s) Sanity: (%s)", getDescription(), getState(),
-					bird.getFlightState(), bird.getHealthState());
+			String text = String.format("%s: %s,  Bird: %s and %s", getDescription(), getState(), bird.getFlightState(),
+					bird.getHealthState());
 			g.setFont(new Font(Font.DIALOG, Font.PLAIN, 10));
 			g.drawString(text, 20, app().settings().height - 20);
 		}

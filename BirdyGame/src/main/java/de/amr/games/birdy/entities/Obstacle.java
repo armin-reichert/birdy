@@ -10,17 +10,15 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import de.amr.easy.game.assets.Assets;
-import de.amr.easy.game.controller.Lifecycle;
-import de.amr.easy.game.entity.Entity;
+import de.amr.easy.game.controller.GameObject;
 import de.amr.easy.game.entity.collision.Collider;
-import de.amr.easy.game.view.View;
 
 /**
  * An obstacle consisting of a hanging and a standing pipe with a passage in the middle.
  * 
  * @author Armin Reichert
  */
-public class Obstacle extends Entity implements Lifecycle, View {
+public class Obstacle extends GameObject {
 
 	public int width, height;
 	public Rectangle hanging, passage, standing;

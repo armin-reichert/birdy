@@ -14,13 +14,11 @@ import java.awt.event.KeyEvent;
 import java.util.stream.IntStream;
 
 import de.amr.easy.game.Application;
-import de.amr.easy.game.controller.Lifecycle;
-import de.amr.easy.game.entity.Entity;
+import de.amr.easy.game.controller.GameObject;
 import de.amr.easy.game.entity.EntityMap;
 import de.amr.easy.game.input.Keyboard;
 import de.amr.easy.game.ui.sprites.Sprite;
 import de.amr.easy.game.ui.sprites.SpriteMap;
-import de.amr.easy.game.view.View;
 import de.amr.statemachine.api.EventMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 import de.amr.statemachine.core.StateMachine.MissingTransitionBehavior;
@@ -30,7 +28,7 @@ import de.amr.statemachine.core.StateMachine.MissingTransitionBehavior;
  * 
  * @author Armin Reichert
  */
-public class City extends Entity implements Lifecycle, View {
+public class City extends GameObject {
 
 	public enum DayTime {
 		DAY, NIGHT
@@ -50,7 +48,7 @@ public class City extends Entity implements Lifecycle, View {
 
 		sprites.set("s_night", Sprite.ofAssets("bg_night"));
 		sprites.set("s_day", Sprite.ofAssets("bg_day"));
-		sprites.select(dayTime == DAY ? "s_day": "s_night");
+		sprites.select(dayTime == DAY ? "s_day" : "s_night");
 
 		sprites.current().ifPresent(sprite -> {
 			tf.width = sprite.getWidth();
