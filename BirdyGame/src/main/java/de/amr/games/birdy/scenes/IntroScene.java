@@ -38,10 +38,10 @@ public class IntroScene extends StateMachine<IntroSceneState, Void> implements V
 
 	static final String CREDITS_TEXT = String.join("\n",
 	/*@formatter:off*/
-		"Anna proudly presents", 
+		"Anna Schillo", 
 		"in cooperation with",
-		"Prof. Zwickmann", 
-		"Geräteschuppen Software, 2017"
+		"Geräteschuppen Software",
+		"proudly presents"
 	/*@formatter:on*/
 	);
 
@@ -90,7 +90,7 @@ public class IntroScene extends StateMachine<IntroSceneState, Void> implements V
 		city.setWidth(width);
 
 		creditsText = TextWidget.create().text(CREDITS_TEXT).font(Assets.font("Pacifico-Regular"))
-				.color(city.isNight() ? Color.WHITE : Color.DARK_GRAY).build();
+				.color(city.isNight() ? Color.WHITE : new Color(50, 50, 255)).build();
 		creditsText.tf.centerX(width);
 		creditsText.tf.y = (height);
 		creditsText.tf.vy = -1.5f;
@@ -100,10 +100,11 @@ public class IntroScene extends StateMachine<IntroSceneState, Void> implements V
 		logoImage.tf.center(width, height);
 		logoImage.visible = false;
 
-		super.init();
 		Sound music = Assets.sound("music/bgmusic.mp3");
 		music.volume(0.9f);
 		music.loop();
+
+		super.init();
 	}
 
 	@Override
