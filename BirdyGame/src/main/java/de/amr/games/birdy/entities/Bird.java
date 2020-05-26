@@ -139,8 +139,8 @@ public class Bird extends GameObject {
 		sprites.set("s_red", createFeatherSprite("bird2"));
 		sprites.select("s_yellow");
 
-		tf.width = (sprites.current().get().getWidth());
-		tf.height = (sprites.current().get().getHeight());
+		tf.width = sprites.current().get().getWidth();
+		tf.height = sprites.current().get().getHeight();
 
 		gravity = app().settings().getAsFloat("world-gravity");
 	}
