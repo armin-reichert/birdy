@@ -5,7 +5,6 @@ import static de.amr.easy.game.Application.app;
 import static de.amr.games.birdy.BirdyGameApp.sec;
 import static de.amr.games.birdy.entities.BirdEvent.CRASHED;
 import static de.amr.games.birdy.entities.BirdEvent.LEFT_WORLD;
-import static de.amr.games.birdy.entities.BirdEvent.PASSED_OBSTACLE;
 import static de.amr.games.birdy.entities.BirdEvent.TOUCHED_GROUND;
 import static de.amr.games.birdy.entities.BirdEvent.TOUCHED_PIPE;
 import static de.amr.games.birdy.entities.FlightState.CRASHING;
@@ -50,7 +49,7 @@ public class Bird extends GameObject {
 	private class HealthControl extends StateMachine<HealthState, BirdEvent> {
 
 		/*
-		 * Using the state machine builder result in prettier code, but I wanted to check that the API is
+		 * Using the state machine builder results in prettier code, but I wanted to check that the API is
 		 * working too.
 		 */
 		public HealthControl() {
@@ -62,7 +61,6 @@ public class Bird extends GameObject {
 
 			state(SANE).setOnEntry(() -> sprites.select("s_yellow"));
 
-			addTransitionOnEventObject(SANE, SANE, null, null, PASSED_OBSTACLE);
 			addTransitionOnEventObject(SANE, INJURED, null, null, TOUCHED_PIPE);
 			addTransitionOnEventObject(SANE, DEAD, null, null, TOUCHED_GROUND);
 			addTransitionOnEventObject(SANE, DEAD, null, null, LEFT_WORLD);
@@ -72,8 +70,6 @@ public class Bird extends GameObject {
 
 			addTransitionOnEventObject(INJURED, INJURED, null, e -> restartTimer(INJURED), TOUCHED_PIPE);
 			addTransitionOnTimeout(INJURED, SANE, null, null);
-			addTransitionOnEventObject(INJURED, INJURED, null, null, CRASHED);
-			addTransitionOnEventObject(INJURED, INJURED, null, null, PASSED_OBSTACLE);
 			addTransitionOnEventObject(INJURED, DEAD, null, null, TOUCHED_GROUND);
 			addTransitionOnEventObject(INJURED, DEAD, null, null, LEFT_WORLD);
 
@@ -81,8 +77,6 @@ public class Bird extends GameObject {
 				sprites.select("s_blue");
 				turnDown();
 			});
-
-			addTransitionOnEventObject(DEAD, DEAD, null, null, TOUCHED_GROUND);
 		}
 	}
 
