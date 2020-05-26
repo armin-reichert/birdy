@@ -7,7 +7,7 @@ import static de.amr.games.birdy.BirdyGameApp.randomInt;
 import java.awt.Graphics2D;
 import java.util.Random;
 
-import de.amr.easy.game.controller.GameObject;
+import de.amr.easy.game.entity.GameObject;
 import de.amr.easy.game.ui.sprites.Sprite;
 
 /**

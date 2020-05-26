@@ -14,8 +14,8 @@ import java.awt.event.KeyEvent;
 import java.util.stream.IntStream;
 
 import de.amr.easy.game.Application;
-import de.amr.easy.game.controller.GameObject;
 import de.amr.easy.game.entity.EntityMap;
+import de.amr.easy.game.entity.GameObject;
 import de.amr.easy.game.input.Keyboard;
 import de.amr.easy.game.ui.sprites.Sprite;
 import de.amr.easy.game.ui.sprites.SpriteMap;

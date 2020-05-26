@@ -19,7 +19,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 
 import de.amr.easy.game.assets.Assets;
-import de.amr.easy.game.controller.GameObject;
+import de.amr.easy.game.entity.GameObject;
 import de.amr.easy.game.input.Keyboard;
 import de.amr.easy.game.math.Vector2f;
 import de.amr.easy.game.ui.sprites.AnimationType;

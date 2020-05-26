@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import de.amr.easy.game.assets.Assets;
-import de.amr.easy.game.controller.GameObject;
+import de.amr.easy.game.entity.GameObject;
 import de.amr.easy.game.entity.collision.Collider;
 
 /**

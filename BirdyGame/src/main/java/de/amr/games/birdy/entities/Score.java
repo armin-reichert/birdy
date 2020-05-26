@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 import java.util.function.Supplier;
 
 import de.amr.easy.game.assets.Assets;
-import de.amr.easy.game.controller.GameObject;
+import de.amr.easy.game.entity.GameObject;
 
 /**
  * Displays the game score.

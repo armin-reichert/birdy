@@ -3,7 +3,7 @@ package de.amr.games.birdy.entities;
 import java.awt.Graphics2D;
 import java.awt.Image;
 
-import de.amr.easy.game.controller.GameObject;
+import de.amr.easy.game.entity.GameObject;
 import de.amr.easy.game.ui.sprites.Sprite;
 import de.amr.easy.game.ui.sprites.SpriteMap;
 
