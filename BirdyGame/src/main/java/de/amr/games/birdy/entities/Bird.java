@@ -61,17 +61,17 @@ public class Bird extends GameObject {
 
 			state(SANE).setOnEntry(() -> sprites.select("s_yellow"));
 
-			addTransitionOnEventObject(SANE, INJURED, null, null, TOUCHED_PIPE);
-			addTransitionOnEventObject(SANE, DEAD, null, null, TOUCHED_GROUND);
-			addTransitionOnEventObject(SANE, DEAD, null, null, LEFT_WORLD);
+			addTransitionOnEventValue(SANE, INJURED, null, null, TOUCHED_PIPE);
+			addTransitionOnEventValue(SANE, DEAD, null, null, TOUCHED_GROUND);
+			addTransitionOnEventValue(SANE, DEAD, null, null, LEFT_WORLD);
 
 			state(INJURED).setTimer(() -> sec(app().settings().get("bird-injured-seconds")));
 			state(INJURED).setOnEntry(() -> sprites.select("s_red"));
 
-			addTransitionOnEventObject(INJURED, INJURED, null, e -> restartTimer(INJURED), TOUCHED_PIPE);
+			addTransitionOnEventValue(INJURED, INJURED, null, e -> restartTimer(INJURED), TOUCHED_PIPE);
 			addTransitionOnTimeout(INJURED, SANE, null, null);
-			addTransitionOnEventObject(INJURED, DEAD, null, null, TOUCHED_GROUND);
-			addTransitionOnEventObject(INJURED, DEAD, null, null, LEFT_WORLD);
+			addTransitionOnEventValue(INJURED, DEAD, null, null, TOUCHED_GROUND);
+			addTransitionOnEventValue(INJURED, DEAD, null, null, LEFT_WORLD);
 
 			state(DEAD).setOnEntry(() -> {
 				sprites.select("s_blue");

@@ -65,7 +65,7 @@ public class City extends GameObject {
 			sprites.select("s_day");
 		});
 
-		fsm.addTransitionOnEventObject(DAY, NIGHT, null, null, SUNSET);
+		fsm.addTransitionOnEventValue(DAY, NIGHT, null, null, SUNSET);
 
 		fsm.state(NIGHT).setTimer(() -> app().clock().sec(10));
 
@@ -83,7 +83,7 @@ public class City extends GameObject {
 			fsm.restartTimer(NIGHT);
 		});
 
-		fsm.addTransitionOnEventObject(NIGHT, DAY, null, null, SUNRISE);
+		fsm.addTransitionOnEventValue(NIGHT, DAY, null, null, SUNRISE);
 	}
 
 	@Override
