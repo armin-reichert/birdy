@@ -20,6 +20,6 @@ public class SpriteBrowserApp extends Application {
 	public void init() {
 		SpritesheetReader.extractSpriteSheet();
 		setController(new SpriteBrowserScene(settings().width, settings().height));
-		clock().setTargetFramerate(10);
+		clock().setTargetFrameRate(10);
 	}
 }

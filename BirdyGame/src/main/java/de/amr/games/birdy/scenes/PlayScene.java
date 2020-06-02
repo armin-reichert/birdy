@@ -151,8 +151,10 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		ent.store(gameOverText);
 
 		Bird bird = ent.named("bird");
-		app().collisionHandler().registerStart(bird, ground, TOUCHED_GROUND);
-		app().collisionHandler().registerEnd(bird, ent.named("world"), LEFT_WORLD);
+		app().collisionHandler().ifPresent(handler -> {
+			handler.registerStart(bird, ground, TOUCHED_GROUND);
+			handler.registerEnd(bird, ent.named("world"), LEFT_WORLD);
+		});
 
 		obstacleController.init();
 		super.init();
@@ -164,9 +166,11 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 			boolean showState = app().settings().getAsBoolean("show-state");
 			app().settings().set("show-state", !showState);
 		}
-		for (Collision collision : app().collisionHandler().collisions()) {
-			dispatch((BirdEvent) collision.getAppEvent());
-		}
+		app().collisionHandler().ifPresent(handler -> {
+			for (Collision collision : handler.collisions()) {
+				dispatch((BirdEvent) collision.getAppEvent());
+			}
+		});
 		ent.implementing(Lifecycle.class).forEach(Lifecycle::update);
 		obstacleController.update();
 		super.update();

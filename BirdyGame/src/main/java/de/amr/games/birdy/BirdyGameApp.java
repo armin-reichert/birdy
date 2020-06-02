@@ -97,6 +97,7 @@ public class BirdyGameApp extends Application {
 		EntityMap entities = new EntityMap();
 		DayTime dayTime = getDayTime();
 		loginfo("Its %s now", dayTime);
+		createCollisionHandler();
 		int w = app().settings().width, h = app().settings().height;
 		entities.store("world", new Area(0, -h, w, 2 * h));
 		entities.store("city", new City(entities, dayTime));

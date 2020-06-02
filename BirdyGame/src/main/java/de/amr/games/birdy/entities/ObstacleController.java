@@ -90,25 +90,29 @@ public class ObstacleController extends StateMachine<Phase, String> implements L
 		int passageHeight = app().settings().get("passage-height");
 		int passageCenterY = randomInt(minHeight + passageHeight / 2, (int) ground.tf.y - minHeight - passageHeight / 2);
 
-		Obstacle obstacle = new Obstacle(passageHeight / 2, passageCenterY);
-		obstacle.tf.x = app().settings().width;
-		obstacle.tf.vx = app().settings().getAsFloat("world-speed");
-		obstacle.illuminated = city.isNight() && randomInt(0, 100) == 20;
-		ent.store(obstacle);
+		Obstacle newObstacle = new Obstacle(passageHeight / 2, passageCenterY);
+		newObstacle.tf.x = app().settings().width;
+		newObstacle.tf.vx = app().settings().getAsFloat("world-speed");
+		newObstacle.illuminated = city.isNight() && randomInt(0, 100) == 20;
+		ent.store(newObstacle);
 
-		app().collisionHandler().registerStart(bird, obstacle.getUpperPart(), TOUCHED_PIPE);
-		app().collisionHandler().registerStart(bird, obstacle.getLowerPart(), TOUCHED_PIPE);
-		app().collisionHandler().registerEnd(bird, obstacle.getPassage(), PASSED_OBSTACLE);
+		app().collisionHandler().ifPresent(handler -> {
+			handler.registerStart(bird, newObstacle.getUpperPart(), TOUCHED_PIPE);
+			handler.registerStart(bird, newObstacle.getLowerPart(), TOUCHED_PIPE);
+			handler.registerEnd(bird, newObstacle.getPassage(), PASSED_OBSTACLE);
+		});
 
 		// Remove obstacles that ran out of screen
 		Iterator<Obstacle> obstacles = ent.ofClass(Obstacle.class).iterator();
 		while (obstacles.hasNext()) {
-			obstacle = obstacles.next();
-			if (obstacle.tf.x + obstacle.tf.width < 0) {
-				app().collisionHandler().unregisterStart(bird, obstacle.getUpperPart());
-				app().collisionHandler().unregisterStart(bird, obstacle.getLowerPart());
-				app().collisionHandler().unregisterEnd(bird, obstacle.getPassage());
-				ent.removeEntity(obstacle);
+			Obstacle nextObstacle = obstacles.next();
+			if (nextObstacle.tf.x + nextObstacle.tf.width < 0) {
+				app().collisionHandler().ifPresent(handler -> {
+					handler.unregisterStart(bird, nextObstacle.getUpperPart());
+					handler.unregisterStart(bird, nextObstacle.getLowerPart());
+					handler.unregisterEnd(bird, nextObstacle.getPassage());
+				});
+				ent.removeEntity(nextObstacle);
 			}
 		}
 	}

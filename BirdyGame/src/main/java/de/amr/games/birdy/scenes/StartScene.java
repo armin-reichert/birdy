@@ -130,9 +130,11 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 		bird.init();
 		bird.tf.setPosition(w / 8, ground.tf.y / 2);
 		bird.tf.setVelocity(0, 0);
-		app().collisionHandler().clear();
-		app().collisionHandler().registerEnd(bird, ent.named("world"), LEFT_WORLD);
-		app().collisionHandler().registerStart(bird, ground, TOUCHED_GROUND);
+		app().collisionHandler().ifPresent(collisions -> {
+			collisions.clear();
+			collisions.registerEnd(bird, ent.named("world"), LEFT_WORLD);
+			collisions.registerStart(bird, ground, TOUCHED_GROUND);
+		});
 	}
 
 	@Override
@@ -148,11 +150,13 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 
 	private void checkCollisions() {
 		Bird bird = ent.named("bird");
-		for (Collision c : app().collisionHandler().collisions()) {
-			BirdEvent event = (BirdEvent) c.getAppEvent();
-			bird.dispatch(event);
-			enqueue(event);
-		}
+		app().collisionHandler().ifPresent(handler -> {
+			for (Collision c : handler.collisions()) {
+				BirdEvent event = (BirdEvent) c.getAppEvent();
+				bird.dispatch(event);
+				enqueue(event);
+			}
+		});
 	}
 
 	@Override
