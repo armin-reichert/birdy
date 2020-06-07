@@ -70,7 +70,7 @@ public class BirdyGameApp extends Application {
 		settings.width = 640;
 		settings.height = 480;
 		settings.fullScreenMode = new DisplayMode(640, 480, 32, DisplayMode.REFRESH_RATE_UNKNOWN);
-		settings.fullScreenOnStart = false;
+		settings.fullScreen = false;
 
 		// specific settings
 		settings.set("jump-key", KeyEvent.VK_UP);
