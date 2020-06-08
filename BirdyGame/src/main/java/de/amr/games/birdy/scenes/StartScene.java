@@ -19,7 +19,7 @@ import java.awt.event.KeyEvent;
 
 import de.amr.easy.game.Application;
 import de.amr.easy.game.assets.Assets;
-import de.amr.easy.game.assets.Sound;
+import de.amr.easy.game.assets.SoundClip;
 import de.amr.easy.game.controller.Lifecycle;
 import de.amr.easy.game.entity.EntityMap;
 import de.amr.easy.game.entity.collision.Collision;
@@ -90,7 +90,7 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 				.state(GAME_OVER)
 					.onEntry(() -> {
 						stop();
-						sounds().forEach(Sound::stop);
+						sounds().forEach(SoundClip::stop);
 						displayedText = ent.named("game_over");
 					})
 	

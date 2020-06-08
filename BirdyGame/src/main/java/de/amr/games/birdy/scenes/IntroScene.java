@@ -12,7 +12,7 @@ import java.awt.Graphics2D;
 
 import de.amr.easy.game.Application;
 import de.amr.easy.game.assets.Assets;
-import de.amr.easy.game.assets.Sound;
+import de.amr.easy.game.assets.SoundClip;
 import de.amr.easy.game.controller.Lifecycle;
 import de.amr.easy.game.entity.EntityMap;
 import de.amr.easy.game.ui.widgets.PumpingImageWidget;
@@ -100,7 +100,7 @@ public class IntroScene extends StateMachine<IntroSceneState, Void> implements V
 		flashingLogo.tf.center(width, height);
 		flashingLogo.visible = false;
 
-		Sound music = Assets.sound("music/bgmusic.mp3");
+		SoundClip music = Assets.sound("music/bgmusic.mp3");
 		music.volume(0.9f);
 		music.loop();
 
