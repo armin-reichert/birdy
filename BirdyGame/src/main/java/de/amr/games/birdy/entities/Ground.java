@@ -1,7 +1,6 @@
 package de.amr.games.birdy.entities;
 
 import java.awt.Graphics2D;
-import java.awt.Image;
 
 import de.amr.easy.game.entity.GameObject;
 import de.amr.easy.game.ui.sprites.Sprite;
@@ -31,10 +30,14 @@ public class Ground extends GameObject {
 
 	@Override
 	public void update() {
-		startX -= tf.vx;
-		if (startX < 0) {
-			startX = sprites.current().get().currentFrame().getWidth(null);
-		}
+		sprites.current().ifPresent(sprite -> {
+			sprite.currentFrame().ifPresent(image -> {
+				startX -= tf.vx;
+				if (startX < 0) {
+					startX = image.getWidth(null);
+				}
+			});
+		});
 	}
 
 	public void setWidth(int width) {
@@ -44,9 +47,12 @@ public class Ground extends GameObject {
 
 	@Override
 	public void draw(Graphics2D g) {
-		Image image = sprites.current().get().currentFrame();
-		for (float x = -startX; x < tf.width; x += image.getWidth(null)) {
-			g.drawImage(image, (int) x, (int) tf.y, null);
-		}
+		sprites.current().ifPresent(sprite -> {
+			sprite.currentFrame().ifPresent(image -> {
+				for (float x = -startX; x < tf.width; x += image.getWidth(null)) {
+					g.drawImage(image, (int) x, (int) tf.y, null);
+				}
+			});
+		});
 	}
 }

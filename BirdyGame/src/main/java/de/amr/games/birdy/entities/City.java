@@ -9,7 +9,6 @@ import static de.amr.games.birdy.entities.City.DayTime.DAY;
 import static de.amr.games.birdy.entities.City.DayTime.NIGHT;
 
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.util.stream.IntStream;
 
@@ -127,13 +126,14 @@ public class City extends GameObject {
 	@Override
 	public void draw(Graphics2D g) {
 		sprites.current().ifPresent(sprite -> {
-			Image image = sprite.currentFrame();
-			g.translate(tf.x, tf.y);
-			for (int x = 0; x < tf.width; x += image.getWidth(null)) {
-				g.drawImage(image, x, 0, null);
-			}
-			ent.ofClass(Star.class).forEach(star -> star.draw(g));
-			g.translate(-tf.x, -tf.y);
+			sprite.currentFrame().ifPresent(image -> {
+				g.translate(tf.x, tf.y);
+				for (int x = 0; x < tf.width; x += image.getWidth(null)) {
+					g.drawImage(image, x, 0, null);
+				}
+				ent.ofClass(Star.class).forEach(star -> star.draw(g));
+				g.translate(-tf.x, -tf.y);
+			});
 		});
 	}
 }
