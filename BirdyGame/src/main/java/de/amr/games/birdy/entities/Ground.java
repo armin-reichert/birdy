@@ -31,7 +31,7 @@ public class Ground extends GameObject {
 	@Override
 	public void update() {
 		sprites.current().ifPresent(sprite -> {
-			sprite.currentFrame().ifPresent(image -> {
+			sprite.currentAnimationFrame().ifPresent(image -> {
 				startX -= tf.vx;
 				if (startX < 0) {
 					startX = image.getWidth(null);
@@ -48,7 +48,7 @@ public class Ground extends GameObject {
 	@Override
 	public void draw(Graphics2D g) {
 		sprites.current().ifPresent(sprite -> {
-			sprite.currentFrame().ifPresent(image -> {
+			sprite.currentAnimationFrame().ifPresent(image -> {
 				for (float x = -startX; x < tf.width; x += image.getWidth(null)) {
 					g.drawImage(image, (int) x, (int) tf.y, null);
 				}

@@ -126,7 +126,7 @@ public class City extends GameObject {
 	@Override
 	public void draw(Graphics2D g) {
 		sprites.current().ifPresent(sprite -> {
-			sprite.currentFrame().ifPresent(image -> {
+			sprite.currentAnimationFrame().ifPresent(image -> {
 				g.translate(tf.x, tf.y);
 				for (int x = 0; x < tf.width; x += image.getWidth(null)) {
 					g.drawImage(image, x, 0, null);
