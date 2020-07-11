@@ -60,22 +60,22 @@ public class City extends GameObject {
 		fsm.setDescription("City");
 		fsm.setInitialState(DAY);
 
-		fsm.state(DAY).setOnEntry(() -> {
+		fsm.state(DAY).entryAction = () -> {
 			sprites.select("s_day");
-		});
+		};
 
 		fsm.addTransitionOnEventValue(DAY, NIGHT, null, null, SUNSET);
 
 		fsm.state(NIGHT).setTimer(() -> app().clock().sec(10));
 
-		fsm.state(NIGHT).setOnEntry(() -> {
+		fsm.state(NIGHT).entryAction = () -> {
 			sprites.select("s_night");
 			replaceStars();
-		});
+		};
 
-		fsm.state(NIGHT).setOnExit(() -> {
+		fsm.state(NIGHT).exitAction = () -> {
 			ent.removeAll(Star.class);
-		});
+		};
 
 		fsm.addTransitionOnTimeout(NIGHT, NIGHT, null, e -> {
 			replaceStars();
