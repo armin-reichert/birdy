@@ -33,7 +33,7 @@ import de.amr.games.birdy.entities.BirdEvent;
 import de.amr.games.birdy.entities.City;
 import de.amr.games.birdy.entities.Ground;
 import de.amr.games.birdy.scenes.StartScene.StartSceneState;
-import de.amr.statemachine.api.EventMatchStrategy;
+import de.amr.statemachine.api.TransitionMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 
 /**
@@ -51,7 +51,7 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 	private ImageWidget displayedText;
 
 	public StartScene(EntityMap entities) {
-		super(StartSceneState.class, EventMatchStrategy.BY_EQUALITY);
+		super(StartSceneState.class, TransitionMatchStrategy.BY_VALUE);
 		ent = entities;
 		ent.store("title", new ImageWidget(Assets.image("title")));
 		ent.store("text_game_over", new ImageWidget(Assets.image("text_game_over")));

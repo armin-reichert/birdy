@@ -14,7 +14,7 @@ import java.util.Iterator;
 import de.amr.easy.game.controller.Lifecycle;
 import de.amr.easy.game.entity.EntityMap;
 import de.amr.games.birdy.entities.ObstacleController.Phase;
-import de.amr.statemachine.api.EventMatchStrategy;
+import de.amr.statemachine.api.TransitionMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 
 /**
@@ -31,7 +31,7 @@ public class ObstacleController extends StateMachine<Phase, String> implements L
 	private final EntityMap ent;
 
 	public ObstacleController(EntityMap entities) {
-		super(Phase.class, EventMatchStrategy.BY_EQUALITY);
+		super(Phase.class, TransitionMatchStrategy.BY_VALUE);
 		ent = entities;
 		//@formatter:off
 		beginStateMachine()

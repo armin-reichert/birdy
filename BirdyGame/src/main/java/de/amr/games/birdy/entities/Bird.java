@@ -25,7 +25,7 @@ import de.amr.easy.game.math.Vector2f;
 import de.amr.easy.game.ui.sprites.AnimationType;
 import de.amr.easy.game.ui.sprites.Sprite;
 import de.amr.easy.game.ui.sprites.SpriteMap;
-import de.amr.statemachine.api.EventMatchStrategy;
+import de.amr.statemachine.api.TransitionMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 
 /**
@@ -53,7 +53,7 @@ public class Bird extends GameObject {
 		 * working too.
 		 */
 		public HealthControl() {
-			super(HealthState.class, EventMatchStrategy.BY_EQUALITY);
+			super(HealthState.class, TransitionMatchStrategy.BY_VALUE);
 
 			setMissingTransitionBehavior(MissingTransitionBehavior.LOG);
 			setDescription("[Health]");
@@ -86,7 +86,7 @@ public class Bird extends GameObject {
 	private class FlightControl extends StateMachine<FlightState, BirdEvent> {
 
 		public FlightControl() {
-			super(FlightState.class, EventMatchStrategy.BY_EQUALITY);
+			super(FlightState.class, TransitionMatchStrategy.BY_VALUE);
 			setMissingTransitionBehavior(MissingTransitionBehavior.LOG);
 			//@formatter:off
 			beginStateMachine()

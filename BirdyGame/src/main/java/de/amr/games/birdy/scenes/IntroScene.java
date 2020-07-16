@@ -23,7 +23,7 @@ import de.amr.games.birdy.BirdyGameApp.Scene;
 import de.amr.games.birdy.entities.City;
 import de.amr.games.birdy.entities.City.DayTime;
 import de.amr.games.birdy.scenes.IntroScene.IntroSceneState;
-import de.amr.statemachine.api.EventMatchStrategy;
+import de.amr.statemachine.api.TransitionMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 
 /**
@@ -51,7 +51,7 @@ public class IntroScene extends StateMachine<IntroSceneState, Void> implements V
 	private TextWidget scrollingText;
 
 	public IntroScene(EntityMap entities) {
-		super(IntroSceneState.class, EventMatchStrategy.BY_EQUALITY);
+		super(IntroSceneState.class, TransitionMatchStrategy.BY_VALUE);
 		ent = entities;
 		scrollingText = TextWidget.create().text(CREDITS_TEXT).font(Assets.font("Pacifico-Regular"))
 				.color(BirdyGameApp.getDayTime() == DayTime.NIGHT ? Color.WHITE : new Color(50, 50, 255)).build();

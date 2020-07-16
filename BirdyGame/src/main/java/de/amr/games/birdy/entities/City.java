@@ -18,7 +18,7 @@ import de.amr.easy.game.entity.GameObject;
 import de.amr.easy.game.input.Keyboard;
 import de.amr.easy.game.ui.sprites.Sprite;
 import de.amr.easy.game.ui.sprites.SpriteMap;
-import de.amr.statemachine.api.EventMatchStrategy;
+import de.amr.statemachine.api.TransitionMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 import de.amr.statemachine.core.StateMachine.MissingTransitionBehavior;
 
@@ -54,7 +54,7 @@ public class City extends GameObject {
 			tf.height = sprite.getHeight();
 		});
 
-		fsm = new StateMachine<>(DayTime.class, EventMatchStrategy.BY_EQUALITY);
+		fsm = new StateMachine<>(DayTime.class, TransitionMatchStrategy.BY_VALUE);
 		fsm.getTracer().setLogger(LOGGER);
 		fsm.setMissingTransitionBehavior(MissingTransitionBehavior.LOG);
 		fsm.setDescription("City");

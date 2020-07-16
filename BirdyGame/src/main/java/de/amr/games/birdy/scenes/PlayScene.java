@@ -32,7 +32,7 @@ import de.amr.games.birdy.entities.Obstacle;
 import de.amr.games.birdy.entities.ObstacleController;
 import de.amr.games.birdy.entities.Score;
 import de.amr.games.birdy.scenes.PlayScene.PlaySceneState;
-import de.amr.statemachine.api.EventMatchStrategy;
+import de.amr.statemachine.api.TransitionMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 
 /**
@@ -53,7 +53,7 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 	private Score score;
 
 	public PlayScene(EntityMap entities) {
-		super(PlaySceneState.class, EventMatchStrategy.BY_EQUALITY);
+		super(PlaySceneState.class, TransitionMatchStrategy.BY_VALUE);
 		ent = entities;
 		buildStateMachine();
 		obstacleController = new ObstacleController(ent);
