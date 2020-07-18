@@ -176,7 +176,7 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 		ground.draw(g);
 		bird.draw(g);
 		if (displayedText != null) {
-			displayedText.tf.center(w, h - ground.tf.height);
+			displayedText.tf.centerBoth(0, 0, w, h - ground.tf.height);
 			displayedText.draw(g);
 		}
 		if (app().settings().getAsBoolean("show-state")) {

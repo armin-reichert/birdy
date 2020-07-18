@@ -92,12 +92,12 @@ public class IntroScene extends StateMachine<IntroSceneState, Void> implements V
 		City city = ent.named("city");
 		city.setWidth(width);
 
-		scrollingText.tf.centerX(width);
+		scrollingText.tf.centerHorizontally(0, width);
 		scrollingText.tf.y = height;
 		scrollingText.tf.vy = -1.5f;
 		scrollingText.setCompletion(() -> scrollingText.tf.y < height / 4);
 
-		flashingLogo.tf.center(width, height);
+		flashingLogo.tf.centerBoth(0, 0, width, height);
 		flashingLogo.visible = false;
 
 		SoundClip music = Assets.sound("music/bgmusic.mp3");

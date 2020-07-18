@@ -142,15 +142,16 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		Ground ground = ent.named("ground");
 
 		score = new Score(() -> points, 1.5f);
-		score.tf.centerX(w);
+		score.tf.centerHorizontally(0, w);
 		score.tf.y = (ground.tf.y / 4);
 		ent.store(score);
 
 		gameOverText = new ImageWidget(Assets.image("text_game_over"));
-		gameOverText.tf.center(w, h);
+		gameOverText.tf.centerBoth(0, 0, w, h);
 		ent.store(gameOverText);
 
 		Bird bird = ent.named("bird");
+		app().createCollisionHandler();
 		app().collisionHandler().ifPresent(handler -> {
 			handler.registerStart(bird, ground, TOUCHED_GROUND);
 			handler.registerEnd(bird, ent.named("world"), LEFT_WORLD);
