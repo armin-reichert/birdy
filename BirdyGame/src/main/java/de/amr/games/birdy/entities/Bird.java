@@ -1,6 +1,5 @@
 package de.amr.games.birdy.entities;
 
-import static de.amr.easy.game.Application.LOGGER;
 import static de.amr.easy.game.Application.app;
 import static de.amr.games.birdy.BirdyGameApp.sec;
 import static de.amr.games.birdy.entities.BirdEvent.CRASHED;
@@ -129,10 +128,7 @@ public class Bird extends GameObject {
 
 	public Bird() {
 		flightControl = new FlightControl();
-		flightControl.getTracer().setLogger(LOGGER);
-
 		healthControl = new HealthControl();
-		healthControl.getTracer().setLogger(LOGGER);
 
 		sprites.set("s_yellow", createFeatherSprite("bird0"));
 		sprites.set("s_blue", createFeatherSprite("bird1"));

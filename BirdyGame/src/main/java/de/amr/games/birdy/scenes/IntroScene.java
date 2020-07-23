@@ -10,7 +10,6 @@ import static de.amr.games.birdy.scenes.IntroScene.IntroSceneState.WAITING;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import de.amr.easy.game.Application;
 import de.amr.easy.game.assets.Assets;
 import de.amr.easy.game.assets.SoundClip;
 import de.amr.easy.game.controller.Lifecycle;
@@ -82,7 +81,6 @@ public class IntroScene extends StateMachine<IntroSceneState, Void> implements V
 				
 		.endStateMachine();
 		/*@formatter:on*/
-		getTracer().setLogger(Application.LOGGER);
 	}
 
 	@Override

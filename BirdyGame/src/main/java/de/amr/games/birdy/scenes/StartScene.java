@@ -17,7 +17,6 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
-import de.amr.easy.game.Application;
 import de.amr.easy.game.assets.Assets;
 import de.amr.easy.game.assets.SoundClip;
 import de.amr.easy.game.controller.Lifecycle;
@@ -61,7 +60,6 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 
 	private void buildStateMachine() {
 		setMissingTransitionBehavior(MissingTransitionBehavior.LOG);
-		getTracer().setLogger(Application.LOGGER);
 		//@formatter:off
 		beginStateMachine()
 			.description("[Start Scene]")

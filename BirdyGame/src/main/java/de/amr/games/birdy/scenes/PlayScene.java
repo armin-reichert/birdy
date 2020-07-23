@@ -15,7 +15,6 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
-import de.amr.easy.game.Application;
 import de.amr.easy.game.assets.Assets;
 import de.amr.easy.game.controller.Lifecycle;
 import de.amr.easy.game.entity.EntityMap;
@@ -57,12 +56,10 @@ public class PlayScene extends StateMachine<PlaySceneState, BirdEvent> implement
 		ent = entities;
 		buildStateMachine();
 		obstacleController = new ObstacleController(ent);
-		obstacleController.getTracer().setLogger(Application.LOGGER);
 	}
 
 	private void buildStateMachine() {
 		setMissingTransitionBehavior(MissingTransitionBehavior.LOG);
-		getTracer().setLogger(Application.LOGGER);
 		//@formatter:off
 		beginStateMachine()
 			.description("[Play Scene]")

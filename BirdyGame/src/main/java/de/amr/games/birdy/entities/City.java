@@ -1,6 +1,5 @@
 package de.amr.games.birdy.entities;
 
-import static de.amr.easy.game.Application.LOGGER;
 import static de.amr.easy.game.Application.app;
 import static de.amr.games.birdy.BirdyGameApp.randomInt;
 import static de.amr.games.birdy.entities.City.DayEvent.SUNRISE;
@@ -55,7 +54,6 @@ public class City extends GameObject {
 		});
 
 		fsm = new StateMachine<>(DayTime.class, TransitionMatchStrategy.BY_VALUE);
-		fsm.getTracer().setLogger(LOGGER);
 		fsm.setMissingTransitionBehavior(MissingTransitionBehavior.LOG);
 		fsm.setDescription("City");
 		fsm.setInitialState(DAY);
