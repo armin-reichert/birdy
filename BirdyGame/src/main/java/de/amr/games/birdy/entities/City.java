@@ -1,7 +1,6 @@
 package de.amr.games.birdy.entities;
 
 import static de.amr.easy.game.Application.app;
-import static de.amr.games.birdy.BirdyGameApp.randomInt;
 import static de.amr.games.birdy.entities.City.DayEvent.SUNRISE;
 import static de.amr.games.birdy.entities.City.DayEvent.SUNSET;
 import static de.amr.games.birdy.entities.City.DayTime.DAY;
@@ -17,6 +16,7 @@ import de.amr.easy.game.entity.GameObject;
 import de.amr.easy.game.input.Keyboard;
 import de.amr.easy.game.ui.sprites.Sprite;
 import de.amr.easy.game.ui.sprites.SpriteMap;
+import de.amr.games.birdy.BirdyGameApp;
 import de.amr.statemachine.api.TransitionMatchStrategy;
 import de.amr.statemachine.core.StateMachine;
 import de.amr.statemachine.core.StateMachine.MissingTransitionBehavior;
@@ -64,7 +64,7 @@ public class City extends GameObject {
 
 		fsm.addTransitionOnEventValue(DAY, NIGHT, null, null, SUNSET, () -> "");
 
-		fsm.state(NIGHT).setTimer(() -> app().clock().sec(10));
+		fsm.state(NIGHT).setTimer(app().clock().sec(10));
 
 		fsm.state(NIGHT).entryAction = () -> {
 			sprites.select("s_night");
@@ -77,7 +77,7 @@ public class City extends GameObject {
 
 		fsm.addTransitionOnTimeout(NIGHT, NIGHT, null, e -> {
 			replaceStars();
-			fsm.restartTimer(NIGHT);
+			fsm.resetTimer(NIGHT);
 		}, () -> "");
 
 		fsm.addTransitionOnEventValue(NIGHT, DAY, null, null, SUNRISE, () -> "");
@@ -100,10 +100,10 @@ public class City extends GameObject {
 
 	private void replaceStars() {
 		ent.removeAll(Star.class);
-		int numStars = randomInt(1, app().settings().get("max-stars"));
+		int numStars = BirdyGameApp.random(1, app().settings().get("max-stars"));
 		IntStream.range(1, numStars).forEach(i -> {
 			Star star = ent.store(new Star());
-			star.tf.setPosition(randomInt(50, tf.width - 50), randomInt(100, 180));
+			star.tf.setPosition(BirdyGameApp.random(50, tf.width - 50), BirdyGameApp.random(100, 180));
 		});
 		Application.LOGGER.info("Created " + numStars + " new stars");
 	}

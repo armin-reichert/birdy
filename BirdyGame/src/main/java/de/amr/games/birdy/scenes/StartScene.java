@@ -3,7 +3,6 @@ package de.amr.games.birdy.scenes;
 import static de.amr.easy.game.Application.app;
 import static de.amr.easy.game.assets.Assets.sound;
 import static de.amr.easy.game.assets.Assets.sounds;
-import static de.amr.games.birdy.BirdyGameApp.randomInt;
 import static de.amr.games.birdy.BirdyGameApp.sec;
 import static de.amr.games.birdy.BirdyGameApp.setScene;
 import static de.amr.games.birdy.entities.BirdEvent.LEFT_WORLD;
@@ -26,6 +25,7 @@ import de.amr.easy.game.input.Keyboard;
 import de.amr.easy.game.ui.widgets.ImageWidget;
 import de.amr.easy.game.ui.widgets.PumpingImageWidget;
 import de.amr.easy.game.view.View;
+import de.amr.games.birdy.BirdyGameApp;
 import de.amr.games.birdy.BirdyGameApp.Scene;
 import de.amr.games.birdy.entities.Bird;
 import de.amr.games.birdy.entities.BirdEvent;
@@ -189,7 +189,7 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 		Bird bird = ent.named("bird");
 		Ground ground = ent.named("ground");
 		while (bird.tf.y > ground.tf.y / 2) {
-			bird.flap(randomInt(1, 4));
+			bird.flap(BirdyGameApp.random(1, 4));
 		}
 	}
 }

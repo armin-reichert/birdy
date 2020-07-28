@@ -45,7 +45,7 @@ public class BirdyGameApp extends Application {
 		app().setController(scenes.get(scene));
 	}
 
-	public static int sec(float amount) {
+	public static long sec(float amount) {
 		return app().clock().sec(amount);
 	}
 
@@ -54,7 +54,7 @@ public class BirdyGameApp extends Application {
 	 * @param max upper bound (inclusive)
 	 * @return random integer from given closed interval
 	 */
-	public static int randomInt(int min, int max) {
+	public static int random(int min, int max) {
 		return min + new Random().nextInt(max - min + 1);
 	}
 
