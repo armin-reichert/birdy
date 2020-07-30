@@ -71,7 +71,7 @@ public class StartScene extends StateMachine<StartSceneState, BirdEvent> impleme
 					.onEntry(() -> {
 						reset();
 						if (!sound("music/bgmusic.mp3").isRunning()) {
-							sound("music/bgmusic.mp3").loop();
+							sound("music/bgmusic.mp3").startEndlessLoop();
 						}
 					})
 				.onTick(() -> keepBirdInAir())

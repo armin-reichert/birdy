@@ -100,7 +100,7 @@ public class IntroScene extends StateMachine<IntroSceneState, Void> implements V
 
 		SoundClip music = Assets.sound("music/bgmusic.mp3");
 		music.volume(0.9f);
-		music.loop();
+		music.startEndlessLoop();
 
 		super.init();
 	}
