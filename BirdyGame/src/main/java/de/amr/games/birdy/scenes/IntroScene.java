@@ -99,8 +99,8 @@ public class IntroScene extends StateMachine<IntroSceneState, Void> implements V
 		flashingLogo.visible = false;
 
 		SoundClip music = Assets.sound("music/bgmusic.mp3");
-		music.volume(0.9f);
-		music.startEndlessLoop();
+		music.setVolume(0.9f);
+		music.loop();
 
 		super.init();
 	}

@@ -92,7 +92,7 @@ public class BirdyGameApp extends Application {
 	@Override
 	public void init() {
 		extractSpriteSheet();
-		sound("music/bgmusic.mp3").volume(0.5f);
+		sound("music/bgmusic.mp3").setVolume(0.5f);
 		storeTrueTypeFont("Pacifico-Regular", "fonts/Pacifico-Regular.ttf", Font.BOLD, 40);
 		EntityMap entities = new EntityMap();
 		DayTime dayTime = getDayTime();
