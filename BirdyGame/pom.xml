@@ -38,13 +38,13 @@
 	</build>
 	<dependencies>
 		<dependency>
-			<groupId>de.amr.easy.game</groupId>
-			<artifactId>EasyGame</artifactId>
+			<groupId>de.amr.statemachine</groupId>
+			<artifactId>StateMachine</artifactId>
 			<version>1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>de.amr.statemachine</groupId>
-			<artifactId>StateMachine</artifactId>
+			<groupId>de.amr.easy.game</groupId>
+			<artifactId>easy-game-framework</artifactId>
 			<version>1.0</version>
 		</dependency>
 	</dependencies>
