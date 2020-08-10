@@ -1,6 +1,7 @@
 package de.amr.games.birdy.entities;
 
 import static de.amr.easy.game.Application.app;
+import static de.amr.easy.game.Application.loginfo;
 import static de.amr.games.birdy.entities.City.DayEvent.SUNRISE;
 import static de.amr.games.birdy.entities.City.DayEvent.SUNSET;
 import static de.amr.games.birdy.entities.City.DayTime.DAY;
@@ -10,7 +11,6 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.util.stream.IntStream;
 
-import de.amr.easy.game.Application;
 import de.amr.easy.game.entity.EntityMap;
 import de.amr.easy.game.entity.GameObject;
 import de.amr.easy.game.input.Keyboard;
@@ -105,7 +105,7 @@ public class City extends GameObject {
 			Star star = ent.store(new Star());
 			star.tf.setPosition(BirdyGameApp.random(50, tf.width - 50), BirdyGameApp.random(100, 180));
 		});
-		Application.LOGGER.info("Created " + numStars + " new stars");
+		loginfo("Created " + numStars + " new stars");
 	}
 
 	public boolean isNight() {
