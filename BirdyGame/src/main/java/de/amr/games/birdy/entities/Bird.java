@@ -143,7 +143,7 @@ public class Bird extends GameObject {
 
 	private Sprite createFeatherSprite(String birdName) {
 		Sprite sprite = Sprite.ofAssets(birdName + "_0", birdName + "_1", birdName + "_2");
-		sprite.animate(AnimationType.BACK_AND_FORTH, app().settings().get("bird-flap-millis"));
+		sprite.animate(AnimationType.FORWARD_BACKWARDS, app().settings().get("bird-flap-millis"));
 		return sprite;
 	}
 
